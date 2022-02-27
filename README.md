@@ -1,8 +1,8 @@
 # product-service
-A NodeJs project for Product management
+A NodeJs project for Ad management
 
 ## Clone
-git clone https://github.com/project-openbasket/product-service.git
+git clone https://github.com/project-openbasket/ad-service.git
 
 ## Build
 npm install
@@ -21,7 +21,7 @@ npm dev
 
 
 ## Endpoints
-Server URL: http://localhost:8081/products
+Server URL: http://localhost:8081/ads
 
 | Attempt | Endpoint  |
 | :---: | :---: |

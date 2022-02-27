@@ -1,7 +1,7 @@
 {
-    "name": "product-service",
+    "name": "property-service",
     "version": "1.0.0",
-    "description": "Microservice for products",
+    "description": "Microservice for properties",
     "main": "app/server.js",
     "scripts": {
         "start": "node  app/server.js",

@@ -44,32 +44,6 @@ var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
 
-// Require routes
-
-// Enable pre-flight across-the-board
-// var whitelist = ['http://localhost:3000', 'http://localhost']
-// var corsOptionsDelegate = function(req, callback) {
-//     var corsOptions;
-//     if (whitelist.indexOf(req.header('Origin')) !== -1) {
-//         corsOptions = {
-//                 origin: true,
-//                 methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-//                 preflightContinue: false,
-//                 optionsSuccessStatus: 204,
-//                 "Set-Cookie": "HttpOnly;Secure;SameSite=Strict"
-//             } // reflect (enable) the requested origin in the CORS response
-//     } else {
-//         corsOptions = {
-//                 origin: false,
-//                 methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-//                 preflightContinue: false,
-//                 optionsSuccessStatus: 204,
-//                 "Set-Cookie": "HttpOnly;Secure;SameSite=Strict"
-//             } // disable CORS for this request
-//     }
-//     callback(null, corsOptions) // callback expects two parameters: error and options
-// }
-
 app.options('*', cors())
 app.use(function(req, res, next){
     res.header("Access-Control-Allow-Origin", "*");
@@ -79,11 +53,10 @@ app.use(function(req, res, next){
 })
 
 // Other routes
-require('./route/category')(app);
-require('./route/brand')(app);
-require('./route/product')(app);
-require('./route/department')(app);
-require('./route/review')(app);
+require('./route/property')(app);
+require('./route/question')(app);
+require('./route/carousel')(app);
+require('./route/property/type')(app);
 app.use('/health', require('./route/healthcheck'));
 
 //Listen for requests

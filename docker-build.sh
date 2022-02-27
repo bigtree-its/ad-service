@@ -1,2 +1,2 @@
 #!/bin/bash
-docker build -t openecomm/product-service:v1 .
+docker build -t openecomm/ad-service:v1 .

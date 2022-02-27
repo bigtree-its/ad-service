@@ -1,10 +1,11 @@
 //Require Mongoose
 var mongoose = require('mongoose');
 
-// Define a Schema for our Department collection
-const DepartmentSchema = new mongoose.Schema({
-    name: { type: String, required: true },
-    slug: { type: String, trim: true }
+// Define a Schema for our PropertyType collection
+const PropertyTypeSchema = new mongoose.Schema({
+    name: { type: String, trim: true },
+    slug: { type: String, trim: true },
+    logo: String,
 }, {
     timestamps: true
 });
@@ -13,10 +14,9 @@ const DepartmentSchema = new mongoose.Schema({
 // The first argument is the singular name of the collection your model is for. 
 // ** Mongoose automatically looks for the plural, lower cased version of your model name.
 // ** Thus, for the example above, the model Tank is for the tanks collection in the database.
-var Department = mongoose.model('Department', DepartmentSchema);
+var PropertyType = mongoose.model('PropertyType', PropertyTypeSchema);
 //Ensure mongoose automatically created _id field for the document
-Department._id instanceof mongoose.Types.ObjectId;
-Department.parent instanceof mongoose.Types.ObjectId;
+PropertyType._id instanceof mongoose.Types.ObjectId;
 
-//Export function to create "Department" model class
-module.exports = Department;
+//Export function to create "PropertyType" model class
+module.exports = PropertyType;

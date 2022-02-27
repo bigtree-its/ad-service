@@ -1,2 +1,2 @@
 #!/bin/bash
-docker run -p 8081:8080 openecomm/product-service:v1
+docker run -p 8083:8080 openecomm/ad-service:v1

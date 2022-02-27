@@ -1,0 +1,761 @@
+[
+    {
+        "sale": {
+            "price": 495000,
+            "quote": "Offers Over"
+        },
+        "address": {
+            "propertyNumber": "18",
+            "addressLine1": "Forrestfield Crescent",
+            "addressLine2": "Newton Mearns",
+            "city": "Glasgow",
+            "postcode": "G77 6DZ",
+            "country": "SCOTLAND",
+            "latitude": 55.7784237,
+            "longitude": -4.3277167
+        },
+        "contact": {
+            "person": "Nava",
+            "email": "nava.arul@gmail.com",
+            "mobile": "07979191176",
+            "telephone": "0416440995"
+        },
+        "description": [
+            "A well presented two bedroom detached bungalow, enjoying aspects over the surrounding countryside.",
+            "This family home affords flexible accommodation, well designed for family living.",
+            "Ground Floor: Entrance hallway with storage. Kitchen with a range of floor standing and wall mounted units. Bedroom one, with fitted wardrobes and ensuite bathroom. Bedroom two. Wet room with three piece suite",
+            "Lower Ground Floor: Sitting/ dining room with a feature fireplace. Spacious bespoke ‘Mozolowski and Murray' sun lounge with French doors leading to the patio area and rear garden"
+        ],
+        "keyFeatures": [
+            "Four double bedrooms",
+            "Kitchen-dining-living room",
+            "345m2 internal floorspace",
+            "Huge gated driveway"
+        ],
+        "tags": [],
+        "floorPlan": [
+            "https://media.rightmove.co.uk/45k/44445/119962673/44445_23033997_IMG_01_0000.jpeg",
+            "https://media.rightmove.co.uk/45k/44445/119962673/44445_23033997_IMG_02_0000.jpeg",
+            "https://media.rightmove.co.uk/45k/44445/119962673/44445_23033997_IMG_03_0000.jpeg",
+            "https://media.rightmove.co.uk/45k/44445/119962673/44445_23033997_IMG_04_0000.jpeg",
+            "https://media.rightmove.co.uk/45k/44445/119962673/44445_23033997_IMG_05_0000.jpeg",
+            "https://media.rightmove.co.uk/45k/44445/119962673/44445_23033997_IMG_06_0000.jpeg",
+            "https://media.rightmove.co.uk/45k/44445/119962673/44445_23033997_IMG_07_0000.jpeg"
+        ],
+        "gallery": [
+            "https://media.rightmove.co.uk/45k/44445/119962673/44445_23033997_IMG_01_0000.jpeg",
+            "https://media.rightmove.co.uk/45k/44445/119962673/44445_23033997_IMG_02_0000.jpeg",
+            "https://media.rightmove.co.uk/45k/44445/119962673/44445_23033997_IMG_03_0000.jpeg",
+            "https://media.rightmove.co.uk/45k/44445/119962673/44445_23033997_IMG_04_0000.jpeg",
+            "https://media.rightmove.co.uk/45k/44445/119962673/44445_23033997_IMG_05_0000.jpeg",
+            "https://media.rightmove.co.uk/45k/44445/119962673/44445_23033997_IMG_06_0000.jpeg",
+            "https://media.rightmove.co.uk/45k/44445/119962673/44445_23033997_IMG_07_0000.jpeg"
+        ],
+        "_id": "6217861889964bdd8413faaa",
+        "title": "4 BedRoom Detached House",
+        "pin": "rJhV6-QYGXXB90dt7dZm9UJkFaw6sqpZCiJwvQ2C",
+        "type": {
+            "_id": "620d34725a93135f1791dbc9",
+            "name": "Detached"
+        },
+        "size": "3,714 sq. ft.",
+        "bedrooms": 4,
+        "bathrooms": 4,
+        "stations": [
+            {
+                "_id": "6217861889964bdd8413faab",
+                "name": "Clarkston",
+                "value": "1miles"
+            },
+            {
+                "_id": "6217861889964bdd8413faac",
+                "name": "Whitecraigs",
+                "value": "2miles"
+            }
+        ],
+        "schools": [
+            {
+                "address": {
+                    "propertyNumber": "#",
+                    "addressLine1": "Kirkhill Rd",
+                    "addressLine2": "Newton Mearns",
+                    "city": "Glasgow",
+                    "postcode": "G77 5RJ",
+                    "country": "SCOTLAND",
+                    "latitude": 55.7769179,
+                    "longitude": -4.3029531
+                },
+                "_id": "6217861889964bdd8413faad",
+                "name": "Kirkhill Primary School",
+                "distance": "1mile"
+            },
+            {
+                "address": {
+                    "propertyNumber": "#",
+                    "addressLine1": "Waterfoot Rd, Glasgow",
+                    "addressLine2": "Newton Mearns",
+                    "city": "Glasgow",
+                    "postcode": "G77 5GU",
+                    "country": "SCOTLAND",
+                    "latitude": 55.7769179,
+                    "longitude": -4.3029531
+                },
+                "_id": "6217861889964bdd8413faae",
+                "name": "Mearns Castle High School",
+                "distance": "1mile"
+            }
+        ],
+        "superStores": [
+            {
+                "address": {
+                    "propertyNumber": "#",
+                    "addressLine1": "Kirkhill Rd",
+                    "addressLine2": "Newton Mearns",
+                    "city": "Glasgow",
+                    "postcode": "G77 5RJ",
+                    "country": "SCOTLAND",
+                    "latitude": 55.7769179,
+                    "longitude": -4.3029531
+                },
+                "_id": "6217861889964bdd8413faaf",
+                "name": "ASDA",
+                "distance": "1mile"
+            },
+            {
+                "address": {
+                    "propertyNumber": "#",
+                    "addressLine1": "Waterfoot Rd, Glasgow",
+                    "addressLine2": "Newton Mearns",
+                    "city": "Glasgow",
+                    "postcode": "G77 5GU",
+                    "country": "SCOTLAND",
+                    "latitude": 55.7769179,
+                    "longitude": -4.3029531
+                },
+                "_id": "6217861889964bdd8413fab0",
+                "name": "Morissons",
+                "distance": "1mile"
+            }
+        ],
+        "consumptionType": "Sale",
+        "availableDate": "2022-02-22T00:00:00.000Z",
+        "addedDate": "2022-02-22T00:00:00.000Z",
+        "liveDate": "2022-02-22T00:00:00.000Z",
+        "coverPhoto": "https://media.rightmove.co.uk/45k/44445/119962673/44445_23033997_IMG_00_0000.jpeg",
+        "status": "Available",
+        "hospitals": [],
+        "shops": [],
+        "parks": [],
+        "malls": [],
+        "leisureCenters": [],
+        "createdAt": "2022-02-24T13:20:24.819Z",
+        "updatedAt": "2022-02-24T13:20:24.819Z",
+        "__v": 0
+    },
+    {
+        "sale": {
+            "price": 120000,
+            "quote": "Offers Over"
+        },
+        "address": {
+            "propertyNumber": "11",
+            "addressLine1": "Shaw Ct",
+            "addressLine2": "Newton Mearns",
+            "city": "Glasgow",
+            "postcode": "G77 5GH",
+            "country": "SCOTLAND",
+            "latitude": 55.7716443,
+            "longitude": -4.314007399999999
+        },
+        "contact": {
+            "person": "Nava",
+            "email": "nava.arul@gmail.com",
+            "mobile": "07979191176",
+            "telephone": "07979191176"
+        },
+        "description": [
+            "A well presented two bedroom detached bungalow, enjoying aspects over the surrounding countryside.",
+            "This family home affords flexible accommodation, well designed for family living.",
+            "Ground Floor: Entrance hallway with storage. Kitchen with a range of floor standing and wall mounted units. Bedroom one, with fitted wardrobes and ensuite bathroom. Bedroom two. Wet room with three piece suite",
+            "Lower Ground Floor: Sitting/ dining room with a feature fireplace. Spacious bespoke ‘Mozolowski and Murray' sun lounge with French doors leading to the patio area and rear garden"
+        ],
+        "keyFeatures": [
+            "Two double bedrooms",
+            "Retirement Development",
+            "Upper Cottage Flat",
+            "Huge gated driveway"
+        ],
+        "tags": [],
+        "floorPlan": [
+            "https://media.rightmove.co.uk/90k/89173/118962518/89173_GLS210436_IMG_01_0000.jpeg",
+            "https://media.rightmove.co.uk/90k/89173/118962518/89173_GLS210436_IMG_02_0000.jpeg",
+            "https://media.rightmove.co.uk/90k/89173/118962518/89173_GLS210436_IMG_04_0000.jpeg",
+            "https://media.rightmove.co.uk/90k/89173/118962518/89173_GLS210436_IMG_07_0000.jpeg",
+            "https://media.rightmove.co.uk/90k/89173/118962518/89173_GLS210436_IMG_09_0000.jpeg",
+            "https://media.rightmove.co.uk/90k/89173/118962518/89173_GLS210436_IMG_11_0000.jpeg",
+            "https://media.rightmove.co.uk/90k/89173/118962518/89173_GLS210436_IMG_13_0000.jpeg"
+        ],
+        "gallery": [
+            "https://media.rightmove.co.uk/90k/89173/118962518/89173_GLS210436_IMG_01_0000.jpeg",
+            "https://media.rightmove.co.uk/90k/89173/118962518/89173_GLS210436_IMG_02_0000.jpeg",
+            "https://media.rightmove.co.uk/90k/89173/118962518/89173_GLS210436_IMG_04_0000.jpeg",
+            "https://media.rightmove.co.uk/90k/89173/118962518/89173_GLS210436_IMG_07_0000.jpeg",
+            "https://media.rightmove.co.uk/90k/89173/118962518/89173_GLS210436_IMG_09_0000.jpeg",
+            "https://media.rightmove.co.uk/90k/89173/118962518/89173_GLS210436_IMG_11_0000.jpeg",
+            "https://media.rightmove.co.uk/90k/89173/118962518/89173_GLS210436_IMG_13_0000.jpeg"
+        ],
+        "_id": "62178b7189964bdd8413fab1",
+        "title": "2 BedRoom Flat",
+        "pin": "FmoHmA7RUZrBDH0JyaHj1UejL1tbHkFYdd8axFse",
+        "type": {
+            "_id": "620d34725a93135f1791dbc9",
+            "name": "Detached"
+        },
+        "size": "641.8 sq. ft.",
+        "bedrooms": 4,
+        "bathrooms": 4,
+        "stations": [
+            {
+                "_id": "62178b7189964bdd8413fab2",
+                "name": "Clarkston",
+                "value": "1miles"
+            },
+            {
+                "_id": "62178b7189964bdd8413fab3",
+                "name": "Whitecraigs",
+                "value": "2miles"
+            }
+        ],
+        "schools": [
+            {
+                "address": {
+                    "propertyNumber": "#",
+                    "addressLine1": "Kirkhill Rd",
+                    "addressLine2": "Newton Mearns",
+                    "city": "Glasgow",
+                    "postcode": "G77 5RJ",
+                    "country": "SCOTLAND",
+                    "latitude": 55.7769179,
+                    "longitude": -4.3029531
+                },
+                "_id": "62178b7189964bdd8413fab4",
+                "name": "Kirkhill Primary School",
+                "distance": "1mile"
+            },
+            {
+                "address": {
+                    "propertyNumber": "#",
+                    "addressLine1": "Waterfoot Rd, Glasgow",
+                    "addressLine2": "Newton Mearns",
+                    "city": "Glasgow",
+                    "postcode": "G77 5GU",
+                    "country": "SCOTLAND",
+                    "latitude": 55.7769179,
+                    "longitude": -4.3029531
+                },
+                "_id": "62178b7189964bdd8413fab5",
+                "name": "Mearns Castle High School",
+                "distance": "1mile"
+            }
+        ],
+        "superStores": [
+            {
+                "address": {
+                    "propertyNumber": "#",
+                    "addressLine1": "Kirkhill Rd",
+                    "addressLine2": "Newton Mearns",
+                    "city": "Glasgow",
+                    "postcode": "G77 5RJ",
+                    "country": "SCOTLAND",
+                    "latitude": 55.7769179,
+                    "longitude": -4.3029531
+                },
+                "_id": "62178b7189964bdd8413fab6",
+                "name": "ASDA",
+                "distance": "1mile"
+            },
+            {
+                "address": {
+                    "propertyNumber": "#",
+                    "addressLine1": "Waterfoot Rd, Glasgow",
+                    "addressLine2": "Newton Mearns",
+                    "city": "Glasgow",
+                    "postcode": "G77 5GU",
+                    "country": "SCOTLAND",
+                    "latitude": 55.7769179,
+                    "longitude": -4.3029531
+                },
+                "_id": "62178b7189964bdd8413fab7",
+                "name": "Morissons",
+                "distance": "1mile"
+            }
+        ],
+        "consumptionType": "Sale",
+        "availableDate": "2022-02-22T00:00:00.000Z",
+        "addedDate": "2022-02-22T00:00:00.000Z",
+        "liveDate": "2022-02-22T00:00:00.000Z",
+        "coverPhoto": "https://media.rightmove.co.uk/90k/89173/118962518/89173_GLS210436_IMG_00_0000.jpeg",
+        "status": "Available",
+        "hospitals": [],
+        "shops": [],
+        "parks": [],
+        "malls": [],
+        "leisureCenters": [],
+        "createdAt": "2022-02-24T13:43:13.719Z",
+        "updatedAt": "2022-02-24T13:43:13.719Z",
+        "__v": 0
+    },
+    {
+        "sale": {
+            "price": 120000,
+            "quote": "Offers Over"
+        },
+        "address": {
+            "propertyNumber": "12",
+            "addressLine1": "Shaw Ct",
+            "addressLine2": "Newton Mearns",
+            "city": "Glasgow",
+            "postcode": "G77 5GH",
+            "country": "SCOTLAND",
+            "latitude": 55.7716443,
+            "longitude": -4.314007399999999
+        },
+        "contact": {
+            "person": "Nava",
+            "email": "nava.arul@gmail.com",
+            "mobile": "07979191176",
+            "telephone": "07979191176"
+        },
+        "description": [
+            "A well presented two bedroom detached bungalow, enjoying aspects over the surrounding countryside.",
+            "This family home affords flexible accommodation, well designed for family living.",
+            "Ground Floor: Entrance hallway with storage. Kitchen with a range of floor standing and wall mounted units. Bedroom one, with fitted wardrobes and ensuite bathroom. Bedroom two. Wet room with three piece suite",
+            "Lower Ground Floor: Sitting/ dining room with a feature fireplace. Spacious bespoke ‘Mozolowski and Murray' sun lounge with French doors leading to the patio area and rear garden"
+        ],
+        "keyFeatures": [
+            "Two double bedrooms",
+            "Retirement Development",
+            "Upper Cottage Flat",
+            "Huge gated driveway"
+        ],
+        "tags": [],
+        "floorPlan": [
+            "https://www.trulia.com/pictures/thumbs_5/zillowstatic/fp/6ecfe7af1f1080305a031396e5b8597d-full.webp",
+            "https://www.trulia.com/pictures/thumbs_5/zillowstatic/fp/bafe974a74ab26875881fad0fad270b2-full.webp",
+            "https://www.trulia.com/pictures/thumbs_4/zillowstatic/fp/d58065aab78997c4a3a024d94cd980e5-full.webp",
+            "https://www.trulia.com/pictures/thumbs_6/zillowstatic/fp/c8a51f2ddcf156a6f722dba374f5c7c5-full.webp",
+            "https://www.trulia.com/pictures/thumbs_5/zillowstatic/fp/6de6545298f8e1e8f3479717e5954402-full.webp",
+            "https://www.trulia.com/pictures/thumbs_4/zillowstatic/fp/47c81db65cc73639a61a92f8053173eb-full.webp",
+            "https://www.trulia.com/pictures/thumbs_5/zillowstatic/fp/cd9df93fe4bfe6eff412c057123c0eeb-full.webp"
+        ],
+        "gallery": [
+            "https://www.trulia.com/pictures/thumbs_5/zillowstatic/fp/6ecfe7af1f1080305a031396e5b8597d-full.webp",
+            "https://www.trulia.com/pictures/thumbs_5/zillowstatic/fp/bafe974a74ab26875881fad0fad270b2-full.webp",
+            "https://www.trulia.com/pictures/thumbs_4/zillowstatic/fp/d58065aab78997c4a3a024d94cd980e5-full.webp",
+            "https://www.trulia.com/pictures/thumbs_6/zillowstatic/fp/c8a51f2ddcf156a6f722dba374f5c7c5-full.webp",
+            "https://www.trulia.com/pictures/thumbs_5/zillowstatic/fp/6de6545298f8e1e8f3479717e5954402-full.webp",
+            "https://www.trulia.com/pictures/thumbs_4/zillowstatic/fp/47c81db65cc73639a61a92f8053173eb-full.webp",
+            "https://www.trulia.com/pictures/thumbs_5/zillowstatic/fp/cd9df93fe4bfe6eff412c057123c0eeb-full.webp"
+        ],
+        "_id": "6217913b89964bdd8413fab8",
+        "title": "5 BedRoom House",
+        "pin": "l6rfC6LkgbsVHQA-_fAnsEOer8Y9Gheq-S_27aRx",
+        "type": {
+            "_id": "620d34725a93135f1791dbc9",
+            "name": "Detached"
+        },
+        "size": "641.8 sq. ft.",
+        "bedrooms": 5,
+        "bathrooms": 5,
+        "stations": [
+            {
+                "_id": "6217913b89964bdd8413fab9",
+                "name": "Clarkston",
+                "value": "1miles"
+            },
+            {
+                "_id": "6217913b89964bdd8413faba",
+                "name": "Whitecraigs",
+                "value": "2miles"
+            }
+        ],
+        "schools": [
+            {
+                "address": {
+                    "propertyNumber": "#",
+                    "addressLine1": "Kirkhill Rd",
+                    "addressLine2": "Newton Mearns",
+                    "city": "Glasgow",
+                    "postcode": "G77 5RJ",
+                    "country": "SCOTLAND",
+                    "latitude": 55.7769179,
+                    "longitude": -4.3029531
+                },
+                "_id": "6217913b89964bdd8413fabb",
+                "name": "Kirkhill Primary School",
+                "distance": "1mile"
+            },
+            {
+                "address": {
+                    "propertyNumber": "#",
+                    "addressLine1": "Waterfoot Rd, Glasgow",
+                    "addressLine2": "Newton Mearns",
+                    "city": "Glasgow",
+                    "postcode": "G77 5GU",
+                    "country": "SCOTLAND",
+                    "latitude": 55.7769179,
+                    "longitude": -4.3029531
+                },
+                "_id": "6217913b89964bdd8413fabc",
+                "name": "Mearns Castle High School",
+                "distance": "1mile"
+            }
+        ],
+        "superStores": [
+            {
+                "address": {
+                    "propertyNumber": "#",
+                    "addressLine1": "Kirkhill Rd",
+                    "addressLine2": "Newton Mearns",
+                    "city": "Glasgow",
+                    "postcode": "G77 5RJ",
+                    "country": "SCOTLAND",
+                    "latitude": 55.7769179,
+                    "longitude": -4.3029531
+                },
+                "_id": "6217913b89964bdd8413fabd",
+                "name": "ASDA",
+                "distance": "1mile"
+            },
+            {
+                "address": {
+                    "propertyNumber": "#",
+                    "addressLine1": "Waterfoot Rd, Glasgow",
+                    "addressLine2": "Newton Mearns",
+                    "city": "Glasgow",
+                    "postcode": "G77 5GU",
+                    "country": "SCOTLAND",
+                    "latitude": 55.7769179,
+                    "longitude": -4.3029531
+                },
+                "_id": "6217913b89964bdd8413fabe",
+                "name": "Morissons",
+                "distance": "1mile"
+            }
+        ],
+        "consumptionType": "Sale",
+        "availableDate": "2022-02-22T00:00:00.000Z",
+        "addedDate": "2022-02-22T00:00:00.000Z",
+        "liveDate": "2022-02-22T00:00:00.000Z",
+        "coverPhoto": "https://www.trulia.com/pictures/thumbs_6/zillowstatic/fp/05b35ebad225c21e577ee71f883eeaef-full.webp",
+        "status": "Available",
+        "hospitals": [],
+        "shops": [],
+        "parks": [],
+        "malls": [],
+        "leisureCenters": [],
+        "createdAt": "2022-02-24T14:07:55.353Z",
+        "updatedAt": "2022-02-24T14:07:55.353Z",
+        "__v": 0
+    },
+    {
+        "sale": {
+            "price": 5630000,
+            "quote": "Offers Over"
+        },
+        "address": {
+            "propertyNumber": "14",
+            "addressLine1": "Shaw Ct",
+            "addressLine2": "Newton Mearns",
+            "city": "Glasgow",
+            "postcode": "G77 5GH",
+            "country": "SCOTLAND",
+            "latitude": 55.7716443,
+            "longitude": -4.314007399999999
+        },
+        "contact": {
+            "person": "Nava",
+            "email": "nava.arul@gmail.com",
+            "mobile": "07979191176",
+            "telephone": "07979191176"
+        },
+        "description": [
+            "A well presented two bedroom detached bungalow, enjoying aspects over the surrounding countryside.",
+            "This family home affords flexible accommodation, well designed for family living.",
+            "Ground Floor: Entrance hallway with storage. Kitchen with a range of floor standing and wall mounted units. Bedroom one, with fitted wardrobes and ensuite bathroom. Bedroom two. Wet room with three piece suite",
+            "Lower Ground Floor: Sitting/ dining room with a feature fireplace. Spacious bespoke ‘Mozolowski and Murray' sun lounge with French doors leading to the patio area and rear garden"
+        ],
+        "keyFeatures": [
+            "Two double bedrooms",
+            "Retirement Development",
+            "Upper Cottage Flat",
+            "Huge gated driveway"
+        ],
+        "tags": [],
+        "floorPlan": [
+            "https://www.trulia.com/pictures/thumbs_5/zillowstatic/fp/6d31762df539d010cc213bfb27232768-full.webp",
+            "https://www.trulia.com/pictures/thumbs_5/zillowstatic/fp/b1f43d6685bcb45a24717fd7ffd9624f-full.webp",
+            "https://www.trulia.com/pictures/thumbs_6/zillowstatic/fp/9c51b4497860344207121a0a9ccc0055-full.webp",
+            "https://www.trulia.com/pictures/thumbs_5/zillowstatic/fp/a6bdad308dc93bea827031c41f92d050-full.webp",
+            "https://www.trulia.com/pictures/thumbs_5/zillowstatic/fp/6de6545298f8e1e8f3479717e5954402-full.webp",
+            "https://www.trulia.com/pictures/thumbs_4/zillowstatic/fp/47c81db65cc73639a61a92f8053173eb-full.webp",
+            "https://www.trulia.com/pictures/thumbs_5/zillowstatic/fp/cd9df93fe4bfe6eff412c057123c0eeb-full.webp"
+        ],
+        "gallery": [
+            "https://www.trulia.com/pictures/thumbs_5/zillowstatic/fp/6d31762df539d010cc213bfb27232768-full.webp",
+            "https://www.trulia.com/pictures/thumbs_5/zillowstatic/fp/b1f43d6685bcb45a24717fd7ffd9624f-full.webp",
+            "https://www.trulia.com/pictures/thumbs_6/zillowstatic/fp/9c51b4497860344207121a0a9ccc0055-full.webp",
+            "https://www.trulia.com/pictures/thumbs_5/zillowstatic/fp/a6bdad308dc93bea827031c41f92d050-full.webp",
+            "https://www.trulia.com/pictures/thumbs_5/zillowstatic/fp/6de6545298f8e1e8f3479717e5954402-full.webp",
+            "https://www.trulia.com/pictures/thumbs_4/zillowstatic/fp/47c81db65cc73639a61a92f8053173eb-full.webp",
+            "https://www.trulia.com/pictures/thumbs_5/zillowstatic/fp/cd9df93fe4bfe6eff412c057123c0eeb-full.webp"
+        ],
+        "_id": "621791bc89964bdd8413fabf",
+        "title": "7 BedRoom House",
+        "pin": "8o-CTDeKKekU8R3q0n13nMAON9yNXEF4DHUynd9F",
+        "type": {
+            "_id": "620d34725a93135f1791dbc9",
+            "name": "Detached"
+        },
+        "size": "641.8 sq. ft.",
+        "bedrooms": 7,
+        "bathrooms": 5,
+        "stations": [
+            {
+                "_id": "621791bc89964bdd8413fac0",
+                "name": "Clarkston",
+                "value": "1miles"
+            },
+            {
+                "_id": "621791bc89964bdd8413fac1",
+                "name": "Whitecraigs",
+                "value": "2miles"
+            }
+        ],
+        "schools": [
+            {
+                "address": {
+                    "propertyNumber": "#",
+                    "addressLine1": "Kirkhill Rd",
+                    "addressLine2": "Newton Mearns",
+                    "city": "Glasgow",
+                    "postcode": "G77 5RJ",
+                    "country": "SCOTLAND",
+                    "latitude": 55.7769179,
+                    "longitude": -4.3029531
+                },
+                "_id": "621791bc89964bdd8413fac2",
+                "name": "Kirkhill Primary School",
+                "distance": "1mile"
+            },
+            {
+                "address": {
+                    "propertyNumber": "#",
+                    "addressLine1": "Waterfoot Rd, Glasgow",
+                    "addressLine2": "Newton Mearns",
+                    "city": "Glasgow",
+                    "postcode": "G77 5GU",
+                    "country": "SCOTLAND",
+                    "latitude": 55.7769179,
+                    "longitude": -4.3029531
+                },
+                "_id": "621791bc89964bdd8413fac3",
+                "name": "Mearns Castle High School",
+                "distance": "1mile"
+            }
+        ],
+        "superStores": [
+            {
+                "address": {
+                    "propertyNumber": "#",
+                    "addressLine1": "Kirkhill Rd",
+                    "addressLine2": "Newton Mearns",
+                    "city": "Glasgow",
+                    "postcode": "G77 5RJ",
+                    "country": "SCOTLAND",
+                    "latitude": 55.7769179,
+                    "longitude": -4.3029531
+                },
+                "_id": "621791bc89964bdd8413fac4",
+                "name": "ASDA",
+                "distance": "1mile"
+            },
+            {
+                "address": {
+                    "propertyNumber": "#",
+                    "addressLine1": "Waterfoot Rd, Glasgow",
+                    "addressLine2": "Newton Mearns",
+                    "city": "Glasgow",
+                    "postcode": "G77 5GU",
+                    "country": "SCOTLAND",
+                    "latitude": 55.7769179,
+                    "longitude": -4.3029531
+                },
+                "_id": "621791bc89964bdd8413fac5",
+                "name": "Morissons",
+                "distance": "1mile"
+            }
+        ],
+        "consumptionType": "Sale",
+        "availableDate": "2022-02-22T00:00:00.000Z",
+        "addedDate": "2022-02-22T00:00:00.000Z",
+        "liveDate": "2022-02-22T00:00:00.000Z",
+        "coverPhoto": "https://media-cdn.trulia-local.com/neighborhood-media-service-prod/ca/san-francisco/mission-terrace/564-ca_sf_mission_terrace_417496_0126_768x_cfit.webp",
+        "status": "Available",
+        "hospitals": [],
+        "shops": [],
+        "parks": [],
+        "malls": [],
+        "leisureCenters": [],
+        "createdAt": "2022-02-24T14:10:04.525Z",
+        "updatedAt": "2022-02-24T14:10:04.525Z",
+        "__v": 0
+    },
+    {
+        "sale": {
+            "price": 2390000,
+            "quote": "Offers Over"
+        },
+        "address": {
+            "propertyNumber": "100",
+            "addressLine1": "Foerster St",
+            "addressLine2": "NY",
+            "city": "Glasgow",
+            "postcode": "G77 5GH",
+            "country": "SCOTLAND",
+            "latitude": 55.7716443,
+            "longitude": -4.314007399999999
+        },
+        "contact": {
+            "person": "Nava",
+            "email": "nava.arul@gmail.com",
+            "mobile": "07979191176",
+            "telephone": "07979191176"
+        },
+        "description": [
+            "A well presented two bedroom detached bungalow, enjoying aspects over the surrounding countryside.",
+            "This family home affords flexible accommodation, well designed for family living.",
+            "Ground Floor: Entrance hallway with storage. Kitchen with a range of floor standing and wall mounted units. Bedroom one, with fitted wardrobes and ensuite bathroom. Bedroom two. Wet room with three piece suite",
+            "Lower Ground Floor: Sitting/ dining room with a feature fireplace. Spacious bespoke ‘Mozolowski and Murray' sun lounge with French doors leading to the patio area and rear garden"
+        ],
+        "keyFeatures": [
+            "Two double bedrooms",
+            "Retirement Development",
+            "Upper Cottage Flat",
+            "Huge gated driveway"
+        ],
+        "tags": [],
+        "floorPlan": [
+            "https://www.trulia.com/pictures/thumbs_5/zillowstatic/fp/cf24f449f5e1be3a0081c28ccaa43f92-full.webp",
+            "https://www.trulia.com/pictures/thumbs_5/zillowstatic/fp/671dab3e9a38d5f90488f9ee32bc80d9-full.webp",
+            "https://www.trulia.com/pictures/thumbs_4/zillowstatic/fp/80368a4c206d0999c95a2d21f85076fe-full.webp",
+            "https://www.trulia.com/pictures/thumbs_4/zillowstatic/fp/670f9e8fcd0c6c7c1b53c85134eb3c61-full.webp"
+        ],
+        "gallery": [
+            "https://www.trulia.com/pictures/thumbs_5/zillowstatic/fp/cf24f449f5e1be3a0081c28ccaa43f92-full.webp",
+            "https://www.trulia.com/pictures/thumbs_5/zillowstatic/fp/671dab3e9a38d5f90488f9ee32bc80d9-full.webp",
+            "https://www.trulia.com/pictures/thumbs_4/zillowstatic/fp/80368a4c206d0999c95a2d21f85076fe-full.webp",
+            "https://www.trulia.com/pictures/thumbs_4/zillowstatic/fp/670f9e8fcd0c6c7c1b53c85134eb3c61-full.webp"
+        ],
+        "_id": "6217928589964bdd8413fac6",
+        "title": "4 BedRoom House",
+        "pin": "5eVu-WNm1lW_4rIoXUCcQlj9mu-xDlQmhvCWsibF",
+        "type": {
+            "_id": "620d34725a93135f1791dbc9",
+            "name": "Detached"
+        },
+        "size": "2236 sq. ft.",
+        "bedrooms": 4,
+        "bathrooms": 3,
+        "stations": [
+            {
+                "_id": "6217928589964bdd8413fac7",
+                "name": "Clarkston",
+                "value": "1miles"
+            },
+            {
+                "_id": "6217928589964bdd8413fac8",
+                "name": "Whitecraigs",
+                "value": "2miles"
+            }
+        ],
+        "schools": [
+            {
+                "address": {
+                    "propertyNumber": "#",
+                    "addressLine1": "Kirkhill Rd",
+                    "addressLine2": "Newton Mearns",
+                    "city": "Glasgow",
+                    "postcode": "G77 5RJ",
+                    "country": "SCOTLAND",
+                    "latitude": 55.7769179,
+                    "longitude": -4.3029531
+                },
+                "_id": "6217928589964bdd8413fac9",
+                "name": "Kirkhill Primary School",
+                "distance": "1mile"
+            },
+            {
+                "address": {
+                    "propertyNumber": "#",
+                    "addressLine1": "Waterfoot Rd, Glasgow",
+                    "addressLine2": "Newton Mearns",
+                    "city": "Glasgow",
+                    "postcode": "G77 5GU",
+                    "country": "SCOTLAND",
+                    "latitude": 55.7769179,
+                    "longitude": -4.3029531
+                },
+                "_id": "6217928589964bdd8413faca",
+                "name": "Mearns Castle High School",
+                "distance": "1mile"
+            }
+        ],
+        "superStores": [
+            {
+                "address": {
+                    "propertyNumber": "#",
+                    "addressLine1": "Kirkhill Rd",
+                    "addressLine2": "Newton Mearns",
+                    "city": "Glasgow",
+                    "postcode": "G77 5RJ",
+                    "country": "SCOTLAND",
+                    "latitude": 55.7769179,
+                    "longitude": -4.3029531
+                },
+                "_id": "6217928589964bdd8413facb",
+                "name": "ASDA",
+                "distance": "1mile"
+            },
+            {
+                "address": {
+                    "propertyNumber": "#",
+                    "addressLine1": "Waterfoot Rd, Glasgow",
+                    "addressLine2": "Newton Mearns",
+                    "city": "Glasgow",
+                    "postcode": "G77 5GU",
+                    "country": "SCOTLAND",
+                    "latitude": 55.7769179,
+                    "longitude": -4.3029531
+                },
+                "_id": "6217928589964bdd8413facc",
+                "name": "Morissons",
+                "distance": "1mile"
+            }
+        ],
+        "consumptionType": "Sale",
+        "availableDate": "2022-02-22T00:00:00.000Z",
+        "addedDate": "2022-02-22T00:00:00.000Z",
+        "liveDate": "2022-02-22T00:00:00.000Z",
+        "coverPhoto": "https://media-cdn.trulia-local.com/neighborhood-media-service-prod/ca/san-francisco/sunnyside/439-ca_sf_sunnyside_415247_14_57_1984x_cfit.webp",
+        "status": "Available",
+        "hospitals": [],
+        "shops": [],
+        "parks": [],
+        "malls": [],
+        "leisureCenters": [],
+        "createdAt": "2022-02-24T14:13:25.206Z",
+        "updatedAt": "2022-02-24T14:13:25.206Z",
+        "__v": 0
+    }
+]

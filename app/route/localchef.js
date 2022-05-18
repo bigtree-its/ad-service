@@ -1,32 +1,24 @@
 module.exports = (app) => {
-    const controller = require('../controller/property.js');
+    const controller = require('../controller/localchef.js');
     const { verifyToken } = require('../security/security');
     const { check } = require('express-validator');
 
-    const path = process.env.CONTEXT_PATH + '/properties';
+    const path = process.env.CONTEXT_PATH + '/localchefs';
 
     // Public routes
-    // Retrieve all Property
+    // Retrieve all LocalChef
     app.get(path, controller.findAll);
 
-    // Retrieve featured Property
-    app.get(path + '/featured', controller.featured);
-
-    // Retrieve all Property
-    app.get(path + '/paginate', controller.paginate);
-
-    // Retrieve a single Property with Id
+    // Retrieve a single LocalChef with Id
     app.get(path + '/:id', controller.findOne);
 
     // Private routes
-    // Creates a new Property
+    // Creates a new LocalChef
     app.post(path,
         // verifyToken, 
         [
-            check('title').notEmpty().isLength({ min: 3, max: 250 }).withMessage('Title is mandatory'),
-            check('type').notEmpty().isLength({ min: 3, max: 250 }).withMessage('Type is mandatory'),
+            check('name').notEmpty().isLength({ min: 3, max: 250 }).withMessage('Name is mandatory'),
             check('description').notEmpty().isLength({ min: 3, max: 250 }).withMessage('Description is mandatory'),
-            check('consumptionType').notEmpty().isLength({ min: 3, max: 30 }).withMessage('Consumption Type is mandatory'),
             check('address.postcode').notEmpty().isLength({ min: 5, max: 7 }).withMessage('Postcode is mandatory'),
             check('coverPhoto').notEmpty().isLength({ min: 3, max: 250 }).withMessage('Cover Photo is mandatory'),
             check('contact.person').notEmpty().isLength({ min: 3, max: 30 }).withMessage('Contact person is mandatory'),
@@ -35,12 +27,12 @@ module.exports = (app) => {
         ],
         controller.create);
 
-    // Update a Property with id
+    // Update a LocalChef with id
     app.put(path + '/:id', controller.update);
 
-    // Delete a Property with id
+    // Delete a LocalChef with id
     app.delete(path + '/:id', controller.delete);
 
-    //Delete All -- only for non propertyion and can only be done by an admin
+    //Delete All -- only for non production and can only be done by an admin
     app.delete(path, controller.deleteEverything);
 }

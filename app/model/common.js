@@ -1,8 +1,4 @@
 const Address = {
-    name: String,
-    email: String,
-    mobile: String,
-    telephone: String,
     propertyNumber: String,
     addressLine1: String,
     addressLine2: String,
@@ -60,9 +56,13 @@ const NameValue = {
     name: String,
     value: String,
 }
+const Extra = {
+    name: String,
+    price: Number,
+}
 
 const ReturnPolicy = {
 
 }
 
-module.exports = { SuperStore, School, Address, Sale, Rental, Contact, Attribute, ReturnPolicy, NameValue }
+module.exports = { Extra, SuperStore, School, Address, Sale, Rental, Contact, Attribute, ReturnPolicy, NameValue }

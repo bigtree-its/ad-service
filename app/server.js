@@ -53,8 +53,13 @@ app.use(function(req, res, next){
 })
 
 // Other routes
+require('./route/localchef')(app);
+require('./route/localarea')(app);
+require('./route/calendar')(app);
+require('./route/cuisine')(app);
+require('./route/food')(app);
 require('./route/property')(app);
-require('./route/question')(app);
+require('./route/property-enquiry')(app);
 require('./route/carousel')(app);
 require('./route/property/type')(app);
 app.use('/health', require('./route/healthcheck'));

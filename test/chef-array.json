@@ -1,0 +1,986 @@
+[
+    {
+        "address": {
+            "propertyNumber": "2",
+            "addressLine1": "Main St",
+            "addressLine2": "NY",
+            "city": "Glasgow",
+            "postcode": "G77 5GH",
+            "country": "SCOTLAND",
+            "latitude": 55.7716443,
+            "longitude": -4.314007399999999
+        },
+        "contact": {
+            "person": "Nava",
+            "email": "nava.arul@gmail.com",
+            "mobile": "07979191176",
+            "telephone": "07979191176"
+        },
+        "description": [
+            "Beku Foods are comited to provide quality foos"
+        ],
+        "specials": [],
+        "cuisines": [
+            {
+                "_id": "82d5a813-bd8a-440d-b280-b9aa0bb235da",
+                "name": "Indian"
+            },
+            {
+                "_id": "0f2e59c0-a7e1-4189-a65c-fe3f97729a28",
+                "name": "Chinese"
+            }
+        ],
+        "gallery": [
+            "https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/20190503-delish-pineapple-baked-salmon-horizontal-ehg-450-1557771120.jpg",
+            "https://www.refrigeratedfrozenfood.com/ext/resources/NEW_RD_Website/DefaultImages/default-pasta.jpg?1430942591",
+            "http://cdn.cnn.com/cnnnext/dam/assets/140430115517-06-comfort-foods.jpg",
+            "https://img.webmd.com/dtmcms/live/webmd/consumer_assets/site_images/article_thumbnails/slideshows/foods_for_healthy_supple_skin_slideshow/1800x1200_foods_for_healthy_supple_skin_slideshow.jpg",
+            "https://ychef.files.bbci.co.uk/976x549/p09wrjyz.jpg",
+            "https://www.expatica.com/app/uploads/sites/2/2016/09/spanish-food.jpg"
+        ],
+        "serviceAreas": [
+            {
+                "_id": "200dfe76-9b80-412f-b0d6-476902adf024",
+                "name": "Newton Mearns",
+                "city": "Glasgow",
+                "country": "Scotland",
+                "slug": "newton-mearns-glasgow",
+                "createdAt": "2022-03-08T20:12:56.565Z",
+                "updatedAt": "2022-03-08T20:12:56.565Z",
+                "__v": 0
+            },
+            {
+                "_id": "a524f36c-6dd1-4a65-968c-5691a5e59991",
+                "name": "Clarkston",
+                "city": "Glasgow",
+                "country": "Scotland",
+                "slug": "clarkston-glasgow",
+                "createdAt": "2022-03-08T20:13:07.994Z",
+                "updatedAt": "2022-03-08T20:13:07.994Z",
+                "__v": 0
+            }
+        ],
+        "categories": [
+            "Starter",
+            "Mains",
+            "Desserts",
+            "Briyani"
+        ],
+        "slots": [
+            "Dinner",
+            "Lunch",
+            "Breakfast"
+        ],
+        "_id": "721dc4e3-b87c-4da3-8ff5-8c6b2907614e",
+        "name": "Beku",
+        "displayName": "Beku Foods",
+        "slug": "beku-foods",
+        "rating": 5,
+        "reviews": 300,
+        "coverPhoto": "https://thumbs.dreamstime.com/b/chef-woman-portrait-kitchen-23037212.jpg",
+        "active": true,
+        "preOrder": true,
+        "delivery": true,
+        "takingOrdersNow": true,
+        "collectionOnly": false,
+        "minimumOrder": 12,
+        "collectionEstimate": 15,
+        "deliveryEstimateMin": 35,
+        "deliveryEstimateMax": 55,
+        "noMinimumOrder": true,
+        "createdAt": "2022-03-11T14:22:17.439Z",
+        "updatedAt": "2022-03-11T14:22:17.439Z",
+        "__v": 0
+    },
+    {
+        "address": {
+            "propertyNumber": "2",
+            "addressLine1": "Main St",
+            "addressLine2": "NY",
+            "city": "Glasgow",
+            "postcode": "G77 5GH",
+            "country": "SCOTLAND",
+            "latitude": 55.7716443,
+            "longitude": -4.314007399999999
+        },
+        "contact": {
+            "person": "Nava",
+            "email": "nava.arul@gmail.com",
+            "mobile": "07979191176",
+            "telephone": "07979191176"
+        },
+        "description": [
+            "Desi Swaad Foods are commited to provide quality foos"
+        ],
+        "specials": [],
+        "cuisines": [
+            {
+                "_id": "82d5a813-bd8a-440d-b280-b9aa0bb235da",
+                "name": "Indian"
+            },
+            {
+                "_id": "0f2e59c0-a7e1-4189-a65c-fe3f97729a28",
+                "name": "Chinese"
+            }
+        ],
+        "gallery": [
+            "https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/20190503-delish-pineapple-baked-salmon-horizontal-ehg-450-1557771120.jpg",
+            "https://www.refrigeratedfrozenfood.com/ext/resources/NEW_RD_Website/DefaultImages/default-pasta.jpg?1430942591",
+            "http://cdn.cnn.com/cnnnext/dam/assets/140430115517-06-comfort-foods.jpg",
+            "https://img.webmd.com/dtmcms/live/webmd/consumer_assets/site_images/article_thumbnails/slideshows/foods_for_healthy_supple_skin_slideshow/1800x1200_foods_for_healthy_supple_skin_slideshow.jpg",
+            "https://ychef.files.bbci.co.uk/976x549/p09wrjyz.jpg",
+            "https://www.expatica.com/app/uploads/sites/2/2016/09/spanish-food.jpg"
+        ],
+        "serviceAreas": [
+            {
+                "_id": "19ddeaeb-a097-4815-b222-9558e1bf100c",
+                "name": "Waterfoot",
+                "city": "Glasgow",
+                "country": "Scotland",
+                "slug": "waterfoot-glasgow",
+                "createdAt": "2022-03-08T20:13:13.662Z",
+                "updatedAt": "2022-03-08T20:13:13.662Z",
+                "__v": 0
+            },
+            {
+                "_id": "9ccb28a1-9108-462e-bb0d-ed31af10dccb",
+                "name": "Eaglesham",
+                "city": "Glasgow",
+                "country": "Scotland",
+                "slug": "eaglesham-glasgow",
+                "createdAt": "2022-03-08T20:13:19.955Z",
+                "updatedAt": "2022-03-08T20:13:19.955Z",
+                "__v": 0
+            }
+        ],
+        "categories": [
+            "Starter",
+            "Mains",
+            "Desserts",
+            "Briyani"
+        ],
+        "slots": [
+            "Dinner",
+            "Lunch",
+            "Breakfast"
+        ],
+        "_id": "8cd44b23-ef4d-4311-af0d-787e6bfb2550",
+        "name": "Sujata Borker",
+        "displayName": "Desi Swaad Kitchen",
+        "slug": "desi-swaad-kitchen",
+        "rating": 5,
+        "reviews": 300,
+        "coverPhoto": "https://www.great-taste.net/wp-content/uploads/2015/04/guzman-local-chef-style.jpg",
+        "active": true,
+        "preOrder": true,
+        "delivery": true,
+        "takingOrdersNow": true,
+        "collectionOnly": false,
+        "minimumOrder": 12,
+        "collectionEstimate": 15,
+        "deliveryEstimateMin": 35,
+        "deliveryEstimateMax": 55,
+        "noMinimumOrder": true,
+        "createdAt": "2022-03-21T22:11:35.163Z",
+        "updatedAt": "2022-03-21T22:11:35.163Z",
+        "__v": 0
+    },
+    {
+        "address": {
+            "propertyNumber": "2",
+            "addressLine1": "Main St",
+            "addressLine2": "NY",
+            "city": "Glasgow",
+            "postcode": "G77 5GH",
+            "country": "SCOTLAND",
+            "latitude": 55.7716443,
+            "longitude": -4.314007399999999
+        },
+        "contact": {
+            "person": "Nava",
+            "email": "nava.arul@gmail.com",
+            "mobile": "07979191176",
+            "telephone": "07979191176"
+        },
+        "description": [
+            "South Indian Kitchen are commited to provide quality foos"
+        ],
+        "specials": [],
+        "cuisines": [
+            {
+                "_id": "82d5a813-bd8a-440d-b280-b9aa0bb235da",
+                "name": "Indian"
+            },
+            {
+                "_id": "0f2e59c0-a7e1-4189-a65c-fe3f97729a28",
+                "name": "Chinese"
+            }
+        ],
+        "gallery": [
+            "https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/20190503-delish-pineapple-baked-salmon-horizontal-ehg-450-1557771120.jpg",
+            "https://www.refrigeratedfrozenfood.com/ext/resources/NEW_RD_Website/DefaultImages/default-pasta.jpg?1430942591",
+            "http://cdn.cnn.com/cnnnext/dam/assets/140430115517-06-comfort-foods.jpg",
+            "https://img.webmd.com/dtmcms/live/webmd/consumer_assets/site_images/article_thumbnails/slideshows/foods_for_healthy_supple_skin_slideshow/1800x1200_foods_for_healthy_supple_skin_slideshow.jpg",
+            "https://ychef.files.bbci.co.uk/976x549/p09wrjyz.jpg",
+            "https://www.expatica.com/app/uploads/sites/2/2016/09/spanish-food.jpg"
+        ],
+        "serviceAreas": [
+            {
+                "_id": "19ddeaeb-a097-4815-b222-9558e1bf100c",
+                "name": "Waterfoot",
+                "city": "Glasgow",
+                "country": "Scotland",
+                "slug": "waterfoot-glasgow",
+                "createdAt": "2022-03-08T20:13:13.662Z",
+                "updatedAt": "2022-03-08T20:13:13.662Z",
+                "__v": 0
+            },
+            {
+                "_id": "9ccb28a1-9108-462e-bb0d-ed31af10dccb",
+                "name": "Eaglesham",
+                "city": "Glasgow",
+                "country": "Scotland",
+                "slug": "eaglesham-glasgow",
+                "createdAt": "2022-03-08T20:13:19.955Z",
+                "updatedAt": "2022-03-08T20:13:19.955Z",
+                "__v": 0
+            }
+        ],
+        "categories": [
+            "Starter",
+            "Mains",
+            "Desserts",
+            "Briyani"
+        ],
+        "slots": [
+            "Dinner",
+            "Lunch",
+            "Breakfast"
+        ],
+        "_id": "3ada30a3-ff97-46a7-9f2e-3614eb0f725c",
+        "name": "Navaneetha Krishnan",
+        "displayName": "South Indian Kitchen",
+        "slug": "south-indian-kitchen",
+        "rating": 5,
+        "reviews": 300,
+        "coverPhoto": "https://image.shutterstock.com/image-vector/chef-logo-design-vector-template-260nw-1601145331.jpg",
+        "active": true,
+        "preOrder": true,
+        "delivery": true,
+        "takingOrdersNow": true,
+        "collectionOnly": false,
+        "minimumOrder": 12,
+        "deliveryFee": 2.5,
+        "packagingFee": 0.5,
+        "collectionPolicy": "4 Hours",
+        "deliveryPolicy": "Next Day",
+        "noMinimumOrder": true,
+        "createdAt": "2022-03-28T13:10:12.051Z",
+        "updatedAt": "2022-03-28T13:10:12.051Z",
+        "__v": 0
+    },
+    {
+        "address": {
+            "propertyNumber": "2",
+            "addressLine1": "Main St",
+            "addressLine2": "NY",
+            "city": "Glasgow",
+            "postcode": "G77 5GH",
+            "country": "SCOTLAND",
+            "latitude": 55.7716443,
+            "longitude": -4.314007399999999
+        },
+        "contact": {
+            "person": "Nava",
+            "email": "nava.arul@gmail.com",
+            "mobile": "07979191176",
+            "telephone": "07979191176"
+        },
+        "description": [
+            "Madhus Kitchen are commited to provide quality foos"
+        ],
+        "specials": [],
+        "cuisines": [
+            {
+                "_id": "82d5a813-bd8a-440d-b280-b9aa0bb235da",
+                "name": "Indian"
+            },
+            {
+                "_id": "0f2e59c0-a7e1-4189-a65c-fe3f97729a28",
+                "name": "Chinese"
+            }
+        ],
+        "gallery": [
+            "https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/20190503-delish-pineapple-baked-salmon-horizontal-ehg-450-1557771120.jpg",
+            "https://www.refrigeratedfrozenfood.com/ext/resources/NEW_RD_Website/DefaultImages/default-pasta.jpg?1430942591",
+            "http://cdn.cnn.com/cnnnext/dam/assets/140430115517-06-comfort-foods.jpg",
+            "https://img.webmd.com/dtmcms/live/webmd/consumer_assets/site_images/article_thumbnails/slideshows/foods_for_healthy_supple_skin_slideshow/1800x1200_foods_for_healthy_supple_skin_slideshow.jpg",
+            "https://ychef.files.bbci.co.uk/976x549/p09wrjyz.jpg",
+            "https://www.expatica.com/app/uploads/sites/2/2016/09/spanish-food.jpg"
+        ],
+        "serviceAreas": [
+            {
+                "_id": "19ddeaeb-a097-4815-b222-9558e1bf100c",
+                "name": "Waterfoot",
+                "city": "Glasgow",
+                "country": "Scotland",
+                "slug": "waterfoot-glasgow",
+                "createdAt": "2022-03-08T20:13:13.662Z",
+                "updatedAt": "2022-03-08T20:13:13.662Z",
+                "__v": 0
+            },
+            {
+                "_id": "9ccb28a1-9108-462e-bb0d-ed31af10dccb",
+                "name": "Eaglesham",
+                "city": "Glasgow",
+                "country": "Scotland",
+                "slug": "eaglesham-glasgow",
+                "createdAt": "2022-03-08T20:13:19.955Z",
+                "updatedAt": "2022-03-08T20:13:19.955Z",
+                "__v": 0
+            }
+        ],
+        "categories": [
+            "Starter",
+            "Mains",
+            "Desserts",
+            "Briyani"
+        ],
+        "slots": [
+            "Dinner",
+            "Lunch",
+            "Breakfast"
+        ],
+        "_id": "07cec2b8-ae62-4777-9a65-05fc86e7bc9e",
+        "name": "Madhus Kitchen",
+        "displayName": "Madhus Kitchen",
+        "slug": "madhus-kitchen",
+        "rating": 5,
+        "reviews": 300,
+        "coverPhoto": "https://image.shutterstock.com/image-vector/chef-logo-design-vector-template-260nw-1601145331.jpg",
+        "active": true,
+        "preOrder": true,
+        "delivery": true,
+        "takingOrdersNow": true,
+        "collectionOnly": false,
+        "minimumOrder": 12,
+        "deliveryFee": 2.5,
+        "packagingFee": 0.5,
+        "collectionPolicy": "Saturday Only",
+        "deliveryPolicy": "Saturday Only",
+        "noMinimumOrder": true,
+        "createdAt": "2022-03-29T09:35:07.046Z",
+        "updatedAt": "2022-03-29T09:35:07.046Z",
+        "__v": 0
+    },
+    {
+        "address": {
+            "propertyNumber": "2",
+            "addressLine1": "Main St",
+            "addressLine2": "NY",
+            "city": "Glasgow",
+            "postcode": "G77 5GH",
+            "country": "SCOTLAND",
+            "latitude": 55.7716443,
+            "longitude": -4.314007399999999
+        },
+        "contact": {
+            "person": "Nava",
+            "email": "nava.arul@gmail.com",
+            "mobile": "07979191176",
+            "telephone": "07979191176"
+        },
+        "description": [
+            "Cookoo's are commited to provide quality foos"
+        ],
+        "specials": [
+            "Chicken",
+            "Peri Peri",
+            "Halal"
+        ],
+        "cuisines": [
+            {
+                "_id": "82d5a813-bd8a-440d-b280-b9aa0bb235da",
+                "name": "Indian"
+            },
+            {
+                "_id": "0f2e59c0-a7e1-4189-a65c-fe3f97729a28",
+                "name": "Chinese"
+            }
+        ],
+        "gallery": [
+            "https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/20190503-delish-pineapple-baked-salmon-horizontal-ehg-450-1557771120.jpg",
+            "https://www.refrigeratedfrozenfood.com/ext/resources/NEW_RD_Website/DefaultImages/default-pasta.jpg?1430942591",
+            "http://cdn.cnn.com/cnnnext/dam/assets/140430115517-06-comfort-foods.jpg",
+            "https://img.webmd.com/dtmcms/live/webmd/consumer_assets/site_images/article_thumbnails/slideshows/foods_for_healthy_supple_skin_slideshow/1800x1200_foods_for_healthy_supple_skin_slideshow.jpg",
+            "https://ychef.files.bbci.co.uk/976x549/p09wrjyz.jpg",
+            "https://www.expatica.com/app/uploads/sites/2/2016/09/spanish-food.jpg"
+        ],
+        "serviceAreas": [
+            {
+                "_id": "19ddeaeb-a097-4815-b222-9558e1bf100c",
+                "name": "Waterfoot",
+                "city": "Glasgow",
+                "country": "Scotland",
+                "slug": "waterfoot-glasgow",
+                "createdAt": "2022-03-08T20:13:13.662Z",
+                "updatedAt": "2022-03-08T20:13:13.662Z",
+                "__v": 0
+            },
+            {
+                "_id": "9ccb28a1-9108-462e-bb0d-ed31af10dccb",
+                "name": "Eaglesham",
+                "city": "Glasgow",
+                "country": "Scotland",
+                "slug": "eaglesham-glasgow",
+                "createdAt": "2022-03-08T20:13:19.955Z",
+                "updatedAt": "2022-03-08T20:13:19.955Z",
+                "__v": 0
+            }
+        ],
+        "categories": [
+            "Starter",
+            "Mains",
+            "Desserts",
+            "Briyani"
+        ],
+        "slots": [
+            "Dinner",
+            "Lunch",
+            "Breakfast"
+        ],
+        "_id": "7dacec1c-2e13-4a24-9975-13e70f396878",
+        "name": "Cookoo's",
+        "displayName": "Cookoo's",
+        "slug": "cookoo-s",
+        "rating": 5,
+        "reviews": 300,
+        "coverPhoto": "https://image.shutterstock.com/image-vector/chef-logo-design-vector-template-260nw-1601145331.jpg",
+        "active": true,
+        "preOrder": true,
+        "delivery": true,
+        "takingOrdersNow": true,
+        "collectionOnly": false,
+        "minimumOrder": 12,
+        "deliveryFee": 2.5,
+        "packagingFee": 0.5,
+        "collectionPolicy": "Saturday Only",
+        "deliveryPolicy": "Saturday Only",
+        "noMinimumOrder": true,
+        "createdAt": "2022-03-29T11:02:09.707Z",
+        "updatedAt": "2022-03-29T11:02:09.707Z",
+        "__v": 0
+    },
+    {
+        "address": {
+            "propertyNumber": "2",
+            "addressLine1": "Main St",
+            "addressLine2": "NY",
+            "city": "Glasgow",
+            "postcode": "G77 5GH",
+            "country": "SCOTLAND",
+            "latitude": 55.7716443,
+            "longitude": -4.314007399999999
+        },
+        "contact": {
+            "person": "Nava",
+            "email": "nava.arul@gmail.com",
+            "mobile": "07979191176",
+            "telephone": "07979191176"
+        },
+        "description": [
+            "South Indian Kitchen are commited to provide quality foos"
+        ],
+        "specials": [
+            "Curries",
+            "Briyanis",
+            "South Indian"
+        ],
+        "cuisines": [
+            {
+                "_id": "82d5a813-bd8a-440d-b280-b9aa0bb235da",
+                "name": "Indian"
+            },
+            {
+                "_id": "0f2e59c0-a7e1-4189-a65c-fe3f97729a28",
+                "name": "Chinese"
+            }
+        ],
+        "gallery": [
+            "https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/20190503-delish-pineapple-baked-salmon-horizontal-ehg-450-1557771120.jpg",
+            "https://www.refrigeratedfrozenfood.com/ext/resources/NEW_RD_Website/DefaultImages/default-pasta.jpg?1430942591",
+            "http://cdn.cnn.com/cnnnext/dam/assets/140430115517-06-comfort-foods.jpg",
+            "https://img.webmd.com/dtmcms/live/webmd/consumer_assets/site_images/article_thumbnails/slideshows/foods_for_healthy_supple_skin_slideshow/1800x1200_foods_for_healthy_supple_skin_slideshow.jpg",
+            "https://ychef.files.bbci.co.uk/976x549/p09wrjyz.jpg",
+            "https://www.expatica.com/app/uploads/sites/2/2016/09/spanish-food.jpg"
+        ],
+        "serviceAreas": [
+            {
+                "_id": "19ddeaeb-a097-4815-b222-9558e1bf100c",
+                "name": "Waterfoot",
+                "city": "Glasgow",
+                "country": "Scotland",
+                "slug": "waterfoot-glasgow",
+                "createdAt": "2022-03-08T20:13:13.662Z",
+                "updatedAt": "2022-03-08T20:13:13.662Z",
+                "__v": 0
+            },
+            {
+                "_id": "9ccb28a1-9108-462e-bb0d-ed31af10dccb",
+                "name": "Eaglesham",
+                "city": "Glasgow",
+                "country": "Scotland",
+                "slug": "eaglesham-glasgow",
+                "createdAt": "2022-03-08T20:13:19.955Z",
+                "updatedAt": "2022-03-08T20:13:19.955Z",
+                "__v": 0
+            },
+            {
+                "_id": "200dfe76-9b80-412f-b0d6-476902adf024",
+                "name": "Newton Mearns",
+                "city": "Glasgow",
+                "country": "Scotland",
+                "slug": "newton-mearns-glasgow",
+                "createdAt": "2022-03-08T20:12:56.565Z",
+                "updatedAt": "2022-03-08T20:12:56.565Z",
+                "__v": 0
+            },
+            {
+                "_id": "a524f36c-6dd1-4a65-968c-5691a5e59991",
+                "name": "Clarkston",
+                "city": "Glasgow",
+                "country": "Scotland",
+                "slug": "clarkston-glasgow",
+                "createdAt": "2022-03-08T20:13:07.994Z",
+                "updatedAt": "2022-03-08T20:13:07.994Z",
+                "__v": 0
+            }
+        ],
+        "categories": [
+            "Starter",
+            "Mains",
+            "Desserts",
+            "Briyani"
+        ],
+        "slots": [
+            "Dinner",
+            "Lunch",
+            "Breakfast"
+        ],
+        "_id": "a6cf4b7f-a7ba-4a9c-8254-d7cff89c6767",
+        "name": "Simi's Kitchen",
+        "displayName": "South Indian Kitchen",
+        "slug": "south-indian-kitchen",
+        "rating": 5,
+        "reviews": 300,
+        "coverPhoto": "https://image.shutterstock.com/image-vector/chef-logo-design-vector-template-260nw-1601145331.jpg",
+        "active": true,
+        "preOrder": true,
+        "delivery": true,
+        "takingOrdersNow": true,
+        "collectionOnly": false,
+        "minimumOrder": 12,
+        "noMinimumOrder": true,
+        "createdAt": "2022-04-07T21:13:27.334Z",
+        "updatedAt": "2022-04-07T21:13:27.334Z",
+        "__v": 0
+    },
+    {
+        "address": {
+            "propertyNumber": "113",
+            "addressLine1": "Monteith Drive",
+            "addressLine2": "Clarkston",
+            "city": "Glasgow",
+            "postcode": "G76 5GH",
+            "country": "SCOTLAND",
+            "latitude": 55.7716443,
+            "longitude": -4.314007399999999
+        },
+        "contact": {
+            "person": "Nava",
+            "email": "nava.arul@gmail.com",
+            "mobile": "07979191176",
+            "telephone": "07979191176"
+        },
+        "description": [
+            "Wonderful Parsi foods prepared by excellant home chef"
+        ],
+        "specials": [
+            "Chicken",
+            "Pasta",
+            "Rice"
+        ],
+        "cuisines": [
+            {
+                "_id": "a1cb82ca-24f2-4911-b4b7-2f3ce97519b9",
+                "name": "Parsi"
+            },
+            {
+                "_id": "908591ac-b42d-48c7-bcd5-6e08ad74451d",
+                "name": "North Indian"
+            }
+        ],
+        "gallery": [
+            "https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/20190503-delish-pineapple-baked-salmon-horizontal-ehg-450-1557771120.jpg",
+            "https://www.refrigeratedfrozenfood.com/ext/resources/NEW_RD_Website/DefaultImages/default-pasta.jpg?1430942591",
+            "http://cdn.cnn.com/cnnnext/dam/assets/140430115517-06-comfort-foods.jpg",
+            "https://img.webmd.com/dtmcms/live/webmd/consumer_assets/site_images/article_thumbnails/slideshows/foods_for_healthy_supple_skin_slideshow/1800x1200_foods_for_healthy_supple_skin_slideshow.jpg",
+            "https://ychef.files.bbci.co.uk/976x549/p09wrjyz.jpg",
+            "https://www.expatica.com/app/uploads/sites/2/2016/09/spanish-food.jpg"
+        ],
+        "serviceAreas": [
+            {
+                "_id": "200dfe76-9b80-412f-b0d6-476902adf024",
+                "name": "Newton Mearns",
+                "city": "Glasgow",
+                "country": "Scotland",
+                "slug": "newton-mearns-glasgow",
+                "createdAt": "2022-03-08T20:12:56.565Z",
+                "updatedAt": "2022-03-08T20:12:56.565Z",
+                "__v": 0
+            }
+        ],
+        "categories": [
+            "Starter",
+            "Mains",
+            "Desserts",
+            "Briyani"
+        ],
+        "slots": [
+            "Dinner"
+        ],
+        "_id": "83e84197-80f7-4ea1-8c83-4f874f120359",
+        "name": "Bennifer",
+        "displayName": "Bennifer",
+        "slug": "bennifer",
+        "rating": 5,
+        "reviews": 300,
+        "coverPhoto": "https://www.storytel.com/images/200x200/0002037370.jpg",
+        "active": true,
+        "preOrder": true,
+        "delivery": false,
+        "takingOrdersNow": true,
+        "collectionOnly": true,
+        "minimumOrder": 12,
+        "noMinimumOrder": true,
+        "createdAt": "2022-05-22T09:14:15.577Z",
+        "updatedAt": "2022-05-22T09:14:15.577Z",
+        "__v": 0
+    },
+    {
+        "address": {
+            "propertyNumber": "54",
+            "addressLine1": "Kirkhill Apartments",
+            "addressLine2": "Newton Mearns",
+            "city": "Glasgow",
+            "postcode": "G76 5GH",
+            "country": "SCOTLAND",
+            "latitude": 55.7716443,
+            "longitude": -4.314007399999999
+        },
+        "contact": {
+            "person": "Nava",
+            "email": "nava.arul@gmail.com",
+            "mobile": "07979191176",
+            "telephone": "07979191176"
+        },
+        "description": [
+            "Wonderful UP foods prepared by excellant home chef"
+        ],
+        "specials": [
+            "Vegetarian",
+            "Roti",
+            "Rice"
+        ],
+        "cuisines": [
+            {
+                "_id": "908591ac-b42d-48c7-bcd5-6e08ad74451d",
+                "name": "North Indian"
+            },
+            {
+                "_id": "908591ac-b42d-48c7-bcd5-6e08ad74451d",
+                "name": "North Indian"
+            }
+        ],
+        "gallery": [
+            "https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/20190503-delish-pineapple-baked-salmon-horizontal-ehg-450-1557771120.jpg",
+            "https://www.refrigeratedfrozenfood.com/ext/resources/NEW_RD_Website/DefaultImages/default-pasta.jpg?1430942591",
+            "http://cdn.cnn.com/cnnnext/dam/assets/140430115517-06-comfort-foods.jpg",
+            "https://img.webmd.com/dtmcms/live/webmd/consumer_assets/site_images/article_thumbnails/slideshows/foods_for_healthy_supple_skin_slideshow/1800x1200_foods_for_healthy_supple_skin_slideshow.jpg",
+            "https://ychef.files.bbci.co.uk/976x549/p09wrjyz.jpg",
+            "https://www.expatica.com/app/uploads/sites/2/2016/09/spanish-food.jpg"
+        ],
+        "serviceAreas": [
+            {
+                "_id": "200dfe76-9b80-412f-b0d6-476902adf024",
+                "name": "Newton Mearns",
+                "city": "Glasgow",
+                "country": "Scotland",
+                "slug": "newton-mearns-glasgow",
+                "createdAt": "2022-03-08T20:12:56.565Z",
+                "updatedAt": "2022-03-08T20:12:56.565Z",
+                "__v": 0
+            }
+        ],
+        "categories": [
+            "Starter",
+            "Mains",
+            "Desserts",
+            "Briyani"
+        ],
+        "slots": [
+            "Lunch"
+        ],
+        "_id": "156f0adc-d19a-425c-8829-d43d7a4f296e",
+        "name": "Rekha",
+        "displayName": "Rekha",
+        "slug": "rekha",
+        "rating": 5,
+        "reviews": 300,
+        "coverPhoto": "https://www.storytel.com/images/200x200/0002143233.jpg",
+        "active": true,
+        "preOrder": true,
+        "delivery": true,
+        "takingOrdersNow": true,
+        "collectionOnly": true,
+        "minimumOrder": 12,
+        "noMinimumOrder": true,
+        "createdAt": "2022-05-22T09:45:35.707Z",
+        "updatedAt": "2022-05-22T09:45:35.707Z",
+        "__v": 0
+    },
+    {
+        "address": {
+            "propertyNumber": "54",
+            "addressLine1": "Kirkhill Apartments",
+            "addressLine2": "Newton Mearns",
+            "city": "Glasgow",
+            "postcode": "G76 5GH",
+            "country": "SCOTLAND",
+            "latitude": 55.7716443,
+            "longitude": -4.314007399999999
+        },
+        "contact": {
+            "person": "Nava",
+            "email": "nava.arul@gmail.com",
+            "mobile": "07979191176",
+            "telephone": "07979191176"
+        },
+        "description": [
+            "Wonderful UP foods prepared by excellant home chef"
+        ],
+        "specials": [
+            "Vegetarian",
+            "Roti",
+            "Rice"
+        ],
+        "cuisines": [
+            {
+                "_id": "908591ac-b42d-48c7-bcd5-6e08ad74451d",
+                "name": "North Indian"
+            }
+        ],
+        "gallery": [
+            "https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/20190503-delish-pineapple-baked-salmon-horizontal-ehg-450-1557771120.jpg",
+            "https://www.refrigeratedfrozenfood.com/ext/resources/NEW_RD_Website/DefaultImages/default-pasta.jpg?1430942591",
+            "http://cdn.cnn.com/cnnnext/dam/assets/140430115517-06-comfort-foods.jpg",
+            "https://img.webmd.com/dtmcms/live/webmd/consumer_assets/site_images/article_thumbnails/slideshows/foods_for_healthy_supple_skin_slideshow/1800x1200_foods_for_healthy_supple_skin_slideshow.jpg",
+            "https://ychef.files.bbci.co.uk/976x549/p09wrjyz.jpg",
+            "https://www.expatica.com/app/uploads/sites/2/2016/09/spanish-food.jpg"
+        ],
+        "serviceAreas": [
+            {
+                "_id": "200dfe76-9b80-412f-b0d6-476902adf024",
+                "name": "Newton Mearns",
+                "city": "Glasgow",
+                "country": "Scotland",
+                "slug": "newton-mearns-glasgow",
+                "createdAt": "2022-03-08T20:12:56.565Z",
+                "updatedAt": "2022-03-08T20:12:56.565Z",
+                "__v": 0
+            }
+        ],
+        "categories": [
+            "Starter",
+            "Mains",
+            "Desserts",
+            "Briyani"
+        ],
+        "slots": [
+            "Lunch"
+        ],
+        "_id": "002de16f-7692-4850-822a-1aa0b8436f62",
+        "name": "Sangeeta",
+        "displayName": "Sangeeta",
+        "slug": "sangeeta",
+        "rating": 5,
+        "reviews": 300,
+        "coverPhoto": "https://www.storytel.com/images/200x200/0000968443.jpg",
+        "active": true,
+        "preOrder": true,
+        "delivery": true,
+        "takingOrdersNow": true,
+        "collectionOnly": true,
+        "minimumOrder": 12,
+        "noMinimumOrder": true,
+        "createdAt": "2022-05-22T09:47:08.109Z",
+        "updatedAt": "2022-05-22T09:47:08.109Z",
+        "__v": 0
+    },
+    {
+        "address": {
+            "propertyNumber": "54",
+            "addressLine1": "Kirkhill Apartments",
+            "addressLine2": "Newton Mearns",
+            "city": "Glasgow",
+            "postcode": "G76 5GH",
+            "country": "SCOTLAND",
+            "latitude": 55.7716443,
+            "longitude": -4.314007399999999
+        },
+        "contact": {
+            "person": "Nava",
+            "email": "nava.arul@gmail.com",
+            "mobile": "07979191176",
+            "telephone": "07979191176"
+        },
+        "description": [
+            "Wonderful UP foods prepared by excellant home chef"
+        ],
+        "specials": [
+            "Vegetarian",
+            "Roti",
+            "Rice"
+        ],
+        "cuisines": [
+            {
+                "_id": "908591ac-b42d-48c7-bcd5-6e08ad74451d",
+                "name": "North Indian"
+            }
+        ],
+        "gallery": [
+            "https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/20190503-delish-pineapple-baked-salmon-horizontal-ehg-450-1557771120.jpg",
+            "https://www.refrigeratedfrozenfood.com/ext/resources/NEW_RD_Website/DefaultImages/default-pasta.jpg?1430942591",
+            "http://cdn.cnn.com/cnnnext/dam/assets/140430115517-06-comfort-foods.jpg",
+            "https://img.webmd.com/dtmcms/live/webmd/consumer_assets/site_images/article_thumbnails/slideshows/foods_for_healthy_supple_skin_slideshow/1800x1200_foods_for_healthy_supple_skin_slideshow.jpg",
+            "https://ychef.files.bbci.co.uk/976x549/p09wrjyz.jpg",
+            "https://www.expatica.com/app/uploads/sites/2/2016/09/spanish-food.jpg"
+        ],
+        "serviceAreas": [
+            {
+                "_id": "200dfe76-9b80-412f-b0d6-476902adf024",
+                "name": "Newton Mearns",
+                "city": "Glasgow",
+                "country": "Scotland",
+                "slug": "newton-mearns-glasgow",
+                "createdAt": "2022-03-08T20:12:56.565Z",
+                "updatedAt": "2022-03-08T20:12:56.565Z",
+                "__v": 0
+            }
+        ],
+        "categories": [
+            "Starter",
+            "Mains",
+            "Desserts",
+            "Briyani"
+        ],
+        "slots": [
+            "Lunch"
+        ],
+        "_id": "ef30f9d1-2343-46f1-a2a0-c599f78dc291",
+        "name": "Ranjan",
+        "displayName": "Ranjan",
+        "slug": "ranjan",
+        "rating": 2,
+        "reviews": 135,
+        "coverPhoto": "https://www.storytel.com/images/200x200/0001748037.jpg",
+        "active": true,
+        "preOrder": true,
+        "delivery": true,
+        "takingOrdersNow": true,
+        "collectionOnly": true,
+        "minimumOrder": 12,
+        "noMinimumOrder": true,
+        "createdAt": "2022-05-22T09:48:58.195Z",
+        "updatedAt": "2022-05-24T08:30:43.401Z",
+        "__v": 0
+    },
+    {
+        "address": {
+            "propertyNumber": "54",
+            "addressLine1": "Kirkhill Apartments",
+            "addressLine2": "Newton Mearns",
+            "city": "Glasgow",
+            "postcode": "G76 5GH",
+            "country": "SCOTLAND",
+            "latitude": 55.7716443,
+            "longitude": -4.314007399999999
+        },
+        "contact": {
+            "person": "Nava",
+            "email": "nava.arul@gmail.com",
+            "mobile": "07979191176",
+            "telephone": "07979191176"
+        },
+        "description": [
+            "Wonderful UP foods prepared by excellant home chef"
+        ],
+        "specials": [
+            "Vegetarian",
+            "Roti",
+            "Rice"
+        ],
+        "cuisines": [
+            {
+                "_id": "908591ac-b42d-48c7-bcd5-6e08ad74451d",
+                "name": "North Indian"
+            }
+        ],
+        "gallery": [
+            "https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/20190503-delish-pineapple-baked-salmon-horizontal-ehg-450-1557771120.jpg",
+            "https://www.refrigeratedfrozenfood.com/ext/resources/NEW_RD_Website/DefaultImages/default-pasta.jpg?1430942591",
+            "http://cdn.cnn.com/cnnnext/dam/assets/140430115517-06-comfort-foods.jpg",
+            "https://img.webmd.com/dtmcms/live/webmd/consumer_assets/site_images/article_thumbnails/slideshows/foods_for_healthy_supple_skin_slideshow/1800x1200_foods_for_healthy_supple_skin_slideshow.jpg",
+            "https://ychef.files.bbci.co.uk/976x549/p09wrjyz.jpg",
+            "https://www.expatica.com/app/uploads/sites/2/2016/09/spanish-food.jpg"
+        ],
+        "serviceAreas": [
+            {
+                "_id": "200dfe76-9b80-412f-b0d6-476902adf024",
+                "name": "Newton Mearns",
+                "city": "Glasgow",
+                "country": "Scotland",
+                "slug": "newton-mearns-glasgow",
+                "createdAt": "2022-03-08T20:12:56.565Z",
+                "updatedAt": "2022-03-08T20:12:56.565Z",
+                "__v": 0
+            }
+        ],
+        "categories": [
+            "Starter",
+            "Mains",
+            "Desserts",
+            "Briyani"
+        ],
+        "slots": [
+            "Lunch"
+        ],
+        "_id": "c1b9e46f-2b2f-47e0-937f-a7b48b3b39ab",
+        "name": "Ranjan",
+        "displayName": "Ranjan",
+        "slug": "ranjan",
+        "rating": 2,
+        "reviews": 135,
+        "coverPhoto": "https://www.storytel.com/images/200x200/0000968443.jpg",
+        "active": true,
+        "preOrder": true,
+        "delivery": true,
+        "takingOrdersNow": true,
+        "collectionOnly": true,
+        "minimumOrder": 12,
+        "noMinimumOrder": true,
+        "createdAt": "2022-05-24T08:30:45.421Z",
+        "updatedAt": "2022-05-24T08:30:45.421Z",
+        "__v": 0
+    }
+]

@@ -192,10 +192,13 @@ function buildFoodJson(req) {
         chefId: req.body.chefId,
         category: req.body.category,
         image: req.body.image,
+        spice: req.body.spice,
+        vegetarian: req.body.vegetarian,
         extras: req.body.extras,
         choices: req.body.choices,
         description: req.body.description,
         price: req.body.price,
+        ourPrice: req.body.price + (10/100 * req.body.price),
         discountedPrice: req.body.discountedPrice,
         discounted: req.body.discounted,
         slug: req.body.slug || getSlug(req.body.name, req.body.chefId)

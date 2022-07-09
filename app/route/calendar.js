@@ -18,7 +18,7 @@ module.exports = (app) => {
     app.post(path,
         // verifyToken, 
         [
-            check('foods').notEmpty().withMessage('Foods must not be empty'),
+            // check('foods').notEmpty().withMessage('Foods must not be empty'),
             check('orderBefore').custom((date_ob, { req }) => {
                 if (date_ob > req.body.orderBefore) {
                   throw new Error('OrderBefore must be a future date');

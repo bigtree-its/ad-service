@@ -38,7 +38,7 @@ const Rental = {
 }
 
 const Contact = {
-    person: String,
+    fullName: String,
     email: String,
     mobile: String,
     telephone: String

@@ -172,7 +172,10 @@ exports.findAll = (req, res) => {
     if (req.query.noMinimumOrder) {
         query.where('noMinimumOrder', true);
     }
-    LocalChef.find(query).populate("cuisines", "name").populate("serviceAreas").then(result => {
+    if (req.query.email) {
+        query.where('email', req.query.email)
+    }
+    LocalChef.find(query).populate("cuisines").populate("serviceAreas").then(result => {
         console.log(`Returning ${result.length} LocalChefs.`);
         res.send(result);
     }).catch(error => {
@@ -185,7 +188,7 @@ exports.findAll = (req, res) => {
 
 // Find a single LocalChef with a BrandId
 exports.findOne = (req, res) => {
-    LocalChef.findById(req.params.id).populate("cuisines", "name").populate("serviceAreas")
+    LocalChef.findById(req.params.id).populate("cuisines").populate("serviceAreas")
         .then(LocalChef => {
             if (!LocalChef) {
                 return res.status(404).send({ message: `LocalChef not found with id ${req.params.id}` });
@@ -295,9 +298,9 @@ function buildLocalChefJson(req) {
     var safeId = generateSafeId();
     var slug = "";
     if ( data.displayName){
-        slug = getSlag(data.displayName);
+        slug = getSlug(data.displayName);
     }else{
-        slug = getSlag(data.name);
+        slug = getSlug(data.name);
     }
     return {
         name: data.name,
@@ -313,23 +316,21 @@ function buildLocalChefJson(req) {
         contact: data.contact,
         address: data.address,
         rating: data.rating,
+        email: data.email,
         reviews: data.reviews,
         coverPhoto: data.coverPhoto,
         status: data.status || 'Open',
         gallery: data.gallery,
         active: data.active,
-        preOrder: data.preOrder,
         delivery: data.delivery,
-        takingOrdersNow: data.takingOrdersNow,
-        collectionOnly: data.collectionOnly,
-        minimumOrder: data.minimumOrder,
+        deliveryDistance: data.deliveryDistance,
+        deliveryMinimum: data.deliveryMinimum,
         deliveryFee: data.deliveryFee,
+        freeDeliveryOver: data.freeDeliveryOver,
         packagingFee: data.packagingFee,
         minimumOrder: data.minimumOrder,
-        collectionPolicy: data.collectionPolicy,
-        deliveryPolicy: data.deliveryPolicy,
-        noMinimumOrder: data.noMinimumOrder,
-        preOrder: data.preOrder,
+        minimumPartyOrder: data.minimumPartyOrder,
+        partyOrders: data.partyOrders,
     };
 }
 /**
@@ -339,6 +340,6 @@ function buildLocalChefJson(req) {
  * 
  * @param {String} name 
  */
-function getSlag(name) {
+function getSlug(name) {
     return name.trim().replace(/[\W_]+/g, "-").toLowerCase()
 }

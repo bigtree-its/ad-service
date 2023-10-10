@@ -16,7 +16,7 @@ exports.create = (req, res) => {
     var slug = getSlug(req.body.name, req.body.city);
     console.log(`Finding if a localarea already exist for: ${slug}`);
 
-    LocalArea.exists({ slug: slug }, function (err, result) {
+    LocalArea.exists({ slug: slug }, function(err, result) {
         if (err) {
             return res.status(500).send({ message: `Error while finding LocalArea for: ${slug}` });
         } else if (result) {
@@ -57,7 +57,7 @@ exports.lookup = (req, res) => {
 };
 
 function findOneBySlug(req, res) {
-    console.log('Fetching a local area with slug: '+ req.query.slug);
+    console.log('Fetching a local area with slug: ' + req.query.slug);
     LocalArea.findOne({ slug: req.query.slug })
         .then(localarea => {
             if (!localarea) {
@@ -75,8 +75,8 @@ function findOneBySlug(req, res) {
 
 // Retrieve and return all LocalAreas from the database.
 exports.findAll = (req, res) => {
-    console.log("Received request to get all localareas");
-    if (req.query.text) {
+    console.log("Received request to get all local areas");
+    if (req.query.slug) {
         return this.lookup(req, res);
     } else {
         LocalArea.find()

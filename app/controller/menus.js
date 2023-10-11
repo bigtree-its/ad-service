@@ -1,27 +1,27 @@
-const Food = require('../model/chef/food');
+const Menu = require('../model/chef/menu');
 //Require Underscore JS ( Visit: http://underscorejs.org/#)
 const _ = require('underscore');
 
 // Require Validation Utils
 const { validationResult, errorFormatter } = require('./validation');
 
-// Create and Save a new Food
+// Create and Save a new Menu
 exports.create = (req, res) => {
-    console.log("Creating new food " + JSON.stringify(req.body));
+    console.log("Creating new menu " + JSON.stringify(req.body));
     // Validate Request
     const errors = validationResult(req).formatWith(errorFormatter);
     if (!errors.isEmpty()) {
         return res.json({ errors: _.uniq(errors.array()) });
     }
     var slug = getSlug(req.body.name, req.body.chefId);
-    console.log(`Finding if a food already exist for: ${slug}`);
+    console.log(`Finding if a menu already exist for: ${slug}`);
 
-    Food.exists({ slug: slug }, function(err, result) {
+    Menu.exists({ slug: slug }, function(err, result) {
         if (err) {
-            return res.status(500).send({ message: `Error while finding Food for: ${slug}` });
+            return res.status(500).send({ message: `Error while finding Menu for: ${slug}` });
         } else if (result) {
-            console.log(`Food already exist for: ${slug}`);
-            res.status(400).send({ message: `Food already exist for: ${slug}` });
+            console.log(`Menu already exist for: ${slug}`);
+            res.status(400).send({ message: `Menu already exist for: ${slug}` });
         } else {
             persist(req, res);
         }
@@ -31,12 +31,12 @@ exports.create = (req, res) => {
 
 // Retrieve and return all local area from the database.
 exports.lookup = (req, res) => {
-    let query = Food.find();
+    let query = Menu.find();
     if (req.query.chef) {
         // query.where('name', { $regex: '.*' + req.query.name + '.*' })
         query.where({ chefId: { '$regex': '.*' + req.query.chef + '.*', '$options': 'i' } })
     }
-    Food.find(query).then(result => {
+    Menu.find(query).then(result => {
         console.log(`Returning ${result.length} local area.`);
         res.send(result);
     }).catch(error => {
@@ -47,25 +47,25 @@ exports.lookup = (req, res) => {
     });
 };
 
-// Retrieve and return all Foods from the database.
+// Retrieve and return all Menus from the database.
 exports.findAll = (req, res) => {
-    console.log("Received request to get all foods");
+    console.log("Received request to get all menus");
     if (req.query.chef) {
         return this.lookup(req, res);
     } else {
-        Food.find()
+        Menu.find()
             .then(data => {
                 if (data) {
-                    console.log("Returning " + data.length + " foods.");
+                    console.log("Returning " + data.length + " menus.");
                     res.send(data);
                 } else {
-                    console.log("Returning no foods ");
+                    console.log("Returning no menus ");
                     res.send({});
                 }
             })
             .catch(err => {
                 res.status(500).send({
-                    message: err.message || "Some error occurred while retrieving foods."
+                    message: err.message || "Some error occurred while retrieving menus."
                 });
             });
     }
@@ -74,90 +74,90 @@ exports.findAll = (req, res) => {
 
 // Deletes all
 exports.deleteEverything = (req, res) => {
-    Food.remove().then(result => {
-        res.send({ message: "Deleted all foods" });
+    Menu.remove().then(result => {
+        res.send({ message: "Deleted all menus" });
     }).catch(err => {
         return res.status(500).send({
-            message: `Could not delete all foods. ${err.message}`
+            message: `Could not delete all menus. ${err.message}`
         });
     });
 };
 
-// Find a single Food with a FoodId
+// Find a single Menu with a MenuId
 exports.findOne = (req, res) => {
-    console.log("Received request get a food with id " + req.params.id);
-    Food.findOne({ _id: req.params.id })
-        .then(food => {
-            if (!food) {
-                return foodNotFoundWithId(req, res);
+    console.log("Received request get a menu with id " + req.params.id);
+    Menu.findOne({ _id: req.params.id })
+        .then(menu => {
+            if (!menu) {
+                return menuNotFoundWithId(req, res);
             }
-            res.send(food);
+            res.send(menu);
         })
         .catch(err => {
             if (err.kind === 'ObjectId') {
-                return foodNotFoundWithId(req, res);
+                return menuNotFoundWithId(req, res);
             }
-            return res.status(500).send({ message: "Error while retrieving Food with id " + req.params.id });
+            return res.status(500).send({ message: "Error while retrieving Menu with id " + req.params.id });
         });
 };
 
-// Update a Food identified by the FoodId in the request
+// Update a Menu identified by the MenuId in the request
 exports.update = (req, res) => {
-    console.log("Updating food " + JSON.stringify(req.body));
+    console.log("Updating menu " + JSON.stringify(req.body));
     // Validate Request
     if (!req.body) {
-        return res.status(400).send({ message: "Food body can not be empty" });
+        return res.status(400).send({ message: "Menu body can not be empty" });
     }
-    // Find Food and update it with the request body
-    Food.findByIdAndUpdate(req.params.id, { $set: req.body }, { new: true })
-        .then(food => {
-            if (!food) {
-                return foodNotFoundWithId(req, res);
+    // Find Menu and update it with the request body
+    Menu.findByIdAndUpdate(req.params.id, { $set: req.body }, { new: true })
+        .then(menu => {
+            if (!menu) {
+                return menuNotFoundWithId(req, res);
             }
-            res.send(food);
+            res.send(menu);
         }).catch(err => {
             if (err.kind === 'ObjectId') {
-                return foodNotFoundWithId(req, res);
+                return menuNotFoundWithId(req, res);
             }
             return res.status(500).send({
-                message: "Error updating Food with id " + req.params.id
+                message: "Error updating Menu with id " + req.params.id
             });
         });
 };
 
-// Delete a Food with the specified FoodId in the request
+// Delete a Menu with the specified MenuId in the request
 exports.delete = (req, res) => {
-    Food.findByIdAndRemove(req.params.id)
-        .then(food => {
-            if (!food) {
-                return foodNotFoundWithId(req, res);
+    Menu.findByIdAndRemove(req.params.id)
+        .then(menu => {
+            if (!menu) {
+                return menuNotFoundWithId(req, res);
             }
-            res.send({ message: "Food deleted successfully!" });
+            res.send({ message: "Menu deleted successfully!" });
         }).catch(err => {
             if (err.kind === 'ObjectId' || err.name === 'NotFound') {
-                return foodNotFoundWithId(req, res);
+                return menuNotFoundWithId(req, res);
             }
             return res.status(500).send({
-                message: "Could not delete Food with id " + req.params.id
+                message: "Could not delete Menu with id " + req.params.id
             });
         });
 };
 
 /**
- * Persists new Food document
+ * Persists new Menu document
  * 
  * @param {Request} req 
  * @param {Response} res 
  */
 function persist(req, res) {
-    const food = buildFoodObject(req);
-    // Save Food in the database
-    food.save()
+    const menu = buildMenuObject(req);
+    // Save Menu in the database
+    menu.save()
         .then(data => {
             res.status(201).send(data);
         }).catch(err => {
             res.status(500).send({
-                message: err.message || "Some error occurred while creating the Food."
+                message: err.message || "Some error occurred while creating the Menu."
             });
         });
 }
@@ -168,29 +168,29 @@ function persist(req, res) {
  * @param {Request} req 
  * @param {Response} res 
  */
-function foodNotFoundWithId(req, res) {
-    res.status(404).send({ message: `Food not found with id ${req.params.id}` });
+function menuNotFoundWithId(req, res) {
+    res.status(404).send({ message: `Menu not found with id ${req.params.id}` });
 }
 
 /**
- * Builds Food object from Request
+ * Builds Menu object from Request
  * 
  * @param {Request} req 
  */
-function buildFoodObject(req) {
-    return new Food(buildFoodJson(req));
+function buildMenuObject(req) {
+    return new Menu(buildMenuJson(req));
 }
 
 /**
- * Builds Food Json from Request
+ * Builds Menu Json from Request
  * 
  * @param {Request} req 
  */
-function buildFoodJson(req) {
+function buildMenuJson(req) {
     return {
         name: req.body.name,
         chefId: req.body.chefId,
-        category: req.body.category,
+        collection: req.body.collection,
         image: req.body.image,
         spice: req.body.spice,
         vegetarian: req.body.vegetarian,
@@ -198,7 +198,7 @@ function buildFoodJson(req) {
         choices: req.body.choices,
         description: req.body.description,
         price: req.body.price,
-        ourPrice: req.body.price + (10 / 100 * req.body.price),
+        // ourPrice: req.body.price + (10 / 100 * req.body.price),
         discountedPrice: req.body.discountedPrice,
         discounted: req.body.discounted,
         slug: req.body.slug || getSlug(req.body.name, req.body.chefId)
@@ -207,7 +207,7 @@ function buildFoodJson(req) {
 
 /**
  * Returns the slug from the given name
- * e.g if name = M & S Foods then Slug = m-s-foods
+ * e.g if name = M & S Menus then Slug = m-s-menus
  * Replaces special characters and replace space with -
  * 
  * @param {String} name 

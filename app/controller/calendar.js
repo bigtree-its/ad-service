@@ -1,4 +1,4 @@
-const Calendar = require('../model/localchef/calendar');
+const Calendar = require('../model/chef/calendar');
 //Require Underscore JS ( Visit: http://underscorejs.org/#)
 const _ = require('underscore');
 
@@ -14,7 +14,7 @@ exports.create = (req, res) => {
         return res.json({ errors: _.uniq(errors.array()) });
     }
     console.log(`Finding if a Calendar already exist`);
-    Calendar.exists({ chefId: req.body.chefId, orderBefore: req.body.orderBefore }, function (err, result) {
+    Calendar.exists({ chefId: req.body.chefId, orderBefore: req.body.orderBefore }, function(err, result) {
         if (err) {
             return res.status(500).send({ message: `Error while finding Calendar for Chef ${req.body.chefId} on ${req.body.orderBefore}` });
         } else if (result) {

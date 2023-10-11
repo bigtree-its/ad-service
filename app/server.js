@@ -45,7 +45,7 @@ db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
 
 app.options('*', cors())
-app.use(function(req, res, next){
+app.use(function(req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
     res.header("Access-Control-Allow-Methods", "GET, HEAD, PUT, PATCH, POST");
@@ -53,11 +53,14 @@ app.use(function(req, res, next){
 })
 
 // Other routes
-require('./route/localchef')(app);
+require('./route/chef')(app);
 require('./route/localarea')(app);
 require('./route/calendar')(app);
 require('./route/cuisine')(app);
+require('./route/collection')(app);
+require('./route/category')(app);
 require('./route/food')(app);
+require('./route/menu')(app);
 require('./route/property')(app);
 require('./route/property-enquiry')(app);
 require('./route/carousel')(app);

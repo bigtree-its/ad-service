@@ -1,4 +1,4 @@
-const Cuisine = require('../model/localchef/cuisine');
+const Cuisine = require('../model/chef/cuisine');
 //Require Underscore JS ( Visit: http://underscorejs.org/#)
 const _ = require('underscore');
 

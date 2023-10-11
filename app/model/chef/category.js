@@ -1,13 +1,11 @@
 //Require Mongoose
 var mongoose = require('mongoose');
 const uuid = require('node-uuid');
-// Define a Schema for our Collection collection
-const CollectionSchema = new mongoose.Schema({
-    _id: {type: String, default: uuid.v4},
-    name: String,
-    slug: String,
-    image: String,
-    active: Boolean
+// Define a Schema for our Category collection
+const CategorySchema = new mongoose.Schema({
+    _id: { type: String, default: uuid.v4 },
+    name: { type: String, trim: true },
+    slug: { type: String, trim: true }
 }, {
     timestamps: true
 });
@@ -16,7 +14,7 @@ const CollectionSchema = new mongoose.Schema({
 // The first argument is the singular name of the collection your model is for. 
 // ** Mongoose automatically looks for the plural, lower cased version of your model name.
 // ** Thus, for the example above, the model Tank is for the tanks collection in the database.
-var Collection = mongoose.model('Collection', CollectionSchema);
+var Category = mongoose.model('Category', CategorySchema);
 
-//Export function to create "Collection" model class
-module.exports = Collection;
+//Export function to create "Category" model class
+module.exports = Category;

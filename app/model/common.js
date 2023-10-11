@@ -9,7 +9,7 @@ const Address = {
     longitude: Number,
 }
 const SuperStore = {
-    name: String, 
+    name: String,
     distance: String,
     address: Address,
     isPrimary: Boolean,
@@ -17,7 +17,7 @@ const SuperStore = {
     isStateSchool: Boolean
 }
 const School = {
-    name: String, 
+    name: String,
     distance: String,
     address: Address,
     isPrimary: Boolean,
@@ -38,14 +38,14 @@ const Rental = {
 }
 
 const Contact = {
-    fullName: String,
+    person: String,
     email: String,
     mobile: String,
     telephone: String
 }
 
-const FoodSlot  = {
-     
+const FoodSlot = {
+
 }
 const Attribute = {
     name: String,

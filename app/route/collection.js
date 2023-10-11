@@ -1,33 +1,31 @@
 module.exports = (app) => {
-    const controller = require('../controller/food.js');
-    const { verifyToken } = require('../security/security');
+    const controller = require('../controller/collection.js');
+    const { verifyToken } = require('../security/security.js');
     const { check } = require('express-validator');
 
-    const path = process.env.CONTEXT_PATH + '/foods';
+    const path = process.env.CONTEXT_PATH + '/collections';
 
     // Public routes
-    // Retrieve all Food
+    // Retrieve all Collection
     app.get(path, controller.findAll);
 
-    // Retrieve a single Food with Id
+    // Retrieve a single Collection with Id
     app.get(path + '/:id', controller.findOne);
 
     // Private routes
-    // Creates a new Food
+    // Creates a new Collection
     app.post(path,
         // verifyToken, 
         [
             check('name').notEmpty().isLength({ min: 3, max: 250 }).withMessage('Name is mandatory'),
-            check('group').notEmpty().isLength({ min: 3, max: 250 }).withMessage('Collection is mandatory'),
-            check('price').notEmpty().withMessage('Price is mandatory'),
             check('chefId').notEmpty().isLength({ min: 3, max: 250 }).withMessage('Chef is mandatory')
         ],
         controller.create);
 
-    // Update a Food with id
+    // Update a Collection with id
     app.put(path + '/:id', controller.update);
 
-    // Delete a Food with id
+    // Delete a Collection with id
     app.delete(path + '/:id', controller.delete);
 
     //Delete All -- only for non production and can only be done by an admin

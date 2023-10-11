@@ -1,25 +1,25 @@
-//Require LocalChef Model
-const LocalChef = require('../model/localchef/localchef');
-const Cuisine = require('../model/localchef/cuisine');
+//Require Chef Model
+const Chef = require('../model/chef/chef');
+const Cuisine = require('../model/chef/cuisine');
 //Require Underscore JS ( Visit: http://underscorejs.org/#)
 const _ = require('underscore');
 //Require Generate Safe Id for Random unique id Generation
 var generateSafeId = require('generate-safe-id');
 // Require Validation Utils
 const { validationResult, errorFormatter } = require('./validation');
-const LocalArea = require('../model/localchef/localarea');
+const LocalArea = require('../model/chef/localarea');
 
-function isEmpty(data){
-    if ( data === undefined || data === null || data.length === 0){
+function isEmpty(data) {
+    if (data === undefined || data === null || data.length === 0) {
         return true;
     }
     return false;
 }
 
-// Create and Save a new LocalChef
+// Create and Save a new Chef
 exports.create = async(req, res) => {
 
-    console.log("Creating new LocalChef " + JSON.stringify(req.body));
+    console.log("Creating new Chef " + JSON.stringify(req.body));
     /** Check for validation errors */
     const errors = validationResult(req).formatWith(errorFormatter);
     if (!errors.isEmpty()) {
@@ -27,7 +27,7 @@ exports.create = async(req, res) => {
     }
 
     /** Validate Cuisine */
-    try{
+    try {
         this.validateCuisine(req, res, );
     } catch (error) {
         console.log("Error: " + error);
@@ -35,7 +35,7 @@ exports.create = async(req, res) => {
     }
 
     /** Validate ServiceAreas */
-    try{
+    try {
         this.validateServiceAreas(req, res, );
     } catch (error) {
         console.log("Error: " + error);
@@ -43,7 +43,7 @@ exports.create = async(req, res) => {
     }
 
     /** Validate Slot */
-    try{
+    try {
         this.validateSlots(req, res, );
     } catch (error) {
         console.log("Error: " + error);
@@ -56,10 +56,10 @@ exports.create = async(req, res) => {
 exports.validateCuisine = async(req, res) => {
     try {
         var cuisines = req.body.cuisines;
-        if ( isEmpty(cuisines)){
-            throw new Error(`Cusines are Mandatory`);
+        if (isEmpty(cuisines)) {
+            throw new Error(`Cuisines are Mandatory`);
         }
-        console.log('Verifying Cuisine : '+ cuisines);
+        console.log('Verifying Cuisine : ' + cuisines);
         var records = await Cuisine.find().where('_id').in(cuisines).exec();
         console.log("Verified Cuisines: " + records);
         if (!records) {
@@ -74,18 +74,18 @@ exports.validateCuisine = async(req, res) => {
 exports.validateServiceAreas = async(req, res) => {
     try {
         var serviceAreas = req.body.serviceAreas;
-        if ( isEmpty(serviceAreas)){
+        if (isEmpty(serviceAreas)) {
             throw new Error(`Service Areas are Mandatory`);
         }
-        console.log('Verifying Cuisine : '+ serviceAreas);
+        console.log('Verifying Service Area : ' + serviceAreas);
         var records = await LocalArea.find().where('_id').in(serviceAreas).exec();
         console.log("Verified serviceAreas: " + records);
         if (!records) {
-            throw new Error(`LocalArea : ${serviceAreas} not valid.`);
+            throw new Error(`Service Area : ${serviceAreas} not valid.`);
         }
     } catch (error) {
         console.error(error);
-        throw new Error(`Cannot find LocalArea ${serviceAreas}`);
+        throw new Error(`Cannot find Service Area ${serviceAreas}`);
     }
 };
 
@@ -94,29 +94,29 @@ exports.validateSlots = async(req, res) => {
     var types = ['Breakfast', 'Lunch', 'Dinner', 'AllDay'];
     var valid = false;
     var slots = req.body.slots;
-    if ( slots){
+    if (slots) {
         var length = types.length;
-        while(length--) {
+        while (length--) {
             if (slots.indexOf(types[length]) != -1) {
                 valid = true;
             }
-         }
+        }
     }
-    if ( valid === false){
+    if (valid === false) {
         console.log(`Invalid Slots ${slots}`);
-        return res.status(400).send({ message: `Invalid Slots ${slots}`});
+        return res.status(400).send({ message: `Invalid Slots ${slots}` });
     }
 }
 
 
 function checkDuplicateAndPersist(req, res) {
-    console.log(`Checking if LocalChef already exist..`);
-    LocalChef.exists({ name: req.body.name, postcode: req.body.address.postcode }, function(err, result) {
+    console.log(`Checking if Chef already exist..`);
+    Chef.exists({ name: req.body.name, email: req.body.email }, function(err, result) {
         if (err) {
-            return res.status(500).send({ message: `Error while finding LocalChef with postcode ${req.body.address.postcode}` });
+            return res.status(500).send({ message: `Error while finding Chef with email ${req.body.email}` });
         } else if (result) {
-            console.log(`LocalChef already exist`);
-            res.status(400).send({ message: `LocalChef already exist.` });
+            console.log(`Chef already exist`);
+            res.status(400).send({ message: `Chef already exist.` });
         } else {
             persist(req, res);
         }
@@ -127,14 +127,17 @@ exports.paginate = (req, res) => {
     req.query.page = req.query.page || 1;
     req.query.limit = req.query.limit || 25;
     const options = { page: req.query.page, limit: req.query.limit };
-    let query = LocalChef.find();
+    let query = Chef.find();
     if (req.query.name) {
         query.where('name', { $regex: '.*' + req.query.name + '.*' })
+    }
+    if (req.query.email) {
+        query.where('email', { $in: req.query.email })
     }
     if (req.query.postcode) {
         query.where('address.postcode', { $in: req.query.postcode })
     }
-    LocalChef.aggregatePaginate(query, options, function(err, result) {
+    Chef.aggregatePaginate(query, options, function(err, result) {
         if (result) {
             console.log(`Returning ${result.docs.length} Chefs.`);
             res.send(result);
@@ -146,15 +149,15 @@ exports.paginate = (req, res) => {
     });
 }
 
-// Retrieve and return all LocalChefs from the database.
+// Retrieve and return all Chefs from the database.
 exports.findAll = (req, res) => {
-    console.log('Finding localchefs..')
-    let query = LocalChef.find();
+    console.log('Finding chefs..')
+    let query = Chef.find();
     if (req.query.serviceAreas) {
         query.where('serviceAreas', { $in: req.query.serviceAreas })
-        // query.where('serviceAreas.slug', req.query.serviceArea);
-        // query.where('serviceAreas', { 'slug': req.query.serviceArea });
-        // query.where('serviceAreas', { $elemMatch: { 'slug': req.query.serviceArea } });
+            // query.where('serviceAreas.slug', req.query.serviceArea);
+            // query.where('serviceAreas', { 'slug': req.query.serviceArea });
+            // query.where('serviceAreas', { $elemMatch: { 'slug': req.query.serviceArea } });
     }
     if (req.query.cuisines) {
         query.where('cuisines', { $in: req.query.cuisines })
@@ -175,131 +178,131 @@ exports.findAll = (req, res) => {
     if (req.query.email) {
         query.where('email', req.query.email)
     }
-    LocalChef.find(query).populate("cuisines").populate("serviceAreas").then(result => {
-        console.log(`Returning ${result.length} LocalChefs.`);
+    Chef.find(query).populate("cuisines").populate("serviceAreas").then(result => {
+        console.log(`Returning ${result.length} Chefs.`);
         res.send(result);
     }).catch(error => {
         console.log("Error while fetching from database. " + error.message);
         res.status(500).send({
-            message: error.message || "Some error occurred while retrieving LocalChefs."
+            message: error.message || "Some error occurred while retrieving Chefs."
         });
     });
 };
 
-// Find a single LocalChef with a BrandId
+// Find a single Chef with a BrandId
 exports.findOne = (req, res) => {
-    LocalChef.findById(req.params.id).populate("cuisines").populate("serviceAreas")
-        .then(LocalChef => {
-            if (!LocalChef) {
-                return res.status(404).send({ message: `LocalChef not found with id ${req.params.id}` });
+    Chef.findById(req.params.id).populate("cuisines").populate("serviceAreas")
+        .then(Chef => {
+            if (!Chef) {
+                return res.status(404).send({ message: `Chef not found with id ${req.params.id}` });
             }
-            res.send(LocalChef);
+            res.send(Chef);
         })
         .catch(err => {
             if (err.kind === 'ObjectId') {
-                return res.status(404).send({ message: `LocalChef not found with id ${req.params.id}` });
+                return res.status(404).send({ message: `Chef not found with id ${req.params.id}` });
             }
-            return res.status(500).send({ message: `Error while retrieving LocalChef with id ${req.params.id}` });
+            return res.status(500).send({ message: `Error while retrieving Chef with id ${req.params.id}` });
         });
 };
 
-// Update a LocalChef 
+// Update a Chef 
 exports.update = (req, res) => {
-    console.log("Updating LocalChef " + JSON.stringify(req.body));
+    console.log("Updating Chef " + JSON.stringify(req.body));
     // Validate Request
     if (!req.body) {
-        return res.status(400).send({ message: "LocalChef body cannot be empty" });
+        return res.status(400).send({ message: "Chef body cannot be empty" });
     }
     if (req.body.type) {
         this.validateType(req, res, req.body.type);
     }
-    // Find LocalChef and update it with the request body
-    LocalChef.findByIdAndUpdate({ _id: req.params.id }, req.body, { new: true })
-        .then(LocalChef => {
-            if (!LocalChef) {
-                return res.status(404).send({ message: `LocalChef not found with id ${req.params.id}` });
+    // Find Chef and update it with the request body
+    Chef.findByIdAndUpdate({ _id: req.params.id }, req.body, { new: true })
+        .then(Chef => {
+            if (!Chef) {
+                return res.status(404).send({ message: `Chef not found with id ${req.params.id}` });
             }
-            res.send(LocalChef);
+            res.send(Chef);
         }).catch(err => {
             if (err.kind === 'ObjectId') {
-                return res.status(404).send({ message: `LocalChef not found with id ${req.params.id}` });
+                return res.status(404).send({ message: `Chef not found with id ${req.params.id}` });
             }
-            return res.status(500).send({ message: `Error updating LocalChef with id ${req.params.id}` });
+            return res.status(500).send({ message: `Error updating Chef with id ${req.params.id}` });
         });
 };
 
-// Deletes a LocalChef with the specified BrandId in the request
+// Deletes a Chef with the specified BrandId in the request
 exports.delete = (req, res) => {
-    LocalChef.findByIdAndRemove(req.params.id)
-        .then(LocalChef => {
-            if (!LocalChef) {
-                return res.status(404).send({ message: `LocalChef not found with id ${req.params.id}` });
+    Chef.findByIdAndRemove(req.params.id)
+        .then(Chef => {
+            if (!Chef) {
+                return res.status(404).send({ message: `Chef not found with id ${req.params.id}` });
             }
-            res.send({ message: "LocalChef deleted successfully!" });
+            res.send({ message: "Chef deleted successfully!" });
         }).catch(err => {
             if (err.kind === 'ObjectId' || err.name === 'NotFound') {
-                return res.status(404).send({ message: `LocalChef not found with id ${req.params.id}` });
+                return res.status(404).send({ message: `Chef not found with id ${req.params.id}` });
             }
             return res.status(500).send({
-                message: `Could not delete LocalChef with id ${req.params.id}`
+                message: `Could not delete Chef with id ${req.params.id}`
             });
         });
 };
 
-// Deletes a LocalChef with the specified BrandId in the request
+// Deletes a Chef with the specified BrandId in the request
 exports.deleteEverything = (req, res) => {
-    LocalChef.remove().then(result => {
-        res.send({ message: "Deleted all LocalChefs" });
+    Chef.remove().then(result => {
+        res.send({ message: "Deleted all Chefs" });
     }).catch(err => {
         return res.status(500).send({
-            message: `Could not delete all LocalChefs. ${err.message}`
+            message: `Could not delete all Chefs. ${err.message}`
         });
     });
 };
 
 /**
- * Persists new LocalChef Model 
+ * Persists new Chef Model 
  * 
  * @param {Request} req The HTTP Request 
  * @param {Response} res The HTTP Response
  */
 function persist(req, res) {
-    
-    const localChef = buildLocalChef(req);
-    console.log(`Attempting to persist LocalChef ` + JSON.stringify(localChef));
-    // Save LocalChef in the database
+
+    const localChef = buildChef(req);
+    console.log(`Attempting to persist Chef ` + JSON.stringify(localChef));
+    // Save Chef in the database
     localChef.save()
         .then(data => {
-            console.log(`Persisted LocalChef: ${data._id}`);
+            console.log(`Persisted Chef: ${data._id}`);
             res.status(201).send(data);
         }).catch(err => {
-            console.error('Save failed. '+ err);
-            res.status(500).send({ message: err.message || "Some error occurred while creating the LocalChef." });
+            console.error('Save failed. ' + err);
+            res.status(500).send({ message: err.message || "Some error occurred while creating the Chef." });
         });
 }
 
 /**
- * Builds LocalChef from incoming Request.
- * @returns LocalChef Model
+ * Builds Chef from incoming Request.
+ * @returns Chef Model
  * @param {Request} req 
  */
-function buildLocalChef(req) {
-    return new LocalChef(buildLocalChefJson(req));
+function buildChef(req) {
+    return new Chef(buildChefJson(req));
 }
 
 /**
- * Builds LocalChef JSON incoming Request.
+ * Builds Chef JSON incoming Request.
  * 
- * @returns {String} LocalChef JSON
+ * @returns {String} Chef JSON
  * @param {Request} req 
  */
-function buildLocalChefJson(req) {
+function buildChefJson(req) {
     var data = req.body;
     var safeId = generateSafeId();
     var slug = "";
-    if ( data.displayName){
+    if (data.displayName) {
         slug = getSlug(data.displayName);
-    }else{
+    } else {
         slug = getSlug(data.name);
     }
     return {
@@ -322,7 +325,7 @@ function buildLocalChefJson(req) {
         status: data.status || 'Open',
         gallery: data.gallery,
         active: data.active,
-        delivery: data.delivery,
+        doDelivery: data.doDelivery,
         deliveryDistance: data.deliveryDistance,
         deliveryMinimum: data.deliveryMinimum,
         deliveryFee: data.deliveryFee,
@@ -330,7 +333,7 @@ function buildLocalChefJson(req) {
         packagingFee: data.packagingFee,
         minimumOrder: data.minimumOrder,
         minimumPartyOrder: data.minimumPartyOrder,
-        partyOrders: data.partyOrders,
+        doPartyOrders: data.doPartyOrders,
     };
 }
 /**

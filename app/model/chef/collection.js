@@ -7,8 +7,7 @@ const CollectionSchema = new mongoose.Schema({
     name: String,
     chefId: { type: String, default: uuid.v4 },
     slug: String,
-    image: String,
-    active: Boolean
+    image: String
 }, {
     timestamps: true
 });

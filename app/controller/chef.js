@@ -7,7 +7,7 @@ const _ = require('underscore');
 var generateSafeId = require('generate-safe-id');
 // Require Validation Utils
 const { validationResult, errorFormatter } = require('./validation');
-const LocalArea = require('../model/chef/localarea');
+const LocalArea = require('../model/chef/servicearea');
 
 function isEmpty(data) {
     if (data === undefined || data === null || data.length === 0) {

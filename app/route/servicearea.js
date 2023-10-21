@@ -1,9 +1,9 @@
 module.exports = (app) => {
-    const controller = require('../controller/localarea.js');
-    const { verifyToken } = require('../security/security');
+    const controller = require('../controller/servicearea.js');
+    const { verifyToken } = require('../security/security.js');
     const { check } = require('express-validator');
 
-    const path = process.env.CONTEXT_PATH + '/localarea';
+    const path = process.env.CONTEXT_PATH + '/serviceareas';
 
     // Public routes
     // Retrieve all LocalArea

@@ -29,7 +29,7 @@ exports.create = (req, res) => {
 
 };
 
-// Retrieve and return all local area from the database.
+// Retrieve and return all Menu from the database.
 exports.lookup = (req, res) => {
     let query = Menu.find();
     if (req.query.chef) {
@@ -37,12 +37,12 @@ exports.lookup = (req, res) => {
         query.where({ chefId: { '$regex': '.*' + req.query.chef + '.*', '$options': 'i' } })
     }
     Menu.find(query).then(result => {
-        console.log(`Returning ${result.length} local area.`);
+        console.log(`Returning ${result.length} Menus.`);
         res.send(result);
     }).catch(error => {
-        console.log("Error while fetching from database. " + error.message);
+        console.log("Error while fetching Menu from database. " + error.message);
         res.status(500).send({
-            message: error.message || "Some error occurred while retrieving local area."
+            message: error.message || "Some error occurred while retrieving Menu."
         });
     });
 };

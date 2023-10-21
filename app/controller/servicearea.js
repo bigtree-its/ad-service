@@ -1,4 +1,4 @@
-const LocalArea = require('../model/chef/localarea');
+const LocalArea = require('../model/chef/servicearea');
 //Require Underscore JS ( Visit: http://underscorejs.org/#)
 const _ = require('underscore');
 

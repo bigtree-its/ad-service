@@ -54,7 +54,7 @@ app.use(function(req, res, next) {
 
 // Other routes
 require('./route/chef')(app);
-require('./route/localarea')(app);
+require('./route/servicearea')(app);
 require('./route/calendar')(app);
 require('./route/cuisine')(app);
 require('./route/collection')(app);

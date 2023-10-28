@@ -59,7 +59,7 @@ require('./route/calendar')(app);
 require('./route/cuisine')(app);
 require('./route/collection')(app);
 require('./route/category')(app);
-require('./route/food')(app);
+// require('./route/food')(app);
 require('./route/menu')(app);
 require('./route/property')(app);
 require('./route/property-enquiry')(app);

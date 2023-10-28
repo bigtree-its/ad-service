@@ -190,10 +190,11 @@ function buildMenuJson(req) {
     return {
         name: req.body.name,
         chefId: req.body.chefId,
-        collection: req.body.collection,
+        collectionId: req.body.collectionId,
         image: req.body.image,
         spice: req.body.spice,
         vegetarian: req.body.vegetarian,
+        special: req.body.special,
         extras: req.body.extras,
         choices: req.body.choices,
         description: req.body.description,

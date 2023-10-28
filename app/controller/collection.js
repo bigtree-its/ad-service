@@ -9,16 +9,14 @@ const { validationResult, errorFormatter } = require("./validation");
 
 // Create and Save a new Collection
 exports.create = (req, res) => {
-    console.log("Creating new collection " + JSON.stringify(req.body));
+    console.log("Request to create new collection " + JSON.stringify(req.body));
     // Validate Request
     const errors = validationResult(req).formatWith(errorFormatter);
     if (!errors.isEmpty()) {
         return res.json({ errors: _.uniq(errors.array()) });
     }
-    var slug = getSlug(req.body.name, req.body.chefId);
-    console.log(`Finding if a collection already exist for: ${slug}`);
-
-    Collection.exists({ slug: slug }, function(err, result) {
+    var slug = getSlug(req.body.name);
+    Collection.exists({ slug: slug, chefId: req.body.chefId }, function(err, result) {
         if (err) {
             return res.status(500).send({ message: `Error while finding Collection for: ${slug}` });
         } else if (result) {
@@ -166,6 +164,7 @@ function persist(req, res) {
     collection
         .save()
         .then((data) => {
+            console.log('New collection created: '+ data.name)
             res.status(201).send(data);
         })
         .catch((err) => {

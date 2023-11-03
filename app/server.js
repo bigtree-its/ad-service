@@ -9,16 +9,17 @@ require('console-stamp')(console, { pattern: 'dd/mm/yyyy HH:MM:ss.l' });
 const app = express();
 // parse requests of content-type - application/x-www-form-urlencoded
 app.use(express.urlencoded({ extended: false }))
-    // parse requests of content-type - application/json
+// parse requests of content-type - application/json
 app.use(bodyParser.json())
 
 var callLogger = (req, res, next) => {
-        let qs = querystring.stringify(req.query);
-        console.log(`Request from: ${req.get('origin')} ${req.method}: ${req.path} ${qs}`);
-        next();
-    }
-    // Add logger middleware before router middleware to express
-    // .use(middleware)  is the syntax to add middleware to express
+    let qs = querystring.stringify(req.query);
+    const parseIp = req.headers['x-forwarded-for']?.split(',').shift() || req.socket?.remoteAddress
+    console.log(`Request from: ${req.get('origin')} ${parseIp} ${req.method}: ${req.path} ${qs}`);
+    next();
+}
+// Add logger middleware before router middleware to express
+// .use(middleware)  is the syntax to add middleware to express
 app.use(callLogger);
 
 process.on('unhandledRejection', (err) => {
@@ -45,7 +46,7 @@ db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
 
 app.options('*', cors())
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
     res.header("Access-Control-Allow-Methods", "GET, HEAD, PUT, PATCH, POST");

@@ -15,12 +15,14 @@ app.use(bodyParser.json())
 var callLogger = (req, res, next) => {
     let qs = querystring.stringify(req.query);
     const parseIp = req.headers['x-forwarded-for']?.split(',').shift() || req.socket?.remoteAddress
-    console.log(`Request from: ${req.get('origin')} ${parseIp} ${req.method}: ${req.path} ${qs}`);
+    console.log(`Req from: ${req.get('origin')} ${parseIp} ${req.method}: ${req.path} ${qs}`);
+    console.log('Req Headers:' + JSON.stringify(req.headers));
     next();
 }
 // Add logger middleware before router middleware to express
 // .use(middleware)  is the syntax to add middleware to express
 app.use(callLogger);
+
 
 process.on('unhandledRejection', (err) => {
     console.log(err);
@@ -29,6 +31,7 @@ process.on('unhandledRejection', (err) => {
 
 // Database configurations
 const mongoose = require('mongoose');
+const { verifyToken } = require('./security/security');
 mongoose.Promise = global.Promise;
 
 // connect to database
@@ -53,11 +56,16 @@ app.use(function (req, res, next) {
     next();
 })
 
+app.use(function(req,res,next){
+    verifyToken(req, res, next)
+});
+
 // Other routes
 require('./route/chef')(app);
 require('./route/servicearea')(app);
 require('./route/calendar')(app);
 require('./route/cuisine')(app);
+require('./route/slot')(app);
 require('./route/collection')(app);
 require('./route/category')(app);
 // require('./route/food')(app);

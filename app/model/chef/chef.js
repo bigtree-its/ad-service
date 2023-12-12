@@ -7,12 +7,16 @@ const uuid = require('node-uuid');
 const ChefSchema = new mongoose.Schema({
     _id: { type: String, default: uuid.v4 },
     name: { type: String, trim: true },
-    displayName: { type: String, trim: true },
+    kitchenName: { type: String, trim: true },
     description: [String],
     specials: [String],
     cuisines: [{
         type: String,
         ref: 'Cuisine'
+    }],
+    slots: [{
+        type: String,
+        ref: 'Slot'
     }],
     slug: { type: String, trim: true },
     coverPhoto: String,
@@ -23,7 +27,7 @@ const ChefSchema = new mongoose.Schema({
         ref: 'LocalArea'
     }],
     categories: [String],
-    slots: [String], // [Lunch, breakfast, Dinner, AllDay]
+    keywords: [String],
     address: Address,
     deliveryFee: Number,
     freeDeliveryOver: Number,
@@ -34,8 +38,8 @@ const ChefSchema = new mongoose.Schema({
     minimumPartyOrder: Number,
     rating: Number,
     reviews: Number,
-    delivery: Boolean,
-    partyOrders: Boolean,
+    doDelivery: Boolean,
+    doPartyOrders: Boolean,
     active: Boolean,
     contact: Contact,
 }, {

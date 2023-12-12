@@ -54,20 +54,16 @@ exports.findAll = (req, res) => {
         return this.lookup(req, res);
     } else {
         Menu.find()
-            .then(data => {
-                if (data) {
-                    console.log("Returning " + data.length + " menus.");
-                    res.send(data);
-                } else {
-                    console.log("Returning no menus ");
-                    res.send({});
-                }
-            })
-            .catch(err => {
-                res.status(500).send({
-                    message: err.message || "Some error occurred while retrieving menus."
-                });
+        .then(result => {
+            console.log(`Returning ${result.length} Menus.`);
+            res.send(result);
+        })
+        .catch(error => {
+            console.log("Error while fetching menu from database. " + error.message);
+            res.status(500).send({
+                message: error.message || "Some error occurred while retrieving menu."
             });
+        });
     }
 
 };

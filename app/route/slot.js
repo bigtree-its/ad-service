@@ -1,0 +1,32 @@
+module.exports = (app) => {
+    const controller = require('../controller/slot.js');
+    const { verifyToken } = require('../security/security.js');
+    const { check } = require('express-validator');
+
+    const path = process.env.CONTEXT_PATH + '/slots';
+
+    // Public routes
+    // Retrieve all Slot
+    app.get(path, controller.findAll);
+
+    // Retrieve a single Slot with Id
+    app.get(path + '/:id', controller.findOne);
+
+    // Private routes
+    // Creates a new Slot
+    app.post(path,
+        // verifyToken, 
+        [
+            check('name').notEmpty().isLength({ min: 3, max: 250 }).withMessage('Name is mandatory')
+        ],
+        controller.create);
+
+    // Update a Slot with id
+    app.put(path + '/:id', controller.update);
+
+    // Delete a Slot with id
+    app.delete(path + '/:id', controller.delete);
+
+    //Delete All -- only for non production and can only be done by an admin
+    app.delete(path, controller.deleteEverything);
+}

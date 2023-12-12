@@ -17,7 +17,7 @@ function isEmpty(data) {
 }
 
 // Create and Save a new Chef
-exports.create = async(req, res) => {
+exports.create = async (req, res) => {
 
     console.log("Creating new Chef " + JSON.stringify(req.body));
     /** Check for validation errors */
@@ -28,7 +28,7 @@ exports.create = async(req, res) => {
 
     /** Validate Cuisine */
     try {
-        this.validateCuisine(req, res, );
+        this.validateCuisine(req, res,);
     } catch (error) {
         console.log("Error: " + error);
         return res.status(400).send({ message: error });
@@ -36,7 +36,7 @@ exports.create = async(req, res) => {
 
     /** Validate ServiceAreas */
     try {
-        this.validateServiceAreas(req, res, );
+        this.validateServiceAreas(req, res,);
     } catch (error) {
         console.log("Error: " + error);
         return res.status(400).send({ message: error });
@@ -44,7 +44,7 @@ exports.create = async(req, res) => {
 
     /** Validate Slot */
     try {
-        this.validateSlots(req, res, );
+        this.validateSlots(req, res,);
     } catch (error) {
         console.log("Error: " + error);
         return res.status(400).send({ message: error });
@@ -53,7 +53,7 @@ exports.create = async(req, res) => {
     checkDuplicateAndPersist(req, res);
 };
 
-exports.validateCuisine = async(req, res) => {
+exports.validateCuisine = async (req, res) => {
     try {
         var cuisines = req.body.cuisines;
         if (isEmpty(cuisines)) {
@@ -71,7 +71,7 @@ exports.validateCuisine = async(req, res) => {
     }
 };
 
-exports.validateServiceAreas = async(req, res) => {
+exports.validateServiceAreas = async (req, res) => {
     try {
         var serviceAreas = req.body.serviceAreas;
         if (isEmpty(serviceAreas)) {
@@ -90,7 +90,7 @@ exports.validateServiceAreas = async(req, res) => {
 };
 
 
-exports.validateSlots = async(req, res) => {
+exports.validateSlots = async (req, res) => {
     var types = ['Breakfast', 'Lunch', 'Dinner', 'AllDay'];
     var valid = false;
     var slots = req.body.slots;
@@ -111,7 +111,7 @@ exports.validateSlots = async(req, res) => {
 
 function checkDuplicateAndPersist(req, res) {
     console.log(`Checking if Chef already exist..`);
-    Chef.exists({ name: req.body.name, email: req.body.email }, function(err, result) {
+    Chef.exists({ name: req.body.name, email: req.body.email }, function (err, result) {
         if (err) {
             return res.status(500).send({ message: `Error while finding Chef with email ${req.body.email}` });
         } else if (result) {
@@ -137,7 +137,7 @@ exports.paginate = (req, res) => {
     if (req.query.postcode) {
         query.where('address.postcode', { $in: req.query.postcode })
     }
-    Chef.aggregatePaginate(query, options, function(err, result) {
+    Chef.aggregatePaginate(query, options, function (err, result) {
         if (result) {
             console.log(`Returning ${result.docs.length} Chefs.`);
             res.send(result);
@@ -155,9 +155,9 @@ exports.findAll = (req, res) => {
     let query = Chef.find();
     if (req.query.serviceAreas) {
         query.where('serviceAreas', { $in: req.query.serviceAreas })
-            // query.where('serviceAreas.slug', req.query.serviceArea);
-            // query.where('serviceAreas', { 'slug': req.query.serviceArea });
-            // query.where('serviceAreas', { $elemMatch: { 'slug': req.query.serviceArea } });
+        // query.where('serviceAreas.slug', req.query.serviceArea);
+        // query.where('serviceAreas', { 'slug': req.query.serviceArea });
+        // query.where('serviceAreas', { $elemMatch: { 'slug': req.query.serviceArea } });
     }
     if (req.query.cuisines) {
         query.where('cuisines', { $in: req.query.cuisines })
@@ -172,31 +172,39 @@ exports.findAll = (req, res) => {
     if (req.query.delivery) {
         query.where('delivery', true);
     }
+    if (req.query.keywords) {
+        query.where('keywords', { $in: req.query.keywords })
+    }
     if (req.query.noMinimumOrder) {
         query.where('noMinimumOrder', true);
     }
     if (req.query.email) {
         query.where('email', req.query.email)
     }
-    Chef.find(query).populate("cuisines").populate("serviceAreas").then(result => {
-        console.log(`Returning ${result.length} Chefs.`);
-        res.send(result);
-    }).catch(error => {
-        console.log("Error while fetching from database. " + error.message);
-        res.status(500).send({
-            message: error.message || "Some error occurred while retrieving Chefs."
+    Chef.find(query)
+        .populate("cuisines")
+        .populate("serviceAreas")
+        .populate("slots")
+        .then(result => {
+            console.log(`Returning ${result.length} Chefs. ${JSON.stringify(result)}`);
+            res.send(result);
+        }).catch(error => {
+            console.log("Error while fetching from database. " + error.message);
+            res.status(500).send({
+                message: error.message || "Some error occurred while retrieving Chefs."
+            });
         });
-    });
 };
 
 // Find a single Chef with a BrandId
 exports.findOne = (req, res) => {
-    Chef.findById(req.params.id).populate("cuisines").populate("serviceAreas")
-        .then(Chef => {
-            if (!Chef) {
+    console.log(`Finding a chef ${req.params.id}`);
+    Chef.findById(req.params.id).populate("cuisines").populate("serviceAreas").populate("slots")
+        .then(data => {
+            if (!data) {
                 return res.status(404).send({ message: `Chef not found with id ${req.params.id}` });
             }
-            res.send(Chef);
+            res.send(data);
         })
         .catch(err => {
             if (err.kind === 'ObjectId') {
@@ -208,7 +216,7 @@ exports.findOne = (req, res) => {
 
 // Update a Chef 
 exports.update = (req, res) => {
-    console.log("Updating Chef " + JSON.stringify(req.body));
+    console.log(`Updating Chef ${req.params.id}`);
     // Validate Request
     if (!req.body) {
         return res.status(400).send({ message: "Chef body cannot be empty" });
@@ -217,7 +225,10 @@ exports.update = (req, res) => {
         this.validateType(req, res, req.body.type);
     }
     // Find Chef and update it with the request body
-    Chef.findByIdAndUpdate({ _id: req.params.id }, req.body, { new: true })
+    Chef.findByIdAndUpdate({ _id: req.params.id }, req.body, { upsert: true, setDefaultsOnInsert: true, new: true })
+        .populate("cuisines")
+        .populate("serviceAreas")
+        .populate("slots")
         .then(Chef => {
             if (!Chef) {
                 return res.status(404).send({ message: `Chef not found with id ${req.params.id}` });
@@ -300,14 +311,14 @@ function buildChefJson(req) {
     var data = req.body;
     var safeId = generateSafeId();
     var slug = "";
-    if (data.displayName) {
-        slug = getSlug(data.displayName);
+    if (data.kitchenName) {
+        slug = getSlug(data.kitchenName);
     } else {
         slug = getSlug(data.name);
     }
     return {
         name: data.name,
-        displayName: data.displayName,
+        kitchenName: data.kitchenName,
         consumptionTypes: data.consumptionTypes,
         description: data.description,
         specials: data.specials,
@@ -315,6 +326,7 @@ function buildChefJson(req) {
         slots: data.slots,
         serviceAreas: data.serviceAreas,
         categories: data.categories,
+        keywords: data.keywords,
         cuisines: data.cuisines,
         contact: data.contact,
         address: data.address,

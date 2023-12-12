@@ -1,18 +1,30 @@
 const jwt = require('jsonwebtoken');
 
 const verifyToken = (req, res, next) => {
-    console.log('Verifying security token...');
-    console.log('headers ' + JSON.stringify(req.headers));
-    const bearerHeader = req.headers['Authorization'] || req.headers['authorization'];
-    if (typeof bearerHeader !== 'undefined') {
-        const bearer = bearerHeader.split(' ');
-        const bearerToken = bearer[1];
-        req.token = bearerToken;
-        // call next middleware
+    const referer = req.headers['referer'] || req.headers['referer'];
+
+    if ( referer && referer === 'http://localhost:5200/'){
         next();
-    } else {
-        console.log('Unauthorized!');
-        res.sendStatus(401);
+    }else{
+        console.log('Verifying token ');
+        const token = req.headers['Authorization'] || req.headers['authorization'];
+        if (typeof token !== 'undefined') {
+            jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+    
+                if (err) {
+                    console.error("Error when verifying token.. "+ err)
+                    res.sendStatus(401);
+                } else {
+                    req.decoded = decoded;
+                    console.log('Token verified ' + decoded)
+                    next();
+                }
+            });
+            // next();
+        } else {
+            console.log('Unauthorized!');
+            res.sendStatus(401);
+        }
     }
 }
 

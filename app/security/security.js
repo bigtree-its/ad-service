@@ -1,31 +1,30 @@
-const jwt = require('jsonwebtoken');
+const jwt = require("jsonwebtoken");
 
 const verifyToken = (req, res, next) => {
-    const referer = req.headers['referer'] || req.headers['referer'];
+    console.log("Verifying token ");
+    var bearerToken = req.headers["Authorization"] || req.headers["authorization"];
 
-    if ( referer && referer === 'http://localhost:5200/'){
-        next();
-    }else{
-        console.log('Verifying token ');
-        const token = req.headers['Authorization'] || req.headers['authorization'];
-        if (typeof token !== 'undefined') {
-            jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
-    
-                if (err) {
-                    console.error("Error when verifying token.. "+ err)
-                    res.sendStatus(401);
-                } else {
-                    req.decoded = decoded;
-                    console.log('Token verified ' + decoded)
-                    next();
-                }
-            });
-            // next();
-        } else {
-            console.log('Unauthorized!');
-            res.sendStatus(401);
+    if (typeof bearerToken !== "undefined") {
+        if (bearerToken.includes("Bearer")) {
+            var result = bearerToken.replace(/Bearer/g, '');
+            bearerToken = result.trim();
         }
+        console.log('Verifying jwt ' + bearerToken);
+        jwt.verify(bearerToken, process.env.JWT_SECRET, (err, decoded) => {
+            if (err) {
+                console.error("Error when verifying token.. " + err);
+                res.sendStatus(401);
+            } else {
+                req.decoded = decoded;
+                console.log("Token verified " + decoded);
+                next();
+            }
+        });
+        // next();
+    } else {
+        console.log("Unauthorized!");
+        res.sendStatus(401);
     }
-}
+};
 
 module.exports.verifyToken = verifyToken;

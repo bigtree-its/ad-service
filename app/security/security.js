@@ -9,14 +9,12 @@ const verifyToken = (req, res, next) => {
             var result = bearerToken.replace(/Bearer/g, '');
             bearerToken = result.trim();
         }
-        console.log('Verifying jwt ' + bearerToken);
         jwt.verify(bearerToken, process.env.JWT_SECRET, (err, decoded) => {
             if (err) {
                 console.error("Error when verifying token.. " + err);
                 res.sendStatus(401);
             } else {
                 req.decoded = decoded;
-                console.log("Token verified " + decoded);
                 next();
             }
         });

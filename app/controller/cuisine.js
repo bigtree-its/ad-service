@@ -165,6 +165,7 @@ function buildCuisineObject(req) {
 function buildCuisineJson(req) {
     return {
         name: req.body.name,
+        image: req.body.image,
         slug: req.body.slug || req.body.name.trim().replace(/[\W_]+/g, "-").toLowerCase(),
         logo: req.body.logo
     };

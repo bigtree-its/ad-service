@@ -116,7 +116,8 @@ function checkDuplicateAndPersist(req, res) {
             return res.status(500).send({ message: `Error while finding Chef with email ${req.body.email}` });
         } else if (result) {
             console.log(`Chef already exist`);
-            res.status(400).send({ message: `Chef already exist.` });
+            return res;
+            // return res.status(400).send({ message: `Chef already exist.` });
         } else {
             persist(req, res);
         }

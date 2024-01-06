@@ -72,6 +72,7 @@ require('./route/chef')(app);
 require('./route/servicearea')(app);
 require('./route/calendar')(app);
 require('./route/cuisine')(app);
+require('./route/dish')(app);
 require('./route/slot')(app);
 require('./route/collection')(app);
 require('./route/category')(app);

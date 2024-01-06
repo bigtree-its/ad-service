@@ -32,8 +32,8 @@ exports.create = (req, res) => {
 exports.findAll = (req, res) => {
     console.log("Received request to get all cuisines");
     let query = Cuisine.find();
-    if (req.query.name) {
-        query.where('name', req.query.name)
+    if (req.query.slug) {
+        query.where('slug', req.query.slug)
     }
     Cuisine.find(query)
         .then(data => {

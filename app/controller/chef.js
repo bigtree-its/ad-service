@@ -347,6 +347,8 @@ function buildChefJson(req) {
         minimumOrder: data.minimumOrder,
         minimumPartyOrder: data.minimumPartyOrder,
         doPartyOrders: data.doPartyOrders,
+        preOrderOnly: data.preOrderOnly,
+        open: data.open,
     };
 }
 /**

@@ -40,6 +40,7 @@ const ChefSchema = new mongoose.Schema({
     reviews: Number,
     doDelivery: Boolean,
     doPartyOrders: Boolean,
+    preOrderOnly: Boolean,
     active: Boolean,
     contact: Contact,
 }, {

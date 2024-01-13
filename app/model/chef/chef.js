@@ -41,6 +41,7 @@ const ChefSchema = new mongoose.Schema({
     doDelivery: Boolean,
     doPartyOrders: Boolean,
     preOrderOnly: Boolean,
+    open: Boolean,
     active: Boolean,
     contact: Contact,
 }, {

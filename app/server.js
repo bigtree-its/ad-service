@@ -76,7 +76,7 @@ require('./route/dish')(app);
 require('./route/slot')(app);
 require('./route/collection')(app);
 require('./route/category')(app);
-// require('./route/food')(app);
+require('./route/review')(app);
 require('./route/menu')(app);
 require('./route/property')(app);
 require('./route/property-enquiry')(app);

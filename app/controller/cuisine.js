@@ -19,7 +19,7 @@ exports.create = (req, res) => {
             return res.status(500).send({ message: `Error while finding Cuisine with name ${req.body.name}` });
         } else if (result) {
             console.log(`Cuisine already exist with name ${req.body.name}`);
-            res.status(400).send({ message: `Cuisine already exist with name ${eq.body.name}` });
+            res.status(400).send({ message: `Cuisine already exist with name ${req.body.name}` });
         } else {
             persist(req, res);
         }

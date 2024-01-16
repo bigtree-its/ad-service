@@ -1,9 +1,9 @@
 module.exports = (app) => {
-    const controller = require('../controller/cuisine.js');
+    const controller = require('../controller/review.js');
     const { verifyToken } = require('../security/security.js');
     const { check } = require('express-validator');
 
-    const path = process.env.CONTEXT_PATH + '/review';
+    const path = process.env.CONTEXT_PATH + '/reviews';
 
     // Public routes
     // Retrieve all Review

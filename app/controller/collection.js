@@ -16,17 +16,22 @@ exports.create = (req, res) => {
         return res.json({ errors: _.uniq(errors.array()) });
     }
     var slug = getSlug(req.body.name);
-    Collection.exists({ slug: slug, chefId: req.body.chefId }, function(err, result) {
-        if (err) {
-            return res.status(500).send({ message: `Error while finding Collection for: ${slug}` });
-        } else if (result) {
-            console.log(`Collection already exist for: ${slug}`);
-            res.status(400).send({ message: `Collection already exist for: ${slug}` });
-        } else {
-            persist(req, res);
+    Collection.exists({ slug: slug, chefId: req.body.chefId },
+        function(err, result) {
+            if (err) {
+                return res
+                    .status(500)
+                    .send({ message: `Error while finding Collection for: ${slug}` });
+            } else if (result) {
+                console.log(`Collection already exist for: ${slug}`);
+                res
+                    .status(400)
+                    .send({ message: `Collection already exist for: ${slug}` });
+            } else {
+                persist(req, res);
+            }
         }
-    });
-
+    );
 };
 
 // Retrieve and return all collections from the database.
@@ -37,7 +42,7 @@ exports.findAll = (req, res) => {
         return this.lookup(req, res);
     } else {
         Collection.find()
-            .then(data => {
+            .then((data) => {
                 if (data) {
                     console.log("Returning " + data.length + " collections.");
                     res.send(data);
@@ -46,13 +51,12 @@ exports.findAll = (req, res) => {
                     res.send({});
                 }
             })
-            .catch(err => {
+            .catch((err) => {
                 res.status(500).send({
-                    message: err.message || "Some error occurred while retrieving collections."
+                    message: err.message || "Some error occurred while retrieving collections.",
                 });
             });
     }
-
 };
 
 // Retrieve and return all collections from the database.
@@ -60,17 +64,21 @@ exports.lookup = (req, res) => {
     let query = Collection.find();
     if (req.query.chef) {
         // query.where('name', { $regex: '.*' + req.query.name + '.*' })
-        query.where({ chefId: { '$regex': '.*' + req.query.chef + '.*', '$options': 'i' } })
-    }
-    Collection.find(query).then(result => {
-        console.log(`Returning ${result.length} collections.`);
-        res.send(result);
-    }).catch(error => {
-        console.log("Error while fetching from database. " + error.message);
-        res.status(500).send({
-            message: error.message || "Some error occurred while retrieving collections."
+        query.where({
+            chefId: { $regex: ".*" + req.query.chef + ".*", $options: "i" },
         });
-    });
+    }
+    Collection.find(query)
+        .then((result) => {
+            console.log(`Returning ${result.length} collections.`);
+            res.send(result);
+        })
+        .catch((error) => {
+            console.log("Error while fetching from database. " + error.message);
+            res.status(500).send({
+                message: error.message || "Some error occurred while retrieving collections.",
+            });
+        });
 };
 
 // Deletes all
@@ -100,11 +108,9 @@ exports.findOne = (req, res) => {
             if (err.kind === "ObjectId") {
                 return collectionNotFoundWithId(req, res);
             }
-            return res
-                .status(500)
-                .send({
-                    message: "Error while retrieving Collection with id " + req.params.id,
-                });
+            return res.status(500).send({
+                message: "Error while retrieving Collection with id " + req.params.id,
+            });
         });
 };
 
@@ -113,7 +119,9 @@ exports.update = (req, res) => {
     console.log("Updating collection " + JSON.stringify(req.body));
     // Validate Request
     if (!req.body) {
-        return res.status(400).send({ message: "Collection body can not be empty" });
+        return res
+            .status(400)
+            .send({ message: "Collection body can not be empty" });
     }
     // Find Collection and update it with the request body
     Collection.findByIdAndUpdate(req.params.id, { $set: req.body }, { new: true })
@@ -135,6 +143,32 @@ exports.update = (req, res) => {
 
 // Delete a Collection with the specified CollectionId in the request
 exports.delete = (req, res) => {
+
+    if (req.query.chef) {
+        deleteManyByQuery(req);
+    } else {
+        deleteOneById(req, res);
+    }
+
+};
+
+function deleteManyByQuery(req) {
+    let query = Collection.find();
+    query.where({
+        chefId: { $regex: ".*" + req.query.chef + ".*", $options: "i" },
+    });
+    Collection.deleteMany(query)
+        .then(function() {
+            // Success
+            console.log("Collections for chef deleted");
+        })
+        .catch(function(error) {
+            // Failure
+            console.log(error);
+        });
+}
+
+function deleteOneById(req, res) {
     Collection.findByIdAndRemove(req.params.id)
         .then((collection) => {
             if (!collection) {
@@ -150,7 +184,7 @@ exports.delete = (req, res) => {
                 message: "Could not delete Collection with id " + req.params.id,
             });
         });
-};
+}
 
 /**
  * Persists new Collection document
@@ -164,7 +198,7 @@ function persist(req, res) {
     collection
         .save()
         .then((data) => {
-            console.log('New collection created: '+ data.name)
+            console.log("New collection created: " + data.name);
             res.status(201).send(data);
         })
         .catch((err) => {
@@ -210,7 +244,7 @@ function buildCollectionJson(req) {
             req.body.name
             .trim()
             .replace(/[\W_]+/g, "-")
-            .toLowerCase()
+            .toLowerCase(),
     };
 }
 

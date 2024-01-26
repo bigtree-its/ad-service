@@ -36,6 +36,7 @@ exports.lookup = (req, res) => {
         // query.where('name', { $regex: '.*' + req.query.name + '.*' })
         query.where({ chefId: { '$regex': '.*' + req.query.chef + '.*', '$options': 'i' } })
     }
+    query.where({ active: true });
     Menu.find(query).then(result => {
         console.log(`Returning ${result.length} Menus.`);
         res.send(result);
@@ -54,16 +55,16 @@ exports.findAll = (req, res) => {
         return this.lookup(req, res);
     } else {
         Menu.find()
-        .then(result => {
-            console.log(`Returning ${result.length} Menus.`);
-            res.send(result);
-        })
-        .catch(error => {
-            console.log("Error while fetching menu from database. " + error.message);
-            res.status(500).send({
-                message: error.message || "Some error occurred while retrieving menu."
+            .then(result => {
+                console.log(`Returning ${result.length} Menus.`);
+                res.send(result);
+            })
+            .catch(error => {
+                console.log("Error while fetching menu from database. " + error.message);
+                res.status(500).send({
+                    message: error.message || "Some error occurred while retrieving menu."
+                });
             });
-        });
     }
 
 };
@@ -184,6 +185,8 @@ function buildMenuObject(req) {
  */
 function buildMenuJson(req) {
     return {
+        active: req.body.active ? req.body.active : false,
+        orderBy: req.body.orderBy,
         name: req.body.name,
         chefId: req.body.chefId,
         collectionId: req.body.collectionId,

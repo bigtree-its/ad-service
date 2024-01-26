@@ -20,10 +20,9 @@ module.exports = (app) => {
             check('title').notEmpty().isLength({ min: 3, max: 250 }).withMessage('Title is mandatory'),
             check('comment').notEmpty().isLength({ min: 3, max: 500 }).withMessage('Comment is mandatory'),
             check('chefId').notEmpty().isLength({ min: 12, max: 30 }).withMessage('Chef Id is mandatory'),
-            check('customerName').notEmpty().isLength({ min: 12, max: 50 }).withMessage('Customer Name is mandatory'),
-            check('customerEmail').notEmpty().isLength({ min: 12, max: 50 }).withMessage('Customer Email is mandatory'),
-            check('overAllRating').notEmpty().isLength({ min: 12, max: 50 }).withMessage('OverAllRating is mandatory'),
-            check('orderReference').notEmpty().isLength({ min: 12, max: 50 }).withMessage('Order Reference is mandatory'),
+            check('customer').notEmpty().withMessage('Customer is mandatory'),
+            check('rating').notEmpty().isLength({ min: 0, max: 2 }).withMessage('Rating is mandatory'),
+            check('order').notEmpty().isLength({ min: 12, max: 50 }).withMessage('Order Reference is mandatory'),
         ],
         controller.create);
 

@@ -165,14 +165,11 @@ function buildReviewJson(req) {
 
     return {
         chefId: req.body.chefId,
-        overAllRating: req.body.overAllRating,
-        hygineRating: req.body.hygineRating,
-        qualityRating: req.body.qualityRating,
-        quantityRating: req.body.quantityRating,
+        rating: req.body.rating,
         title: req.body.title,
         comment: req.body.comment,
-        customerName: req.body.customerName,
-        customerEmail: req.body.customerEmail,
-        orderReference: req.body.orderReference,
+        customer: req.body.customer,
+        order: req.body.order,
+        date: new Date(),
     };
 }

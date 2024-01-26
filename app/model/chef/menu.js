@@ -19,7 +19,8 @@ const MenuSchema = new mongoose.Schema({
     discounted: Boolean,
     discountedPrice: Number,
     description: String,
-    active: Boolean
+    active: Boolean,
+    orderBy: Date,
 }, {
     timestamps: true
 });

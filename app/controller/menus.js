@@ -33,7 +33,7 @@ exports.create = (req, res) => {
 exports.lookup = (req, res) => {
     let query = Menu.find();
     if (req.query.chef) {
-        query.where('chef', req.query.chef);
+        query.where('chefId', req.query.chef);
         // query.where({ chefId: { '$regex': '.*' + req.query.chef + '.*', '$options': 'i' } })
     }
     query.where({ active: true });

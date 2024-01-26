@@ -7,7 +7,7 @@ module.exports = (app) => {
 
     // Public routes
     // Retrieve all Menu
-    app.get(path, controller.findAll);
+    app.get(path, controller.lookup);
 
     // Retrieve a single Menu with Id
     app.get(path + '/:id', controller.findOne);

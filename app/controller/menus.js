@@ -48,26 +48,6 @@ exports.lookup = (req, res) => {
     });
 };
 
-// Retrieve and return all Menus from the database.
-exports.findAll = (req, res) => {
-    console.log("Received request to get all menus");
-    if (req.query.chef) {
-        return this.lookup(req, res);
-    } else {
-        Menu.find()
-            .then(result => {
-                console.log(`Returning ${result.length} Menus.`);
-                res.send(result);
-            })
-            .catch(error => {
-                console.log("Error while fetching menu from database. " + error.message);
-                res.status(500).send({
-                    message: error.message || "Some error occurred while retrieving menu."
-                });
-            });
-    }
-
-};
 
 // Deletes all
 exports.deleteEverything = (req, res) => {

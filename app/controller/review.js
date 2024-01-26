@@ -13,12 +13,12 @@ exports.create = (req, res) => {
     if (!errors.isEmpty()) {
         return res.json({ errors: _.uniq(errors.array()) });
     }
-    Review.exists({ orderReference: req.body.orderReference }, function(err, result) {
+    Review.exists({ order: req.body.order }, function(err, result) {
         if (err) {
-            return res.status(500).send({ message: `Error while finding Review with orderReference ${req.body.orderReference}` });
+            return res.status(500).send({ message: `Error while finding Review with order ${req.body.order}` });
         } else if (result) {
-            console.log(`Review already exist with orderReference ${req.body.orderReference}`);
-            res.status(400).send({ message: `Review already exist with orderReference ${req.body.orderReference}` });
+            console.log(`Review already exist for order ${req.body.order}`);
+            res.status(400).send({ message: `Review already exist for order ${req.body.order}` });
         } else {
             persist(req, res);
         }
@@ -27,24 +27,26 @@ exports.create = (req, res) => {
 };
 
 
-// Retrieve and return all Reviews from the database.
+// Retrieve and return all Menu from the database.
 exports.findAll = (req, res) => {
-    console.log("Received request to get all reviews");
-    Review.find()
-        .then(data => {
-            if (data) {
-                console.log("Returning " + data.length + " reviews.");
-                res.send(data);
-            } else {
-                console.log("Returning no reviews ");
-                res.send({});
-            }
-        })
-        .catch(err => {
-            res.status(500).send({
-                message: err.message || "Some error occurred while retrieving reviews."
-            });
+    let query = Review.find();
+    if (req.query.chef) {
+        query.where('chef', req.query.chef);
+        // query.where('name', { $regex: '.*' + req.query.name + '.*' })
+        // query.where({ chef: { '$regex': '.*' + req.query.chef + '.*', '$options': 'i' } })
+    }
+    if (req.query.order) {
+        query.where('order', req.query.order);
+    }
+    Review.find(query).then(result => {
+        console.log(`Returning ${result.length} reviews.`);
+        res.send(result);
+    }).catch(error => {
+        console.log("Error while fetching reviews from database. " + error.message);
+        res.status(500).send({
+            message: error.message || "Some error occurred while retrieving reviews."
         });
+    });
 };
 
 // Deletes all
@@ -164,7 +166,7 @@ function buildReviewObject(req) {
 function buildReviewJson(req) {
 
     return {
-        chefId: req.body.chefId,
+        chef: req.body.chef,
         rating: req.body.rating,
         title: req.body.title,
         comment: req.body.comment,

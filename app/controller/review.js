@@ -133,7 +133,7 @@ function persist(req, res) {
     // Save Review in the database
     review.save()
         .then(data => {
-            this.updateChef();
+            updateChef(req);
             res.status(201).send(data);
         }).catch(err => {
             res.status(500).send({

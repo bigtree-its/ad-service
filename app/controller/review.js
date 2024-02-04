@@ -153,6 +153,7 @@ function updateChef(req) {
                 if (!Chef) {
                     console.log(`Cannot update review count. Chef not found with id ${req.body.chef}`);
                 }
+                updateAverageRating(req);
             }).catch(err => {
                 if (err.kind === 'ObjectId') {
                     console.log(`Cannot update review count. Chef not found with id ${req.body.chef}`);
@@ -161,6 +162,44 @@ function updateChef(req) {
     })
 }
 
+function updateAverageRatingOnChef(req, avgRating) {
+    Review.count({ chef: req.body.chef }).then(count => {
+        console.log(`Updating chef ${req.body.chef} with average rating ${avgRating}`);
+        var x = {
+            "rating": avgRating
+        }
+        Chef.findByIdAndUpdate({ _id: req.body.chef }, x, { upsert: true, setDefaultsOnInsert: true, new: true })
+            .then(Chef => {
+                if (!Chef) {
+                    console.log(`Cannot update average rating. Chef not found with id ${req.body.chef}`);
+                }
+                updateAverageRating(req);
+            }).catch(err => {
+                if (err.kind === 'ObjectId') {
+                    console.log(`Cannot update average rating. Chef not found with id ${req.body.chef}`);
+                }
+            });
+    })
+}
+
+
+
+function updateAverageRating(req) {
+    console.log(`Finding and update average rating for chef ${req.body.chef}`)
+    Review.aggregate(
+        [{
+            "$group": {
+                "chef": "$req.body.chef",
+                "avgRating": { "$avg": { "$ifNull": ["$rating", 0] } }
+            }
+        }],
+        function(err, results) {
+            if (err) throw err;
+            console.log(`Average Rating for chef ${results}`)
+            updateAverageRatingOnChef(req, results);
+        }
+    );
+}
 /**
  * Sends 404 HTTP Response with Message
  * 

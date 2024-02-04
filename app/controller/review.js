@@ -1,4 +1,5 @@
 const Review = require('../model/chef/review');
+const Chef = require('../model/chef/chef');
 //Require Underscore JS ( Visit: http://underscorejs.org/#)
 const _ = require('underscore');
 
@@ -109,6 +110,7 @@ exports.delete = (req, res) => {
             if (!review) {
                 return reviewNotFoundWithId(req, res);
             }
+            this.updateChef();
             res.send({ message: "Review deleted successfully!" });
         }).catch(err => {
             if (err.kind === 'ObjectId' || err.name === 'NotFound') {
@@ -131,12 +133,32 @@ function persist(req, res) {
     // Save Review in the database
     review.save()
         .then(data => {
+            this.updateChef();
             res.status(201).send(data);
         }).catch(err => {
             res.status(500).send({
                 message: err.message || "Some error occurred while creating the Review."
             });
         });
+}
+
+function updateChef(req) {
+    Review.count({ chef: req.body.chef }).then(count => {
+        console.log(`Updating chef ${req.body.chef} with number of reviews ${count}`);
+        var x = {
+            "reviews": count
+        }
+        Chef.findByIdAndUpdate({ _id: req.body.chef }, x, { upsert: true, setDefaultsOnInsert: true, new: true })
+            .then(Chef => {
+                if (!Chef) {
+                    console.log(`Cannot update review count. Chef not found with id ${req.body.chef}`);
+                }
+            }).catch(err => {
+                if (err.kind === 'ObjectId') {
+                    console.log(`Cannot update review count. Chef not found with id ${req.body.chef}`);
+                }
+            });
+    })
 }
 
 /**

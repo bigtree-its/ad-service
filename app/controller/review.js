@@ -1,10 +1,10 @@
-const Review = require('../model/chef/review');
-const Chef = require('../model/chef/chef');
+const Review = require("../model/chef/review");
+const Chef = require("../model/chef/chef");
 //Require Underscore JS ( Visit: http://underscorejs.org/#)
-const _ = require('underscore');
+const _ = require("underscore");
 
 // Require Validation Utils
-const { validationResult, errorFormatter } = require('./validation');
+const { validationResult, errorFormatter } = require("./validation");
 
 // Create and Save a new Review
 exports.create = (req, res) => {
@@ -16,66 +16,80 @@ exports.create = (req, res) => {
     }
     Review.exists({ order: req.body.order }, function(err, result) {
         if (err) {
-            return res.status(500).send({ message: `Error while finding Review with order ${req.body.order}` });
+            return res
+                .status(500)
+                .send({
+                    message: `Error while finding Review with order ${req.body.order}`,
+                });
         } else if (result) {
             console.log(`Review already exist for order ${req.body.order}`);
-            res.status(400).send({ message: `Review already exist for order ${req.body.order}` });
+            res
+                .status(400)
+                .send({ message: `Review already exist for order ${req.body.order}` });
         } else {
             persist(req, res);
         }
     });
-
 };
-
 
 // Retrieve and return all Menu from the database.
 exports.findAll = (req, res) => {
     let query = Review.find();
     if (req.query.chef) {
-        query.where('chef', req.query.chef);
+        query.where("chef", req.query.chef);
         // query.where('name', { $regex: '.*' + req.query.name + '.*' })
         // query.where({ chef: { '$regex': '.*' + req.query.chef + '.*', '$options': 'i' } })
     }
     if (req.query.order) {
-        query.where('order', req.query.order);
+        query.where("order", req.query.order);
     }
-    Review.find(query).then(result => {
-        console.log(`Returning ${result.length} reviews.`);
-        res.send(result);
-    }).catch(error => {
-        console.log("Error while fetching reviews from database. " + error.message);
-        res.status(500).send({
-            message: error.message || "Some error occurred while retrieving reviews."
+    Review.find(query)
+        .then((result) => {
+            console.log(`Returning ${result.length} reviews.`);
+            res.send(result);
+        })
+        .catch((error) => {
+            console.log(
+                "Error while fetching reviews from database. " + error.message
+            );
+            res.status(500).send({
+                message: error.message || "Some error occurred while retrieving reviews.",
+            });
         });
-    });
 };
 
 // Deletes all
 exports.deleteEverything = (req, res) => {
-    Review.remove().then(result => {
-        res.send({ message: "Deleted all reviews" });
-    }).catch(err => {
-        return res.status(500).send({
-            message: `Could not delete all reviews. ${err.message}`
+    Review.remove()
+        .then((result) => {
+            res.send({ message: "Deleted all reviews" });
+        })
+        .catch((err) => {
+            return res.status(500).send({
+                message: `Could not delete all reviews. ${err.message}`,
+            });
         });
-    });
 };
 
 // Find a single Review with a ReviewId
 exports.findOne = (req, res) => {
     console.log("Received request get a review with id " + req.params.id);
     Review.findOne({ _id: req.params.id })
-        .then(review => {
+        .then((review) => {
             if (!review) {
                 return reviewNotFoundWithId(req, res);
             }
             res.send(review);
         })
-        .catch(err => {
-            if (err.kind === 'ObjectId') {
+        .catch((err) => {
+            if (err.kind === "ObjectId") {
                 return reviewNotFoundWithId(req, res);
             }
-            return res.status(500).send({ message: "Error while retrieving Review with id " + req.params.id });
+            return res
+                .status(500)
+                .send({
+                    message: "Error while retrieving Review with id " + req.params.id,
+                });
         });
 };
 
@@ -88,17 +102,18 @@ exports.update = (req, res) => {
     }
     // Find Review and update it with the request body
     Review.findByIdAndUpdate(req.params.id, { $set: req.body }, { new: true })
-        .then(review => {
+        .then((review) => {
             if (!review) {
                 return reviewNotFoundWithId(req, res);
             }
             res.send(review);
-        }).catch(err => {
-            if (err.kind === 'ObjectId') {
+        })
+        .catch((err) => {
+            if (err.kind === "ObjectId") {
                 return reviewNotFoundWithId(req, res);
             }
             return res.status(500).send({
-                message: "Error updating Review with id " + req.params.id
+                message: "Error updating Review with id " + req.params.id,
             });
         });
 };
@@ -106,114 +121,137 @@ exports.update = (req, res) => {
 // Delete a Review with the specified ReviewId in the request
 exports.delete = (req, res) => {
     Review.findByIdAndRemove(req.params.id)
-        .then(review => {
+        .then((review) => {
             if (!review) {
                 return reviewNotFoundWithId(req, res);
             }
             this.updateChef();
             res.send({ message: "Review deleted successfully!" });
-        }).catch(err => {
-            if (err.kind === 'ObjectId' || err.name === 'NotFound') {
+        })
+        .catch((err) => {
+            if (err.kind === "ObjectId" || err.name === "NotFound") {
                 return reviewNotFoundWithId(req, res);
             }
             return res.status(500).send({
-                message: "Could not delete Review with id " + req.params.id
+                message: "Could not delete Review with id " + req.params.id,
             });
         });
 };
 
 /**
  * Persists new Review document
- * 
- * @param {Request} req 
- * @param {Response} res 
+ *
+ * @param {Request} req
+ * @param {Response} res
  */
 function persist(req, res) {
     const review = buildReviewObject(req);
     // Save Review in the database
-    review.save()
-        .then(data => {
+    review
+        .save()
+        .then((data) => {
             updateChef(req);
             res.status(201).send(data);
-        }).catch(err => {
+        })
+        .catch((err) => {
             res.status(500).send({
-                message: err.message || "Some error occurred while creating the Review."
+                message: err.message || "Some error occurred while creating the Review.",
             });
         });
 }
 
 function updateChef(req) {
-    Review.count({ chef: req.body.chef }).then(count => {
-        console.log(`Updating chef ${req.body.chef} with number of reviews ${count}`);
+    Review.countDocuments({ chef: req.body.chef }).then((count) => {
+        console.log(
+            `Updating chef ${req.body.chef} with number of reviews ${count}`
+        );
         var x = {
-            "reviews": count
-        }
-        Chef.findByIdAndUpdate({ _id: req.body.chef }, x, { upsert: true, setDefaultsOnInsert: true, new: true })
-            .then(Chef => {
+            reviews: count,
+        };
+        Chef.findByIdAndUpdate({ _id: req.body.chef }, x, {
+                upsert: true,
+                setDefaultsOnInsert: true,
+                new: true,
+            })
+            .then((Chef) => {
                 if (!Chef) {
-                    console.log(`Cannot update review count. Chef not found with id ${req.body.chef}`);
+                    console.log(
+                        `Cannot update review count. Chef not found with id ${req.body.chef}`
+                    );
                 }
                 updateAverageRating(req);
-            }).catch(err => {
-                if (err.kind === 'ObjectId') {
-                    console.log(`Cannot update review count. Chef not found with id ${req.body.chef}`);
+            })
+            .catch((err) => {
+                if (err.kind === "ObjectId") {
+                    console.log(
+                        `Cannot update review count. Chef not found with id ${req.body.chef}`
+                    );
                 }
             });
-    })
+    });
 }
 
 function updateAverageRatingOnChef(req, avgRating) {
-    Review.count({ chef: req.body.chef }).then(count => {
-        console.log(`Updating chef ${req.body.chef} with average rating ${avgRating}`);
-        var x = {
-            "rating": avgRating
-        }
-        Chef.findByIdAndUpdate({ _id: req.body.chef }, x, { upsert: true, setDefaultsOnInsert: true, new: true })
-            .then(Chef => {
-                if (!Chef) {
-                    console.log(`Cannot update average rating. Chef not found with id ${req.body.chef}`);
-                }
-                updateAverageRating(req);
-            }).catch(err => {
-                if (err.kind === 'ObjectId') {
-                    console.log(`Cannot update average rating. Chef not found with id ${req.body.chef}`);
-                }
-            });
-    })
+    var x = {
+        rating: avgRating,
+    };
+    Chef.findByIdAndUpdate({ _id: req.body.chef }, x, {
+            upsert: true,
+            setDefaultsOnInsert: true,
+            new: true,
+        })
+        .then((Chef) => {
+            if (!Chef) {
+                console.log(
+                    `Cannot update average rating. Chef not found with id ${req.body.chef}`
+                );
+            } else {}
+        })
+        .catch((err) => {
+            if (err.kind === "ObjectId") {
+                console.log(
+                    `Cannot update average rating. Chef not found with id ${req.body.chef}`
+                );
+            }
+        });
 }
 
+async function updateAverageRating(req) {
+    console.log(`Finding and update average rating for chef ${req.body.chef}`);
+    const chefId = req.body.chef;
 
-
-function updateAverageRating(req) {
-    console.log(`Finding and update average rating for chef ${req.body.chef}`)
-    Review.aggregate(
-        [{
-            "$group": {
-                "chef": "$req.body.chef",
-                "avgRating": { "$avg": { "$ifNull": ["$rating", 0] } }
+    const avgResult = await Review.aggregate([{
+            $match: {
+                chef: chefId,
+            },
+        },
+        {
+            $group: {
+                _id: null,
+                avgValue: { "$avg": { "$ifNull": ["$rating", 0] } }
             }
-        }],
-        function(err, results) {
-            if (err) throw err;
-            console.log(`Average Rating for chef ${results}`)
-            updateAverageRatingOnChef(req, results);
         }
-    );
+    ]);
+    const avgRating = avgResult[0].avgValue;
+    console.log(`Average value: ${avgRating}`);
+    updateAverageRatingOnChef(req, avgRating);
 }
 /**
  * Sends 404 HTTP Response with Message
- * 
- * @param {Request} req 
- * @param {Response} res 
+ *
+ * @param {Request} req
+ * @param {Response} res
  */
 function reviewNotFoundWithId(req, res) {
-    res.status(404).send({ message: `Review not found with id ${req.params.id}` });
+    res
+        .status(404)
+        .send({ message: `Review not found with id ${req.params.id}` });
 }
 
 /**
  * Builds Review object from Request
- * 
- * @param {Request} req 
+ *
+ * @param {Request} req
  */
 function buildReviewObject(req) {
     return new Review(buildReviewJson(req));
@@ -221,11 +259,10 @@ function buildReviewObject(req) {
 
 /**
  * Builds Review Json from Request
- * 
- * @param {Request} req 
+ *
+ * @param {Request} req
  */
 function buildReviewJson(req) {
-
     return {
         chef: req.body.chef,
         rating: req.body.rating,

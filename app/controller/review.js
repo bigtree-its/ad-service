@@ -14,7 +14,7 @@ exports.create = (req, res) => {
     if (!errors.isEmpty()) {
         return res.json({ errors: _.uniq(errors.array()) });
     }
-    Review.exists({ order: req.body.order }, function(err, result) {
+    Review.exists({ order: req.body.order }, function (err, result) {
         if (err) {
             return res
                 .status(500)
@@ -160,82 +160,51 @@ function persist(req, res) {
         });
 }
 
-function updateChef(req) {
-    Review.countDocuments({ chef: req.body.chef }).then((count) => {
-        console.log(
-            `Updating chef ${req.body.chef} with number of reviews ${count}`
-        );
-        var x = {
-            reviews: count,
-        };
-        Chef.findByIdAndUpdate({ _id: req.body.chef }, x, {
-                upsert: true,
-                setDefaultsOnInsert: true,
-                new: true,
-            })
-            .then((Chef) => {
-                if (!Chef) {
-                    console.log(
-                        `Cannot update review count. Chef not found with id ${req.body.chef}`
-                    );
-                }
-                updateAverageRating(req);
-            })
-            .catch((err) => {
-                if (err.kind === "ObjectId") {
-                    console.log(
-                        `Cannot update review count. Chef not found with id ${req.body.chef}`
-                    );
-                }
-            });
-    });
-}
-
-function updateAverageRatingOnChef(req, avgRating) {
+async function updateChef(req) {
+    const chefId = req.body.chef;
+    const totalReviews = await Review.countDocuments({ chef: req.body.chef });
+    const avgResult = await Review.aggregate([{
+        $match: {
+            chef: chefId,
+        },
+    },
+    {
+        $group: {
+            _id: null,
+            avgValue: { "$avg": { "$ifNull": ["$rating", 0] } }
+        }
+    }
+    ]);
+    const avgRating = avgResult[0].avgValue;
+    var rounded = Math.round(avgRating * 10) / 10
+    console.log(`Average Rating: ${rounded}`);
+    console.log(`Total Reviews: ${totalReviews}`);
     var x = {
-        rating: avgRating,
+        reviews: totalReviews,
+        rating: rounded,
     };
+
     Chef.findByIdAndUpdate({ _id: req.body.chef }, x, {
-            upsert: true,
-            setDefaultsOnInsert: true,
-            new: true,
-        })
+        upsert: true,
+        setDefaultsOnInsert: true,
+        new: true,
+    })
         .then((Chef) => {
             if (!Chef) {
                 console.log(
-                    `Cannot update average rating. Chef not found with id ${req.body.chef}`
+                    `Cannot update review count. Chef not found with id ${req.body.chef}`
                 );
-            } else {}
+            }
         })
         .catch((err) => {
             if (err.kind === "ObjectId") {
                 console.log(
-                    `Cannot update average rating. Chef not found with id ${req.body.chef}`
+                    `Cannot update review count. Chef not found with id ${req.body.chef}`
                 );
             }
         });
 }
 
-async function updateAverageRating(req) {
-    console.log(`Finding and update average rating for chef ${req.body.chef}`);
-    const chefId = req.body.chef;
-
-    const avgResult = await Review.aggregate([{
-            $match: {
-                chef: chefId,
-            },
-        },
-        {
-            $group: {
-                _id: null,
-                avgValue: { "$avg": { "$ifNull": ["$rating", 0] } }
-            }
-        }
-    ]);
-    const avgRating = avgResult[0].avgValue;
-    console.log(`Average value: ${avgRating}`);
-    updateAverageRatingOnChef(req, avgRating);
-}
 /**
  * Sends 404 HTTP Response with Message
  *

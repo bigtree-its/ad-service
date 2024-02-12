@@ -1,5 +1,6 @@
 //Require Chef Model
 const Chef = require('../model/chef/chef');
+const Dish = require('../model/chef/dish');
 const Cuisine = require('../model/chef/cuisine');
 //Require Underscore JS ( Visit: http://underscorejs.org/#)
 const _ = require('underscore');
@@ -28,7 +29,19 @@ exports.create = async(req, res) => {
 
     /** Validate Cuisine */
     try {
-        this.validateCuisine(req, res, );
+        if (req.body.cuisines) {
+            this.validateCuisine(req, res);
+        }
+    } catch (error) {
+        console.log("Error: " + error);
+        return res.status(400).send({ message: error });
+    }
+
+    /** Validate Dish */
+    try {
+        if (req.body.dishes) {
+            this.validateDish(req, res);
+        }
     } catch (error) {
         console.log("Error: " + error);
         return res.status(400).send({ message: error });
@@ -61,13 +74,28 @@ exports.validateCuisine = async(req, res) => {
         }
         console.log('Verifying Cuisine : ' + cuisines);
         var records = await Cuisine.find().where('_id').in(cuisines).exec();
-        console.log("Verified Cuisines: " + records);
         if (!records) {
-            throw new Error(`Cuisine : ${cuisines} not valid.`);
+            throw new Error(`Some or more cuisines : ${cuisines} not valid.`);
         }
+        console.log("Verified Cuisines: " + records);
     } catch (error) {
         console.error(error);
         throw new Error(`Cannot find Cuisine ${cuisines}`);
+    }
+};
+
+exports.validateDish = async(req, res) => {
+    try {
+        var dishes = req.body.dishes;
+        console.log('Verifying dishes : ' + dishes);
+        var records = await Dish.find().where('_id').in(dishes).exec();
+        if (!records) {
+            throw new Error(`Some or more dishes in ${dishes} not valid.`);
+        }
+        console.log("Verified dishes: " + records);
+    } catch (error) {
+        console.error(error);
+        throw new Error(`Cannot verify dishes ${req.body.dishes}`);
     }
 };
 
@@ -160,6 +188,9 @@ exports.findAll = (req, res) => {
             // query.where('serviceAreas', { 'slug': req.query.serviceArea });
             // query.where('serviceAreas', { $elemMatch: { 'slug': req.query.serviceArea } });
     }
+    if (req.query.dishes) {
+        query.where('dishes', { $in: req.query.dishes })
+    }
     if (req.query.cuisines) {
         query.where('cuisines', { $in: req.query.cuisines })
     }
@@ -186,6 +217,7 @@ exports.findAll = (req, res) => {
         .populate("cuisines")
         .populate("serviceAreas")
         .populate("slots")
+        .populate("dishes")
         .then(result => {
             console.log(`Returning ${result.length} Chefs.`);
             res.send(result);
@@ -200,7 +232,7 @@ exports.findAll = (req, res) => {
 // Find a single Chef with a BrandId
 exports.findOne = (req, res) => {
     console.log(`Finding a chef ${req.params.id}`);
-    Chef.findById(req.params.id).populate("cuisines").populate("serviceAreas").populate("slots")
+    Chef.findById(req.params.id).populate("cuisines").populate("serviceAreas").populate("slots").populate("dishes")
         .then(data => {
             if (!data) {
                 return res.status(404).send({ message: `Chef not found with id ${req.params.id}` });
@@ -230,6 +262,7 @@ exports.update = (req, res) => {
         .populate("cuisines")
         .populate("serviceAreas")
         .populate("slots")
+        .populate("dishes")
         .then(Chef => {
             if (!Chef) {
                 return res.status(404).send({ message: `Chef not found with id ${req.params.id}` });
@@ -329,6 +362,7 @@ function buildChefJson(req) {
         categories: data.categories,
         keywords: data.keywords,
         cuisines: data.cuisines,
+        dishes: data.dishes,
         contact: data.contact,
         address: data.address,
         rating: data.rating,

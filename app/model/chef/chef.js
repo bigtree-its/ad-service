@@ -14,6 +14,10 @@ const ChefSchema = new mongoose.Schema({
         type: String,
         ref: 'Cuisine'
     }],
+    dishes: [{
+        type: String,
+        ref: 'Dish'
+    }],
     slots: [{
         type: String,
         ref: 'Slot'

@@ -18,7 +18,6 @@ const verifyToken = (req, res, next) => {
                 next();
             }
         });
-        next();
     } else {
         console.log("Unauthorized!");
         res.sendStatus(401);

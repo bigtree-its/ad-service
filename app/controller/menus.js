@@ -174,6 +174,7 @@ function buildMenuJson(req) {
         spice: req.body.spice,
         vegetarian: req.body.vegetarian,
         special: req.body.special,
+        preOrder: req.body.preOrder,
         extras: req.body.extras,
         choices: req.body.choices,
         description: req.body.description,

@@ -167,6 +167,8 @@ function buildMenuJson(req) {
     return {
         active: req.body.active ? req.body.active : false,
         orderBy: req.body.orderBy,
+        readyBy: req.body.readyBy,
+        collectionOnly: req.body.collectionOnly,
         name: req.body.name,
         chefId: req.body.chefId,
         collectionId: req.body.collectionId,

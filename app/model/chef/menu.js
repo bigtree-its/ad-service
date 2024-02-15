@@ -21,7 +21,9 @@ const MenuSchema = new mongoose.Schema({
     description: String,
     active: Boolean,
     preOrder: Boolean,
+    readyBy: Date,
     orderBy: Date,
+    collectionOnly: Boolean,
 }, {
     timestamps: true
 });

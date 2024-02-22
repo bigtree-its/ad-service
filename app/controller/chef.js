@@ -382,6 +382,7 @@ function buildChefJson(req) {
         minimumPartyOrder: data.minimumPartyOrder,
         doPartyOrders: data.doPartyOrders,
         preOrderOnly: data.preOrderOnly,
+        paymentRequireApproval: data.paymentRequireApproval,
         open: data.open,
     };
 }

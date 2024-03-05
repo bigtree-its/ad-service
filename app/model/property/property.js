@@ -2,7 +2,7 @@
 var mongoose = require('mongoose');
 //Mongoose Paginate V2
 var aggregatePaginate = require('mongoose-aggregate-paginate-v2');
-const { NameValue, Address, Sale, Rental, Contact, School, SuperStore } = require('./common');
+const { NameValue, Address, Sale, Rental, Contact, School, SuperStore } = require('./all-properties');
 
 // Define a Schema for our property collection
 const PropertySchema= new mongoose.Schema({

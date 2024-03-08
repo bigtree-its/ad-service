@@ -1,6 +1,6 @@
 //Require Property Model
-const Property = require('../model/property');
-const PropertyType = require('../model/property/type');
+const Property = require('../../model/property/property');
+const PropertyType = require('../../model/property/type');
 //Require Underscore JS ( Visit: http://underscorejs.org/#)
 const _ = require('underscore');
 //Require Mongoose
@@ -8,7 +8,7 @@ var mongoose = require('mongoose');
 //Require Generate Safe Id for Random unique id Generation
 var generateSafeId = require('generate-safe-id');
 // Require Validation Utils
-const { validationResult, errorFormatter } = require('./validation');
+const { validationResult, errorFormatter } = require('../validation');
 
 function isEmpty(data){
     if ( data === undefined || data === null || data.length === 0){

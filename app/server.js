@@ -63,9 +63,10 @@ app.use(function(req, res, next) {
     next();
 })
 
-app.use(function(req, res, next) {
-    verifyToken(req, res, next)
-});
+// Add security as below
+// app.use(function(req, res, next) {
+//     verifyToken(req, res, next)
+// });
 
 // Other routes
 require('./route/chef')(app);
@@ -74,12 +75,16 @@ require('./route/calendar')(app);
 require('./route/cuisine')(app);
 require('./route/dish')(app);
 require('./route/slot')(app);
+require('./route/supplier')(app);
 require('./route/collection')(app);
 require('./route/category')(app);
 require('./route/review')(app);
 require('./route/menu')(app);
-require('./route/property')(app);
-require('./route/property-enquiry')(app);
+require('./route/products/product')(app);
+require('./route/products/group')(app);
+require('./route/products/feedback')(app);
+require('./route/property/property')(app);
+require('./route/property/property-enquiry')(app);
 require('./route/carousel')(app);
 require('./route/property/type')(app);
 app.use('/health', require('./route/healthcheck'));

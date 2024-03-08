@@ -1,6 +1,6 @@
 
 // Require PropertyEnquiry Model
-const PropertyEnquiry = require('../model/property-enquiry');
+const PropertyEnquiry = require('../../model/property/property-enquiry');
 
 // Require Underscore JS ( Visit: http://underscorejs.org/#)
 const _ = require('underscore');
@@ -9,7 +9,7 @@ const _ = require('underscore');
 var mongoose = require('mongoose');
 
 // Require Validation Utils
-const { validationResult, errorFormatter } = require('./validation');
+const { validationResult, errorFormatter } = require('../validation');
 
 // Create and Save a new PropertyEnquiry
 exports.create = (req, res) => {

@@ -2,12 +2,12 @@
 const _ = require("underscore");
 
 // Require Validation Utils
-const { validationResult, errorFormatter } = require("./validation");
-const Group = require("../model/products/group");
+const { validationResult, errorFormatter } = require("../validation");
+const Group = require("../../model/products/group");
 
-// Create and Save a new Group
+// Create and Save a new Collection
 
-// Create and Save a new Group
+// Create and Save a new Collection
 exports.create = (req, res) => {
     console.log("Request to create new Group " + JSON.stringify(req.body));
     // Validate Request
@@ -16,8 +16,8 @@ exports.create = (req, res) => {
         return res.json({ errors: _.uniq(errors.array()) });
     }
     var slug = getSlug(req.body.name);
-    Group.exists({ slug: slug, chefId: req.body.chefId },
-        function (err, result) {
+    Group.exists({ slug: slug },
+        function(err, result) {
             if (err) {
                 return res
                     .status(500)
@@ -34,31 +34,35 @@ exports.create = (req, res) => {
     );
 };
 
-// Retrieve and return all Groups from the database.
-// Retrieve and return all Groups from the database.
+// Retrieve and return all groups from the database.
+// Retrieve and return all groups from the database.
 exports.findAll = (req, res) => {
-    console.log("Received request to get all Groups");
-    Group.find()
-        .then((data) => {
-            if (data) {
-                console.log("Returning " + data.length + " Groups.");
-                res.send(data);
-            } else {
-                console.log("Returning no Groups ");
-                res.send({});
-            }
-        })
-        .catch((err) => {
-            res.status(500).send({
-                message: err.message || "Some error occurred while retrieving Groups.",
+    console.log("Received request to get all groups");
+    if (req.query.chef) {
+        return this.lookup(req, res);
+    } else {
+        Group.find()
+            .then((data) => {
+                if (data) {
+                    console.log("Returning " + data.length + " groups.");
+                    res.send(data);
+                } else {
+                    console.log("Returning no groups ");
+                    res.send({});
+                }
+            })
+            .catch((err) => {
+                res.status(500).send({
+                    message: err.message || "Some error occurred while retrieving groups.",
+                });
             });
-        });
+    }
 };
 
-// Retrieve and return all Groups from the database.
+// Retrieve and return all groups from the database.
 exports.lookup = (req, res) => {
     let query = Group.find();
-    if (req.query.name) {
+    if (req.query.chef) {
         // query.where('name', { $regex: '.*' + req.query.name + '.*' })
         query.where({
             chefId: { $regex: ".*" + req.query.chef + ".*", $options: "i" },
@@ -66,13 +70,13 @@ exports.lookup = (req, res) => {
     }
     Group.find(query)
         .then((result) => {
-            console.log(`Returning ${result.length} Groups.`);
+            console.log(`Returning ${result.length} groups.`);
             res.send(result);
         })
         .catch((error) => {
             console.log("Error while fetching from database. " + error.message);
             res.status(500).send({
-                message: error.message || "Some error occurred while retrieving Groups.",
+                message: error.message || "Some error occurred while retrieving groups.",
             });
         });
 };
@@ -81,28 +85,28 @@ exports.lookup = (req, res) => {
 exports.deleteEverything = (req, res) => {
     Group.remove()
         .then((result) => {
-            res.send({ message: "Deleted all Groups" });
+            res.send({ message: "Deleted all groups" });
         })
         .catch((err) => {
             return res.status(500).send({
-                message: `Could not delete all Groups. ${err.message}`,
+                message: `Could not delete all groups. ${err.message}`,
             });
         });
 };
 
-// Find a single Group with a GroupId
+// Find a single Group with a CollectionId
 exports.findOne = (req, res) => {
     console.log("Received request get a Group with id " + req.params.id);
     Group.findOne({ _id: req.params.id })
-        .then((Group) => {
-            if (!Group) {
-                return GroupNotFoundWithId(req, res);
+        .then((collection) => {
+            if (!collection) {
+                return objectNotFoundWithId(req, res);
             }
-            res.send(Group);
+            res.send(collection);
         })
         .catch((err) => {
             if (err.kind === "ObjectId") {
-                return GroupNotFoundWithId(req, res);
+                return objectNotFoundWithId(req, res);
             }
             return res.status(500).send({
                 message: "Error while retrieving Group with id " + req.params.id,
@@ -110,7 +114,7 @@ exports.findOne = (req, res) => {
         });
 };
 
-// Update a Group identified by the GroupId in the request
+// Update a Group identified by the CollectionId in the request
 exports.update = (req, res) => {
     console.log("Updating Group " + JSON.stringify(req.body));
     // Validate Request
@@ -121,15 +125,15 @@ exports.update = (req, res) => {
     }
     // Find Group and update it with the request body
     Group.findByIdAndUpdate(req.params.id, { $set: req.body }, { new: true })
-        .then((Group) => {
-            if (!Group) {
-                return GroupNotFoundWithId(req, res);
+        .then((collection) => {
+            if (!collection) {
+                return objectNotFoundWithId(req, res);
             }
-            res.send(Group);
+            res.send(collection);
         })
         .catch((err) => {
             if (err.kind === "ObjectId") {
-                return GroupNotFoundWithId(req, res);
+                return objectNotFoundWithId(req, res);
             }
             return res.status(500).send({
                 message: "Error updating Group with id " + req.params.id,
@@ -137,10 +141,10 @@ exports.update = (req, res) => {
         });
 };
 
-// Delete a Group with the specified GroupId in the request
+// Delete a Group with the specified CollectionId in the request
 exports.delete = (req, res) => {
 
-    if (req.query.chef) {
+    if (req.query.name) {
         deleteManyByQuery(req);
     } else {
         deleteOneById(req, res);
@@ -151,14 +155,14 @@ exports.delete = (req, res) => {
 function deleteManyByQuery(req) {
     let query = Group.find();
     query.where({
-        chefId: { $regex: ".*" + req.query.chef + ".*", $options: "i" },
+        chefId: { $regex: ".*" + req.query.name + ".*", $options: "i" },
     });
     Group.deleteMany(query)
-        .then(function () {
+        .then(function() {
             // Success
-            console.log("Groups for chef deleted");
+            console.log("Groups deleted");
         })
-        .catch(function (error) {
+        .catch(function(error) {
             // Failure
             console.log(error);
         });
@@ -166,15 +170,15 @@ function deleteManyByQuery(req) {
 
 function deleteOneById(req, res) {
     Group.findByIdAndRemove(req.params.id)
-        .then((Group) => {
-            if (!Group) {
-                return GroupNotFoundWithId(req, res);
+        .then((collection) => {
+            if (!collection) {
+                return objectNotFoundWithId(req, res);
             }
             res.send({ message: "Group deleted successfully!" });
         })
         .catch((err) => {
             if (err.kind === "ObjectId" || err.name === "NotFound") {
-                return GroupNotFoundWithId(req, res);
+                return objectNotFoundWithId(req, res);
             }
             return res.status(500).send({
                 message: "Could not delete Group with id " + req.params.id,
@@ -189,9 +193,9 @@ function deleteOneById(req, res) {
  * @param {Response} res
  */
 function persist(req, res) {
-    const Group = buildGroupObject(req);
+    const persistable = buildPersistableObject(req);
     // Save Group in the database
-    Group
+    persistable
         .save()
         .then((data) => {
             console.log("New Group created: " + data.name);
@@ -210,7 +214,7 @@ function persist(req, res) {
  * @param {Request} req
  * @param {Response} res
  */
-function GroupNotFoundWithId(req, res) {
+function objectNotFoundWithId(req, res) {
     res
         .status(404)
         .send({ message: `Group not found with id ${req.params.id}` });
@@ -221,8 +225,8 @@ function GroupNotFoundWithId(req, res) {
  *
  * @param {Request} req
  */
-function buildGroupObject(req) {
-    return new Group(buildGroupJson(req));
+function buildPersistableObject(req) {
+    return new Group(buildFromJson(req));
 }
 
 /**
@@ -230,23 +234,22 @@ function buildGroupObject(req) {
  *
  * @param {Request} req
  */
-function buildGroupJson(req) {
+function buildFromJson(req) {
     return {
         name: req.body.name,
-        chefId: req.body.chefId,
         image: req.body.image,
         active: req.body.active,
         slug: req.body.slug ||
             req.body.name
-                .trim()
-                .replace(/[\W_]+/g, "-")
-                .toLowerCase(),
+            .trim()
+            .replace(/[\W_]+/g, "-")
+            .toLowerCase(),
     };
 }
 
 /**
  * Returns the slug from the given name
- * e.g if name = M & S Groups then Slug = m-s-Groups
+ * e.g if name = M & S groups then Slug = m-s-groups
  * Replaces special characters and replace space with -
  *
  * @param {String} name

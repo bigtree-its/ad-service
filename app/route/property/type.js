@@ -1,7 +1,5 @@
 module.exports = (app) => {
     const types = require('../../controller/property/type.js');
-    const { verifyToken } = require('../../security/security');
-    const { check } = require('express-validator');
 
     const path = process.env.CONTEXT_PATH + '/property-types';
     // Public routes

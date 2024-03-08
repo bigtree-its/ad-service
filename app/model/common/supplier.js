@@ -1,7 +1,7 @@
 //Require Mongoose
 var mongoose = require('mongoose');
-const { Address, Contact } = require('../common');
 const uuid = require('node-uuid');
+const { Address, Contact } = require('./modals');
 
 // Define a Schema for our Supplier collection
 const SupplierSchema = new mongoose.Schema({
@@ -9,9 +9,9 @@ const SupplierSchema = new mongoose.Schema({
     name: { type: String, trim: true },
     tradingName: { type: String, trim: true },
     description: [String],
-    coverPhoto: String,
+    image: String,
+    slug: String,
     email: String,
-    gallery: [String],
     address: Address,
     deliveryFee: Number,
     freeDeliveryOver: Number,

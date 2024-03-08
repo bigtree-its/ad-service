@@ -1,28 +1,39 @@
 //Require Mongoose
 var mongoose = require('mongoose');
+const uuid = require('node-uuid');
 //Mongoose Paginate V2
 var aggregatePaginate = require('mongoose-aggregate-paginate-v2');
+const { Color, Varient, Extra, NameValue, Size } = require('../common/modals');
 
 // Define a Schema for our Product collection
 const ProductSchema= new mongoose.Schema({
-    title: String, // Product name
-    type: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'ProductType'
-    },
-    supplierId: { type: String, default: uuid.v4 },
+    name: String, // Product name
+    group: { type: String, default: uuid.v4 },
+    supplier: { type: String, default: uuid.v4 },
     description: [String],
     details: [String],
     attributes: [NameValue],
-    coverPhoto: String,
+    slug: String,
+    size: Size,
+    color: Extra,
+    material: String,
+    careInstruction: String,
+    storageInstruction: String,
+    image: String,
     shippingAndReturns: String,
     gallery: [String],
+    colors: [Color],
+    extras: [Extra],
+    sizes: [Size],
+    varients: [Varient],
     price: Number,
     priceOld: Number,
-    date: Date,
-    address: Address,
-    contact: Contact,
+    dateAdded: Date,
+    active: Boolean,
+    collectionOnly: Boolean,
+    discontinued: Boolean,
     featured: Boolean,
+    preOrder: Boolean,
 }, {
     timestamps: true
 });

@@ -1,6 +1,5 @@
 module.exports = (app) => {
-    const enquiries = require('../controller/property-enquiry.js');
-    const { verifyToken } = require('../security/security');
+    const enquiries = require('../../controller/property/property-enquiry.js');
     const { check } = require('express-validator');
 
     const path = process.env.CONTEXT_PATH + '/properties/enquiries';

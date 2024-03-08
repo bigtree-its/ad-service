@@ -1,6 +1,5 @@
 module.exports = (app) => {
-    const controller = require('../controller/property.js');
-    const { verifyToken } = require('../security/security');
+    const controller = require('../../controller/property/property.js');
     const { check } = require('express-validator');
 
     const path = process.env.CONTEXT_PATH + '/properties';

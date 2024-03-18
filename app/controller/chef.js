@@ -353,6 +353,7 @@ function buildChefJson(req) {
     return {
         name: data.name,
         kitchenName: data.kitchenName,
+        image: data.image,
         consumptionTypes: data.consumptionTypes,
         description: data.description,
         specials: data.specials,

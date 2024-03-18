@@ -23,6 +23,7 @@ const ChefSchema = new mongoose.Schema({
         ref: 'Slot'
     }],
     slug: { type: String, trim: true },
+    image: String,
     coverPhoto: String,
     email: String,
     gallery: [String],

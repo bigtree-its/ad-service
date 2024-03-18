@@ -1,6 +1,5 @@
 module.exports = (app) => {
     const controller = require('../controller/collection.js');
-    const { verifyToken } = require('../security/security.js');
     const { check } = require('express-validator');
 
     const path = process.env.CONTEXT_PATH + '/collections';

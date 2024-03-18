@@ -3,33 +3,30 @@ var mongoose = require('mongoose');
 const uuid = require('node-uuid');
 //Mongoose Paginate V2
 var aggregatePaginate = require('mongoose-aggregate-paginate-v2');
-const { Color, Varient, Extra, NameValue, Size } = require('../common/modals');
+const { Variant, ProductInfo, SupplierBasic } = require('../common/modals');
 
 // Define a Schema for our Product collection
 const ProductSchema= new mongoose.Schema({
     name: String, // Product name
     group: { type: String, default: uuid.v4 },
-    supplier: { type: String, default: uuid.v4 },
-    description: [String],
-    details: [String],
-    attributes: [NameValue],
+    supplier: SupplierBasic,
+    productInfo: [ProductInfo],
     slug: String,
-    size: Size,
-    color: Extra,
-    material: String,
-    careInstruction: String,
-    storageInstruction: String,
+    size: Variant,
+    color: Variant,
     image: String,
-    shippingAndReturns: String,
     gallery: [String],
-    colors: [Color],
-    extras: [Extra],
-    sizes: [Size],
-    varients: [Varient],
+    colors: [Variant],
+    sizes: [Variant],
+    variants: [Variant],
+    deliveryLeadTime: Number,
     price: Number,
     priceOld: Number,
+    availableDate: Date,
     dateAdded: Date,
     active: Boolean,
+    dispatchFrom: String,
+    freeDelivery: Boolean,
     collectionOnly: Boolean,
     discontinued: Boolean,
     featured: Boolean,

@@ -1,0 +1,116 @@
+{
+    "gallery": [
+        "/assets/images/p/p/shirts/garden-shirt-1.jpeg",
+        "/assets/images/p/p/shirts/garden-shirt-2.jpeg",
+        "/assets/images/p/p/shirts/garden-shirt-3.jpeg",
+        "/assets/images/p/p/shirts/garden-shirt-4.jpeg",
+        "/assets/images/p/p/shirts/garden-shirt-5.jpeg"
+    ],
+    "_id": "65f3009f40c59ec318c4a5a2",
+    "active": true,
+    "name": "Mughal Garden Shirt",
+    "slug": "mughal-garden-shirt--7c35ea92-5793-4c45-b10f-00a49e2395c9--331a578b-400e-4c42-91db-2254677d23f2",
+    "productInfo": [
+        {
+            "details": [
+                "Stylish and exotic, this shirt with indie motifs including peacocks, forests and domes is an eye catcher and extremely gorgeous. Made in 100% cotton fabric, this long and oversized style shirt is a perfect pick for vacationing as well as work"
+            ],
+            "_id": "65f3009f40c59ec318c4a5a3",
+            "title": "Description",
+            "moreInfo": []
+        },
+        {
+            "details": [
+                "Dispatched in 5 working days. This product is Non-Returnable"
+            ],
+            "_id": "65f3009f40c59ec318c4a5a4",
+            "title": "Shipping & Returns",
+            "moreInfo": []
+        },
+        {
+            "details": [],
+            "_id": "65f3009f40c59ec318c4a5a5",
+            "title": "Item Dimensions",
+            "moreInfo": [
+                {
+                    "_id": "65f3009f40c59ec318c4a5a6",
+                    "name": "Fit",
+                    "value": "Long and Oversized Style Fit"
+                },
+                {
+                    "_id": "65f3009f40c59ec318c4a5a7",
+                    "name": "Length",
+                    "value": "28 inches"
+                },
+                {
+                    "_id": "65f3009f40c59ec318c4a5a8",
+                    "name": "Closure Type",
+                    "value": "Buttons"
+                },
+                {
+                    "_id": "65f3009f40c59ec318c4a5a9",
+                    "name": "Material",
+                    "value": "100% Cotton (Cambric 60X60)"
+                },
+                {
+                    "_id": "65f3009f40c59ec318c4a5aa",
+                    "name": "Features",
+                    "value": "Collared Shirt style with concealed button placket and rounded high lowttons"
+                }
+            ]
+        }
+    ],
+    "group": "7c35ea92-5793-4c45-b10f-00a49e2395c9",
+    "supplier": {
+        "_id": "331a578b-400e-4c42-91db-2254677d23f2"
+    },
+    "size": {
+        "name": "S",
+        "price": 16.21
+    },
+    "color": {
+        "name": "Blue",
+        "price": 15.21
+    },
+    "price": 15.21,
+    "priceOld": 16.5,
+    "image": "/assets/images/p/p/shirts/garden-shirt.jpeg",
+    "colors": [
+        {
+            "_id": "65f3009f40c59ec318c4a5ab",
+            "name": "Blue",
+            "price": 0
+        },
+        {
+            "_id": "65f3009f40c59ec318c4a5ac",
+            "name": "Green",
+            "price": 1
+        },
+        {
+            "_id": "65f3009f40c59ec318c4a5ad",
+            "name": "Orange",
+            "price": 2
+        }
+    ],
+    "sizes": [
+        {
+            "_id": "65f3009f40c59ec318c4a5ae",
+            "name": "S",
+            "price": 16.21
+        },
+        {
+            "_id": "65f3009f40c59ec318c4a5af",
+            "name": "M",
+            "price": 17.21
+        },
+        {
+            "_id": "65f3009f40c59ec318c4a5b0",
+            "name": "L",
+            "price": 18.21
+        }
+    ],
+    "freeDelivery": true,
+    "dispatchFrom": "Türkiye",
+    "deliveryLeadTime": 7,
+    "variants": []
+}

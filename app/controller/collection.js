@@ -3,30 +3,30 @@ const _ = require("underscore");
 
 // Require Validation Utils
 const { validationResult, errorFormatter } = require("./validation");
-const Group = require("../model/products/group");
+const Collection = require("../model/chef/collection");
 
-// Create and Save a new Group
+// Create and Save a new Collection
 
-// Create and Save a new Group
+// Create and Save a new Collection
 exports.create = (req, res) => {
-    console.log("Request to create new Group " + JSON.stringify(req.body));
+    console.log("Request to create new Collection " + JSON.stringify(req.body));
     // Validate Request
     const errors = validationResult(req).formatWith(errorFormatter);
     if (!errors.isEmpty()) {
         return res.json({ errors: _.uniq(errors.array()) });
     }
     var slug = getSlug(req.body.name);
-    Group.exists({ slug: slug, chefId: req.body.chefId },
+    Collection.exists({ slug: slug, chefId: req.body.chefId },
         function (err, result) {
             if (err) {
                 return res
                     .status(500)
-                    .send({ message: `Error while finding Group for: ${slug}` });
+                    .send({ message: `Error while finding Collection for: ${slug}` });
             } else if (result) {
-                console.log(`Group already exist for: ${slug}`);
+                console.log(`Collection already exist for: ${slug}`);
                 res
                     .status(400)
-                    .send({ message: `Group already exist for: ${slug}` });
+                    .send({ message: `Collection already exist for: ${slug}` });
             } else {
                 persist(req, res);
             }
@@ -34,110 +34,110 @@ exports.create = (req, res) => {
     );
 };
 
-// Retrieve and return all Groups from the database.
-// Retrieve and return all Groups from the database.
+// Retrieve and return all Collections from the database.
+// Retrieve and return all Collections from the database.
 exports.findAll = (req, res) => {
-    console.log("Received request to get all Groups");
-    Group.find()
+    console.log("Received request to get all Collections");
+    Collection.find()
         .then((data) => {
             if (data) {
-                console.log("Returning " + data.length + " Groups.");
+                console.log("Returning " + data.length + " Collections.");
                 res.send(data);
             } else {
-                console.log("Returning no Groups ");
+                console.log("Returning no Collections ");
                 res.send({});
             }
         })
         .catch((err) => {
             res.status(500).send({
-                message: err.message || "Some error occurred while retrieving Groups.",
+                message: err.message || "Some error occurred while retrieving Collections.",
             });
         });
 };
 
-// Retrieve and return all Groups from the database.
+// Retrieve and return all Collections from the database.
 exports.lookup = (req, res) => {
-    let query = Group.find();
-    if (req.query.name) {
+    let query = Collection.find();
+    if (req.query.chef) {
         // query.where('name', { $regex: '.*' + req.query.name + '.*' })
         query.where({
             chefId: { $regex: ".*" + req.query.chef + ".*", $options: "i" },
         });
     }
-    Group.find(query)
+    Collection.find(query)
         .then((result) => {
-            console.log(`Returning ${result.length} Groups.`);
+            console.log(`Returning ${result.length} Collections.`);
             res.send(result);
         })
         .catch((error) => {
             console.log("Error while fetching from database. " + error.message);
             res.status(500).send({
-                message: error.message || "Some error occurred while retrieving Groups.",
+                message: error.message || "Some error occurred while retrieving Collections.",
             });
         });
 };
 
 // Deletes all
 exports.deleteEverything = (req, res) => {
-    Group.remove()
+    Collection.remove()
         .then((result) => {
-            res.send({ message: "Deleted all Groups" });
+            res.send({ message: "Deleted all Collections" });
         })
         .catch((err) => {
             return res.status(500).send({
-                message: `Could not delete all Groups. ${err.message}`,
+                message: `Could not delete all Collections. ${err.message}`,
             });
         });
 };
 
-// Find a single Group with a GroupId
+// Find a single Collection with a CollectionId
 exports.findOne = (req, res) => {
-    console.log("Received request get a Group with id " + req.params.id);
-    Group.findOne({ _id: req.params.id })
-        .then((Group) => {
-            if (!Group) {
-                return GroupNotFoundWithId(req, res);
+    console.log("Received request get a Collection with id " + req.params.id);
+    Collection.findOne({ _id: req.params.id })
+        .then((Collection) => {
+            if (!Collection) {
+                return CollectionNotFoundWithId(req, res);
             }
-            res.send(Group);
+            res.send(Collection);
         })
         .catch((err) => {
             if (err.kind === "ObjectId") {
-                return GroupNotFoundWithId(req, res);
+                return CollectionNotFoundWithId(req, res);
             }
             return res.status(500).send({
-                message: "Error while retrieving Group with id " + req.params.id,
+                message: "Error while retrieving Collection with id " + req.params.id,
             });
         });
 };
 
-// Update a Group identified by the GroupId in the request
+// Update a Collection identified by the CollectionId in the request
 exports.update = (req, res) => {
-    console.log("Updating Group " + JSON.stringify(req.body));
+    console.log("Updating Collection " + JSON.stringify(req.body));
     // Validate Request
     if (!req.body) {
         return res
             .status(400)
-            .send({ message: "Group body can not be empty" });
+            .send({ message: "Collection body can not be empty" });
     }
-    // Find Group and update it with the request body
-    Group.findByIdAndUpdate(req.params.id, { $set: req.body }, { new: true })
-        .then((Group) => {
-            if (!Group) {
-                return GroupNotFoundWithId(req, res);
+    // Find Collection and update it with the request body
+    Collection.findByIdAndUpdate(req.params.id, { $set: req.body }, { new: true })
+        .then((Collection) => {
+            if (!Collection) {
+                return CollectionNotFoundWithId(req, res);
             }
-            res.send(Group);
+            res.send(Collection);
         })
         .catch((err) => {
             if (err.kind === "ObjectId") {
-                return GroupNotFoundWithId(req, res);
+                return CollectionNotFoundWithId(req, res);
             }
             return res.status(500).send({
-                message: "Error updating Group with id " + req.params.id,
+                message: "Error updating Collection with id " + req.params.id,
             });
         });
 };
 
-// Delete a Group with the specified GroupId in the request
+// Delete a Collection with the specified CollectionId in the request
 exports.delete = (req, res) => {
 
     if (req.query.chef) {
@@ -149,14 +149,14 @@ exports.delete = (req, res) => {
 };
 
 function deleteManyByQuery(req) {
-    let query = Group.find();
+    let query = Collection.find();
     query.where({
         chefId: { $regex: ".*" + req.query.chef + ".*", $options: "i" },
     });
-    Group.deleteMany(query)
+    Collection.deleteMany(query)
         .then(function () {
             // Success
-            console.log("Groups for chef deleted");
+            console.log("Collections for chef deleted");
         })
         .catch(function (error) {
             // Failure
@@ -165,41 +165,41 @@ function deleteManyByQuery(req) {
 }
 
 function deleteOneById(req, res) {
-    Group.findByIdAndRemove(req.params.id)
-        .then((Group) => {
-            if (!Group) {
-                return GroupNotFoundWithId(req, res);
+    Collection.findByIdAndRemove(req.params.id)
+        .then((Collection) => {
+            if (!Collection) {
+                return CollectionNotFoundWithId(req, res);
             }
-            res.send({ message: "Group deleted successfully!" });
+            res.send({ message: "Collection deleted successfully!" });
         })
         .catch((err) => {
             if (err.kind === "ObjectId" || err.name === "NotFound") {
-                return GroupNotFoundWithId(req, res);
+                return CollectionNotFoundWithId(req, res);
             }
             return res.status(500).send({
-                message: "Could not delete Group with id " + req.params.id,
+                message: "Could not delete Collection with id " + req.params.id,
             });
         });
 }
 
 /**
- * Persists new Group document
+ * Persists new Collection document
  *
  * @param {Request} req
  * @param {Response} res
  */
 function persist(req, res) {
-    const Group = buildGroupObject(req);
-    // Save Group in the database
-    Group
+    const Collection = buildCollectionObject(req);
+    // Save Collection in the database
+    Collection
         .save()
         .then((data) => {
-            console.log("New Group created: " + data.name);
+            console.log("New Collection created: " + data.name);
             res.status(201).send(data);
         })
         .catch((err) => {
             res.status(500).send({
-                message: err.message || "Some error occurred while creating the Group.",
+                message: err.message || "Some error occurred while creating the Collection.",
             });
         });
 }
@@ -210,27 +210,27 @@ function persist(req, res) {
  * @param {Request} req
  * @param {Response} res
  */
-function GroupNotFoundWithId(req, res) {
+function CollectionNotFoundWithId(req, res) {
     res
         .status(404)
-        .send({ message: `Group not found with id ${req.params.id}` });
+        .send({ message: `Collection not found with id ${req.params.id}` });
 }
 
 /**
- * Builds Group object from Request
+ * Builds Collection object from Request
  *
  * @param {Request} req
  */
-function buildGroupObject(req) {
-    return new Group(buildGroupJson(req));
+function buildCollectionObject(req) {
+    return new Collection(buildCollectionJson(req));
 }
 
 /**
- * Builds Group Json from Request
+ * Builds Collection Json from Request
  *
  * @param {Request} req
  */
-function buildGroupJson(req) {
+function buildCollectionJson(req) {
     return {
         name: req.body.name,
         chefId: req.body.chefId,
@@ -246,7 +246,7 @@ function buildGroupJson(req) {
 
 /**
  * Returns the slug from the given name
- * e.g if name = M & S Groups then Slug = m-s-Groups
+ * e.g if name = M & S Collections then Slug = m-s-Collections
  * Replaces special characters and replace space with -
  *
  * @param {String} name

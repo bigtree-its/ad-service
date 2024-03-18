@@ -3,6 +3,7 @@ const _ = require('underscore');
 
 // Require Validation Utils
 const Product = require('../../model/products/product');
+const Supplier = require('../../model/common/supplier');
 const { errorFormatter, validationResult } = require('../validation');
 
 // Create and Save a new product
@@ -13,10 +14,10 @@ exports.create = (req, res) => {
     if (!errors.isEmpty()) {
         return res.json({ errors: _.uniq(errors.array()) });
     }
-    var slug = getSlug(req.body.name, req.body.group, req.body.supplier);
+    var slug = getSlug(req.body.name, req.body.group, req.body.supplier._id);
     console.log(`Finding if a product already exist for: ${slug}`);
 
-    Product.exists({ slug: slug }, function(err, result) {
+    Product.exists({ slug: slug }, function (err, result) {
         if (err) {
             console.log(`Error while finding product for: ${slug}`);
             return res.status(500).send({ message: `Error while finding product for: ${slug}` });
@@ -72,13 +73,13 @@ exports.findOne = (req, res) => {
     Product.findOne({ _id: req.params.id })
         .then(product => {
             if (!product) {
-                return productNotFoundWithId(req, res);
+                return returnError(req, res, 400, "Product not found");
             }
             res.send(product);
         })
         .catch(err => {
             if (err.kind === 'ObjectId') {
-                return productNotFoundWithId(req, res);
+                return returnError(req, res, 400, "Product not found");
             }
             return res.status(500).send({ message: "Error while retrieving product with id " + req.params.id });
         });
@@ -95,12 +96,12 @@ exports.update = (req, res) => {
     Product.findByIdAndUpdate(req.params.id, { $set: req.body }, { new: true })
         .then(product => {
             if (!product) {
-                return productNotFoundWithId(req, res);
+                return returnError(req, res, 400, "Product not found");
             }
             res.send(product);
         }).catch(err => {
             if (err.kind === 'ObjectId') {
-                return productNotFoundWithId(req, res);
+                return returnError(req, res, 400, "Product not found");
             }
             return res.status(500).send({
                 message: "Error updating product with id " + req.params.id
@@ -113,12 +114,12 @@ exports.delete = (req, res) => {
     Product.findByIdAndRemove(req.params.id)
         .then(product => {
             if (!product) {
-                return productNotFoundWithId(req, res);
+                return returnError(req, res, 400, "Product not found");
             }
             res.send({ message: "product deleted successfully!" });
         }).catch(err => {
             if (err.kind === 'ObjectId' || err.name === 'NotFound') {
-                return productNotFoundWithId(req, res);
+                return returnError(req, res, 400, "Product not found");
             }
             return res.status(500).send({
                 message: "Could not delete product with id " + req.params.id
@@ -133,26 +134,50 @@ exports.delete = (req, res) => {
  * @param {Response} res 
  */
 function persist(req, res) {
-    const product = buildProductObject(req);
+    
     // Save product in the database
-    product.save()
-        .then(data => {
-            res.status(201).send(data);
-        }).catch(err => {
-            res.status(500).send({
-                message: err.message || "Some error occurred while creating the Product."
-            });
+    Supplier.findOne({ _id: req.body.supplier._id })
+        .then(supplier => {
+            if (!supplier) {
+                return returnError(req, res, 400, "Supplier not found");
+            }
+            console.log('Supplier found');
+            req.body.supplier = {
+                "_id": supplier._id,
+                "name": supplier.name,
+                "tradingName": supplier.tradingName,
+                "email": supplier.contact.email,
+                "mobile": supplier.contact.mobile,
+                "telephone": supplier.contact.telephone,
+            }
+            const product = buildProductObject(req);
+            console.log('Saving new product '+ JSON.stringify(product))
+            product.save()
+                .then(data => {
+                    res.status(201).send(data);
+                }).catch(err => {
+                    res.status(500).send({
+                        message: err.message || "Some error occurred while creating the Product."
+                    });
+                });
+        })
+        .catch(err => {
+            if (err.kind === 'ObjectId') {
+                return returnError(req, res, 400, "Supplier not found");
+            }
+            return res.status(500).send({ message: "Error while retrieving product with id " + req.params.id });
         });
+
 }
 
 /**
- * Sends 404 HTTP Response with Message
+ * Returns Error 
  * 
  * @param {Request} req 
  * @param {Response} res 
  */
-function productNotFoundWithId(req, res) {
-    res.status(404).send({ message: `product not found with id ${req.params.id}` });
+function returnError(req, res, code, msg) {
+    res.status(code).send({ message: msg });
 }
 
 /**
@@ -173,18 +198,12 @@ function buildObject(req) {
     return {
         active: req.body.active ? req.body.active : false,
         name: req.body.name,
-        slug: getSlug(req.body.name, req.body.group, req.body.supplier),
-        description: req.body.description,
+        slug: getSlug(req.body.name, req.body.group, req.body.supplier._id),
+        productInfo: req.body.productInfo,
         group: req.body.group,
         supplier: req.body.supplier,
-        details: req.body.details,
-        attributes: req.body.attributes,
         size: req.body.size,
         color: req.body.color,
-        material: req.body.material,
-        careInstruction: req.body.careInstruction,
-        storageInstruction: req.body.storageInstruction,
-        shippingAndReturns: req.body.shippingAndReturns,
         price: req.body.price,
         priceOld: req.body.priceOld,
         orderBy: req.body.orderBy,
@@ -194,6 +213,10 @@ function buildObject(req) {
         colors: req.body.colors,
         sizes: req.body.sizes,
         varients: req.body.varients,
+        freeDelivery: req.body.freeDelivery,
+        dispatchFrom: req.body.dispatchFrom,
+        availableDate: req.body.availableDate,
+        deliveryLeadTime: req.body.deliveryLeadTime,
         dateAdded: req.body.dateAdded,
         preOrder: req.body.preOrder,
         collectionOnly: req.body.collectionOnly,
@@ -211,5 +234,5 @@ function buildObject(req) {
  * @param {String} name 
  */
 function getSlug(name, group, supplier) {
-    return name.trim().replace(/[\W_]+/g, "-").toLowerCase()+"--"+group.trim().replace(/[\W_]+/g, "-").toLowerCase()+"--"+supplier.trim().replace(/[\W_]+/g, "-").toLowerCase();
+    return name.trim().replace(/[\W_]+/g, "-").toLowerCase() + "--" + group.trim().replace(/[\W_]+/g, "-").toLowerCase() + "--" + supplier.trim().replace(/[\W_]+/g, "-").toLowerCase();
 }

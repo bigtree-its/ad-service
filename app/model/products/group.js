@@ -5,6 +5,7 @@ const uuid = require('node-uuid');
 const GroupSchema = new mongoose.Schema({
     _id: { type: String, default: uuid.v4 },
     name: String,
+    department: String,
     slug: String,
     image: String,
     active: Boolean

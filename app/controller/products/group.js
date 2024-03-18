@@ -15,7 +15,7 @@ exports.create = (req, res) => {
     if (!errors.isEmpty()) {
         return res.json({ errors: _.uniq(errors.array()) });
     }
-    var slug = getSlug(req.body.name);
+    var slug = getSlug(req);
     Group.exists({ slug: slug },
         function(err, result) {
             if (err) {
@@ -38,7 +38,7 @@ exports.create = (req, res) => {
 // Retrieve and return all groups from the database.
 exports.findAll = (req, res) => {
     console.log("Received request to get all groups");
-    if (req.query.chef) {
+    if (req.query.dept) {
         return this.lookup(req, res);
     } else {
         Group.find()
@@ -62,10 +62,10 @@ exports.findAll = (req, res) => {
 // Retrieve and return all groups from the database.
 exports.lookup = (req, res) => {
     let query = Group.find();
-    if (req.query.chef) {
+    if (req.query.dept) {
         // query.where('name', { $regex: '.*' + req.query.name + '.*' })
         query.where({
-            chefId: { $regex: ".*" + req.query.chef + ".*", $options: "i" },
+            department: { $regex: ".*" + req.query.dept + ".*", $options: "i" },
         });
     }
     Group.find(query)
@@ -237,13 +237,10 @@ function buildPersistableObject(req) {
 function buildFromJson(req) {
     return {
         name: req.body.name,
+        department: req.body.department,
         image: req.body.image,
         active: req.body.active,
-        slug: req.body.slug ||
-            req.body.name
-            .trim()
-            .replace(/[\W_]+/g, "-")
-            .toLowerCase(),
+        slug: req.body.slug ||getSlug(req),
     };
 }
 
@@ -254,9 +251,6 @@ function buildFromJson(req) {
  *
  * @param {String} name
  */
-function getSlug(name) {
-    return name
-        .trim()
-        .replace(/[\W_]+/g, "-")
-        .toLowerCase();
+function getSlug(req) {
+    return req.body.name.trim().replace(/[\W_]+/g, "-").toLowerCase() + "--" + req.body.department.trim().replace(/[\W_]+/g, "-").toLowerCase();
 }

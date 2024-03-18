@@ -14,6 +14,17 @@ const Contact = {
     telephone: String
 }
 
+const NameValue = {
+    name: String,
+    value: String,
+}
+
+const ProductInfo = {
+    title: String,
+    details: [String],
+    moreInfo: [NameValue]
+}
+
 const Customer = {
     _id: String,
     name: String,
@@ -22,26 +33,23 @@ const Customer = {
     telephone: String
 }
 
-const NameValue = {
+const SupplierBasic = {
+    _id: String,
     name: String,
-    value: String,
+    tradingName: String,
+    email: String,
+    mobile: String,
+    telephone: String
 }
+
 const Extra = {
     name: String,
     price: Number,
 }
-const Varient = {
+const Variant = {
     name: String,
     price: Number,
+    detail: String,
 }
 
-const Color = {
-    name: String,
-    price: Number,
-}
-const Size = {
-    name: String,
-    price: Number,
-    details: [String],
-}
-module.exports = { Customer, Address, Contact, NameValue, Extra, Color, Size, Varient }
+module.exports = { Customer, Address, Contact, NameValue, Extra, Variant, ProductInfo, SupplierBasic }

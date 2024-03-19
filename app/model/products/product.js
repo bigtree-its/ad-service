@@ -11,6 +11,7 @@ const ProductSchema= new mongoose.Schema({
     group: { type: String, default: uuid.v4 },
     supplier: SupplierBasic,
     productInfo: [ProductInfo],
+    shortDesc: String,
     slug: String,
     size: Variant,
     color: Variant,

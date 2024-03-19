@@ -198,6 +198,7 @@ function buildObject(req) {
     return {
         active: req.body.active ? req.body.active : false,
         name: req.body.name,
+        shortDesc: req.body.shortDesc,
         slug: getSlug(req.body.name, req.body.group, req.body.supplier._id),
         productInfo: req.body.productInfo,
         group: req.body.group,

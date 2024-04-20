@@ -14,12 +14,12 @@ exports.create = (req, res) => {
         return res.json({ errors: _.uniq(errors.array()) });
     }
     console.log(`Finding if a Calendar already exist`);
-    Calendar.exists({ chefId: req.body.chefId, orderBefore: req.body.orderBefore }, function(err, result) {
+    Calendar.exists({ chefId: req.body.chefId, date: req.body.date }, function(err, result) {
         if (err) {
-            return res.status(500).send({ message: `Error while finding Calendar for Chef ${req.body.chefId} on ${req.body.orderBefore}` });
+            return res.status(500).send({ message: `Error while finding Calendar for Chef ${req.body.chefId} on ${req.body.date}` });
         } else if (result) {
-            console.log(`Calendar already exist for Chef ${req.body.chefId} on ${req.body.orderBefore}`);
-            res.status(400).send({ message: `Calendar already exist for Chef ${req.body.chefId} on ${req.body.orderBefore}` });
+            console.log(`Calendar already exist for Chef ${req.body.chefId} on ${req.body.date}`);
+            res.status(400).send({ message: `Calendar already exist for Chef ${req.body.chefId} on ${req.body.date}` });
         } else {
             persist(req, res);
         }
@@ -29,12 +29,11 @@ exports.create = (req, res) => {
 
 
 // Retrieve and return all Calendars from the database.
-exports.findAll = (req, res) => {
-    console.log("Received request to get all Calendars");
+exports.findAll = (req, res) => {   
     if (Object.keys(req.query).length > 0) {
         return this.lookup(req, res);
     }
-    console.log(`Contains Query Params: ${Object.keys(req.query).length}`);
+    console.log("Received request to get all Calendars");
     Calendar.find()
         .then(data => {
             if (data) {
@@ -58,24 +57,23 @@ function addDays(theDate, days) {
 
 // Retrieve and return all local area from the database.
 exports.lookup = (req, res) => {
-    console.log(`Looking for calendars`)
     let query = Calendar.find();
+    console.log(`Looking for calendars with ${req.query}`);
     if (req.query.chef) {
-        console.log(`Query ChefId : ${req.query.chef}`)
         query.where({ chefId: req.query.chef })
     }
-    if (req.query.orderBefore) {
-        query.where({ orderBefore: req.query.orderBefore })
+    if (req.query.date) {
+        query.where({ date: req.query.date })
     }
     if (req.query.thisweek) {
         let today = new Date();
-        let dayOfWeekNumber = today.getDay();
-        let endDays = 7 - dayOfWeekNumber;
-        var endDate = addDays(today, endDays);
-        console.log(`Calendars with start date ${today}, end date: ${endDate}`)
-        query.where({ orderBefore: { $gte: today, $lte: endDate } })
+        var tomorrow = addDays(today, 1);
+        let tomorrowDay = tomorrow.getDay();
+        var endDate = addDays(tomorrow, tomorrowDay + 7);
+        console.log(`Calendars with start date ${tomorrow}, end date: ${endDate}`)
+        query.where({ date: { $gte: tomorrow, $lte: endDate } })
     }
-    console.log(`Looking for calendars with ${query}`);
+    
     Calendar.find(query)
         .populate({
             path: 'foods'
@@ -210,11 +208,7 @@ function buildCalendarObject(req) {
 function buildCalendarJson(req) {
     return {
         chefId: req.body.chefId,
-        orderBefore: req.body.orderBefore,
-        collectionStartDate: req.body.collectionStartDate,
-        collectionEndDate: req.body.collectionEndDate,
-        deliveryStartDate: req.body.deliveryStartDate,
-        deliveryEndDate: req.body.deliveryEndDate,
+        date: req.body.date,
         foods: req.body.foods,
         description: req.body.description
     };

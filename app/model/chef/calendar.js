@@ -6,13 +6,9 @@ const uuid = require('node-uuid');
 const CalendarSchema = new mongoose.Schema({
     _id: { type: String, default: uuid.v4 },
     chefId: { type: String, default: uuid.v4 },
-    orderBefore: Date,
-    collectionStartDate: Date,
-    collectionEndDate: Date,
-    deliveryStartDate: Date,
-    deliveryEndDate: Date,
+    date: Date,
     description: [String],
-    menus: [{
+    foods: [{
         type: String,
         ref: 'Menu'
     }]

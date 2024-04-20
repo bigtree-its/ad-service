@@ -18,10 +18,10 @@ module.exports = (app) => {
     app.post(path,
         // verifyToken, 
         [
-            // check('foods').notEmpty().withMessage('Foods must not be empty'),
-            check('orderBefore').custom((date_ob, { req }) => {
-                if (date_ob > req.body.orderBefore) {
-                  throw new Error('OrderBefore must be a future date');
+            check('foods').notEmpty().withMessage('Foods must not be empty'),
+            check('date').custom((date_ob, { req }) => {
+                if (date_ob > req.body.date) {
+                  throw new Error('Date must be a future date');
                 }
                 // Indicates the success of this synchronous custom validator
                 return true;

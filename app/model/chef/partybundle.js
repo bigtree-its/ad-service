@@ -2,30 +2,40 @@
 var mongoose = require('mongoose');
 const uuid = require('node-uuid');
 const { Extra } = require('../common');
-// Define a Schema for our Menu collection
-const MenuSchema = new mongoose.Schema({
+// Define a Schema for our PartyBundle collection
+const PartyBundleSchema = new mongoose.Schema({
     _id: { type: String, default: uuid.v4 },
     chefId: { type: String, default: uuid.v4 },
     collectionId: { type: String, default: uuid.v4 },
     name: String,
     slug: String,
-    image: String,
     price: Number,
-    spice: Number,
+    maxStarters: Number,
+    maxMains: Number,
+    maxDeserts: Number,
+    maxSides: Number,
+    starters: [{
+        type: String,
+        ref: 'Menu'
+    }],
+    mains: [{
+        type: String,
+        ref: 'Menu'
+    }],
+    sides: [{
+        type: String,
+        ref: 'Menu'
+    }],
+    deserts: [{
+        type: String,
+        ref: 'Menu'
+    }],
     extras: [Extra],
-    choices: [Extra],
     vegetarian: Boolean,
-    special: Boolean,
     discounted: Boolean,
     discountedPrice: Number,
     description: String,
     active: Boolean,
-    preOrder: Boolean,
-    partyCandidate: Boolean,
-    partyDescription: String,
-    readyBy: Date,
-    orderBy: Date,
-    collectionOnly: Boolean,
 }, {
     timestamps: true
 });
@@ -34,7 +44,7 @@ const MenuSchema = new mongoose.Schema({
 // The first argument is the singular name of the collection your model is for. 
 // ** Mongoose automatically looks for the plural, lower cased version of your model name.
 // ** Thus, for the example above, the model Tank is for the tanks collection in the database.
-var Menu = mongoose.model('Menu', MenuSchema);
+var PartyBundle = mongoose.model('PartyBundle', PartyBundleSchema);
 
-//Export function to create "Menu" model class
-module.exports = Menu;
+//Export function to create "PartyBundle" model class
+module.exports = PartyBundle;

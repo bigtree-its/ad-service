@@ -1,30 +1,33 @@
 module.exports = (app) => {
-    const controller = require('../controller/collection.js');
+    const controller = require('../controller/partybundle.js');
+    const { verifyToken } = require('../security/security.js');
     const { check } = require('express-validator');
 
-    const path = process.env.CONTEXT_PATH + '/collections';
+    const path = process.env.CONTEXT_PATH + '/party-bundles';
 
     // Public routes
-    // Retrieve all Collection
+    // Retrieve all Menu
     app.get(path, controller.lookup);
 
-    // Retrieve a single Collection with Id
+    // Retrieve a single Menu with Id
     app.get(path + '/:id', controller.findOne);
 
     // Private routes
-    // Creates a new Collection
+    // Creates a new Menu
     app.post(path,
         // verifyToken, 
         [
             check('name').notEmpty().isLength({ min: 3, max: 250 }).withMessage('Name is mandatory'),
+            check('collectionId').notEmpty().withMessage('Collection is mandatory'),
+            check('price').notEmpty().withMessage('Price is mandatory'),
             check('chefId').notEmpty().isLength({ min: 3, max: 250 }).withMessage('Chef is mandatory')
         ],
         controller.create);
 
-    // Update a Collection with id
+    // Update a Menu with id
     app.put(path + '/:id', controller.update);
 
-    // Delete a Collection with id
+    // Delete a Menu with id
     app.delete(path + '/:id', controller.delete);
 
     //Delete All -- only for non production and can only be done by an admin

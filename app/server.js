@@ -80,6 +80,7 @@ require('./route/collection')(app);
 require('./route/category')(app);
 require('./route/review')(app);
 require('./route/menu')(app);
+require('./route/partybundle')(app);
 require('./route/products/product')(app);
 require('./route/products/group')(app);
 require('./route/products/feedback')(app);

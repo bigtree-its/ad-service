@@ -17,7 +17,7 @@ exports.create = (req, res) => {
     }
     var slug = getSlug(req.body.name);
     Collection.exists({ slug: slug, chefId: req.body.chefId },
-        function (err, result) {
+        function(err, result) {
             if (err) {
                 return res
                     .status(500)
@@ -59,11 +59,15 @@ exports.findAll = (req, res) => {
 exports.lookup = (req, res) => {
     let query = Collection.find();
     if (req.query.chef) {
-        // query.where('name', { $regex: '.*' + req.query.name + '.*' })
-        query.where({
-            chefId: { $regex: ".*" + req.query.chef + ".*", $options: "i" },
-        });
+        query.where('chefId', req.query.chef);
+        // query.where({ chefId: { '$regex': '.*' + req.query.chef + '.*', '$options': 'i' } })
     }
+    // if (req.query.chef) {
+    //     // query.where('name', { $regex: '.*' + req.query.name + '.*' })
+    //     query.where({
+    //         chefId: { $regex: ".*" + req.query.chef + ".*", $options: "i" },
+    //     });
+    // }
     Collection.find(query)
         .then((result) => {
             console.log(`Returning ${result.length} Collections.`);
@@ -154,11 +158,11 @@ function deleteManyByQuery(req) {
         chefId: { $regex: ".*" + req.query.chef + ".*", $options: "i" },
     });
     Collection.deleteMany(query)
-        .then(function () {
+        .then(function() {
             // Success
             console.log("Collections for chef deleted");
         })
-        .catch(function (error) {
+        .catch(function(error) {
             // Failure
             console.log(error);
         });
@@ -238,9 +242,9 @@ function buildCollectionJson(req) {
         active: req.body.active,
         slug: req.body.slug ||
             req.body.name
-                .trim()
-                .replace(/[\W_]+/g, "-")
-                .toLowerCase(),
+            .trim()
+            .replace(/[\W_]+/g, "-")
+            .toLowerCase(),
     };
 }
 

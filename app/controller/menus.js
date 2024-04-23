@@ -36,6 +36,13 @@ exports.lookup = (req, res) => {
         query.where('chefId', req.query.chef);
         // query.where({ chefId: { '$regex': '.*' + req.query.chef + '.*', '$options': 'i' } })
     }
+    if (req.query.collection) {
+        query.where('collectionId', req.query.collection);
+    }
+    if (req.query.vegetarian) {
+        query.where('vegetarian', req.query.vegetarian);
+    }
+
     query.where({ active: true });
     Menu.find(query).then(result => {
         console.log(`Returning ${result.length} Menus.`);

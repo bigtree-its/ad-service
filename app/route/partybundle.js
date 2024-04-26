@@ -18,7 +18,6 @@ module.exports = (app) => {
         // verifyToken, 
         [
             check('name').notEmpty().isLength({ min: 3, max: 250 }).withMessage('Name is mandatory'),
-            check('collectionId').notEmpty().withMessage('Collection is mandatory'),
             check('price').notEmpty().withMessage('Price is mandatory'),
             check('chefId').notEmpty().isLength({ min: 3, max: 250 }).withMessage('Chef is mandatory')
         ],

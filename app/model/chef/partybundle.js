@@ -2,6 +2,7 @@
 var mongoose = require('mongoose');
 const uuid = require('node-uuid');
 const { Extra } = require('../common');
+const { PartyBundleCandidate } = require('./common-foods');
 // Define a Schema for our PartyBundle collection
 const PartyBundleSchema = new mongoose.Schema({
     _id: { type: String, default: uuid.v4 },
@@ -10,26 +11,7 @@ const PartyBundleSchema = new mongoose.Schema({
     name: String,
     slug: String,
     price: Number,
-    maxStarters: Number,
-    maxMains: Number,
-    maxDeserts: Number,
-    maxSides: Number,
-    starters: [{
-        type: String,
-        ref: 'Menu'
-    }],
-    mains: [{
-        type: String,
-        ref: 'Menu'
-    }],
-    sides: [{
-        type: String,
-        ref: 'Menu'
-    }],
-    deserts: [{
-        type: String,
-        ref: 'Menu'
-    }],
+    partyBundleCandidates: [PartyBundleCandidate],
     extras: [Extra],
     vegetarian: Boolean,
     discounted: Boolean,

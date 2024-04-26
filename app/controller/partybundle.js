@@ -15,7 +15,7 @@ exports.create = (req, res) => {
     }
     var slug = getSlug(req.body.name);
     PartyBundle.exists({ slug: slug, chefId: req.body.chefId },
-        function(err, result) {
+        function (err, result) {
             if (err) {
                 return res
                     .status(500)
@@ -36,10 +36,13 @@ exports.create = (req, res) => {
 exports.findAll = (req, res) => {
     console.log("Received request to get all PartyBundles");
     PartyBundle.find()
-        .populate("starters")
-        .populate("mains")
-        .populate("sides")
-        .populate("deserts")
+        .populate({
+            path: 'partyBundleCandidates',
+            populate: {
+                path: 'items',
+                model: 'Menu'
+            }
+        })
         .then((data) => {
             if (data) {
                 console.log("Returning " + data.length + " PartyBundles.");
@@ -63,10 +66,13 @@ exports.lookup = (req, res) => {
         query.where("chefId", req.query.chef);
     }
     PartyBundle.find(query)
-        .populate("starters")
-        .populate("mains")
-        .populate("sides")
-        .populate("deserts")
+        .populate({
+            path: 'partyBundleCandidates',
+            populate: {
+                path: 'items',
+                model: 'Menu'
+            }
+        })
         .then((result) => {
             console.log(`Returning ${result.length} PartyBundles.`);
             res.send(result);
@@ -96,10 +102,13 @@ exports.deleteEverything = (req, res) => {
 exports.findOne = (req, res) => {
     console.log("Received request get a PartyBundle with id " + req.params.id);
     PartyBundle.findOne({ _id: req.params.id })
-        .populate("starters")
-        .populate("mains")
-        .populate("sides")
-        .populate("deserts")
+        .populate({
+            path: 'partyBundleCandidates',
+            populate: {
+                path: 'items',
+                model: 'Menu'
+            }
+        })
         .then((PartyBundle) => {
             if (!PartyBundle) {
                 return PartyBundleNotFoundWithId(req, res);
@@ -127,8 +136,8 @@ exports.update = (req, res) => {
     }
     // Find PartyBundle and update it with the request body
     PartyBundle.findByIdAndUpdate(
-            req.params.id, { $set: req.body }, { new: true }
-        )
+        req.params.id, { $set: req.body }, { new: true }
+    )
         .then((PartyBundle) => {
             if (!PartyBundle) {
                 return PartyBundleNotFoundWithId(req, res);
@@ -160,11 +169,11 @@ function deleteManyByQuery(req) {
         chefId: { $regex: ".*" + req.query.chef + ".*", $options: "i" },
     });
     PartyBundle.deleteMany(query)
-        .then(function() {
+        .then(function () {
             // Success
             console.log("PartyBundles for chef deleted");
         })
-        .catch(function(error) {
+        .catch(function (error) {
             // Failure
             console.log(error);
         });
@@ -242,24 +251,16 @@ function buildPartyBundleJson(req) {
         chefId: req.body.chefId,
         collectionId: req.body.collectionId,
         vegetarian: req.body.vegetarian,
-        starters: req.body.starters,
-        mains: req.body.mains,
-        sides: req.body.sides,
-        deserts: req.body.deserts,
-        extras: req.body.extras,
-        maxStarters: req.body.maxStarters,
-        maxMains: req.body.maxMains,
-        maxDeserts: req.body.maxDeserts,
-        maxSides: req.body.maxSides,
+        partyBundleCandidates: req.body.partyBundleCandidates,
         description: req.body.description,
         price: req.body.price,
         discountedPrice: req.body.discountedPrice,
         discounted: req.body.discounted,
         slug: req.body.slug ||
             req.body.name
-            .trim()
-            .replace(/[\W_]+/g, "-")
-            .toLowerCase(),
+                .trim()
+                .replace(/[\W_]+/g, "-")
+                .toLowerCase(),
     };
 }
 

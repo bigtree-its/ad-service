@@ -42,6 +42,7 @@ const ChefSchema = new mongoose.Schema({
     minimumOrder: Number,
     minimumPartyOrder: Number,
     rating: Number,
+    partyOrderLeadDays: Number,
     reviews: Number,
     doDelivery: Boolean,
     doPartyOrders: Boolean,

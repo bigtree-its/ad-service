@@ -373,6 +373,7 @@ function buildChefJson(req) {
         status: data.status || 'Open',
         gallery: data.gallery,
         active: data.active,
+        partyOrderLeadDays: data.partyOrderLeadDays,
         doDelivery: data.doDelivery,
         deliveryDistance: data.deliveryDistance,
         deliveryMinimum: data.deliveryMinimum,

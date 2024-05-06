@@ -191,5 +191,5 @@ function buildPostcodeDistrictJson(req) {
  * @param {String} prefix 
  */
 function getSlug(prefix, area) {
-    return prefix.trim().replace(/[\W_]+/g, "-").toLowerCase() + "-" + area.trim().replace(/[\W_]+/g, "-").toLowerCase()
+    return prefix.trim().replace(/[\W_]+/g, "-").toLowerCase() + "-" + area.trim().replace(/[\W_]+/g, "_").toLowerCase()
 }

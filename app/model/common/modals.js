@@ -52,4 +52,10 @@ const Variant = {
     detail: String,
 }
 
-module.exports = { Customer, Address, Contact, NameValue, Extra, Variant, ProductInfo, SupplierBasic }
+const ServiceDistrict = {
+    postcode: String,
+    area: String,
+    region: String,
+}
+
+module.exports = { ServiceDistrict, Customer, Address, Contact, NameValue, Extra, Variant, ProductInfo, SupplierBasic }

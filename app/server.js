@@ -70,6 +70,7 @@ app.use(function(req, res, next) {
 
 // Other routes
 require('./route/chef')(app);
+require('./route/postcodedistrict')(app);
 require('./route/servicearea')(app);
 require('./route/calendar')(app);
 require('./route/cuisine')(app);

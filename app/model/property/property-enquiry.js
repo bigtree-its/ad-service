@@ -3,8 +3,7 @@ var mongoose = require('mongoose');
 
 // Define a Schema for PropertyEnquiry
 const PropertyEnquirySchema = new mongoose.Schema({
-    firstName: String,
-    lastName: String,
+    name: String,
     mobile: String,
     email: String,
     postcode: String,

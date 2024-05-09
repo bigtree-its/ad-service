@@ -1,46 +1,36 @@
 //Require Property Model
 const Property = require('../../model/property/property');
-const PropertyType = require('../../model/property/type');
 //Require Underscore JS ( Visit: http://underscorejs.org/#)
 const _ = require('underscore');
 //Require Mongoose
 var mongoose = require('mongoose');
 //Require Generate Safe Id for Random unique id Generation
-var generateSafeId = require('generate-safe-id');
+// var generateSafeId = require('generate-safe-id');
+var utils = require('../../utils/utils');
+// var randomString = require('../../utils/utils.js');
+const Utils = require('../../utils/utils.js');
+
 // Require Validation Utils
 const { validationResult, errorFormatter } = require('../validation');
 
-function isEmpty(data){
-    if ( data === undefined || data === null || data.length === 0){
-        return true;
-    }
-    return false;
-}
 
 // Create and Save a new Property
 exports.create = async(req, res) => {
 
-    console.log("Creating new Property " + JSON.stringify(req.body));
+    console.log("Creating new Property " + req.body.title);
     /** Check for validation errors */
     const errors = validationResult(req).formatWith(errorFormatter);
     if (!errors.isEmpty()) {
         return res.json({ errors: _.uniq(errors.array()) });
     }
 
-    /** Validate if the given department is correct */
-    try{
-        this.validateType(req, res, );
-    } catch (error) {
-        console.log("Error: " + error);
-        return res.status(400).send({ message: error });
-    }
-    try{
+    try {
         validateTenure(req, res);
     } catch (error) {
         console.log("Error: " + error);
         return res.status(400).send({ message: error });
     }
-    try{
+    try {
         validateStatus(req, res);
     } catch (error) {
         console.log("Error: " + error);
@@ -50,64 +40,45 @@ exports.create = async(req, res) => {
     checkDuplicateAndPersist(req, res);
 };
 
-exports.validateType = async(req, res) => {
-    try {
-        var types = req.body.type;
-        if ( isEmpty(types)){
-            throw new Error(`PropertyType is Mandatory`);
-        }
-        console.log('Verifying type : '+ types);
-        var ids = types.split(",");
-        var records = await PropertyType.find().where('_id').in(ids).exec();
-        console.log("Verified PropertyType: " + records);
-        if (!records) {
-            throw new Error(`PropertyType : ${types} not valid.`);
-        }
-    } catch (error) {
-        throw new Error(`Cannot find PropertyType ${types}`);
-    }
-};
 
-
-function validateTenure(req, res)  {
+function validateTenure(req, res) {
     var types = ['Freehold', 'Leasehold', 'Shared'];
     var valid = false;
     var tenure = req.body.tenure;
-    if ( tenure){
+    if (tenure) {
         var length = types.length;
-        while(length--) {
+        while (length--) {
             if (tenure.indexOf(types[length]) != -1) {
                 valid = true;
             }
-         }
+        }
     }
-    if ( valid === false){
+    if (valid === false) {
         console.log(`Invalid Property Tenure ${tenure}`);
-        return res.status(400).send({ message: `Invalid Property Tenure ${tenure}`});
+        return res.status(400).send({ message: `Invalid Property Tenure ${tenure}` });
     }
 }
 
-function validateStatus(req, res)  {
+function validateStatus(req, res) {
     var types = ['Under Offer', 'Available', 'Let Agreed', 'Sold'];
     var valid = false;
     var status = req.body.status;
-    if ( status){
+    if (status) {
         var length = types.length;
-        while(length--) {
+        while (length--) {
             if (status.indexOf(types[length]) != -1) {
                 valid = true;
             }
-         }
+        }
     }
-    if ( valid === false){
+    if (valid === false) {
         console.log(`Invalid Property Status ${status}`);
-        return res.status(400).send({ message: `Invalid Property Status ${status}`});
+        return res.status(400).send({ message: `Invalid Property Status ${status}` });
     }
 }
 
 
 function checkDuplicateAndPersist(req, res) {
-    console.log(`Checking if Property already exist..`);
     Property.exists({ property_number: req.body.address.propertyNumber, postcode: req.body.address.postcode }, function(err, result) {
         if (err) {
             return res.status(500).send({ message: `Error while finding Property with property number ${req.body.address.propertyNumber}` });
@@ -148,44 +119,53 @@ exports.paginate = (req, res) => {
 exports.findAll = (req, res) => {
     console.log('Finding properties..')
     let query = Property.find();
-    if (req.query.min_bedroom) {
-        query.where('bedrooms', {  $gte : req.query.min_bedroom })
+    if (req.query.minAmount) {
+        query.where('price', { $gte: req.query.minAmount })
     }
-    if (req.query.max_bedroom) {
-        query.where('bedrooms', {  $lte : req.query.min_bedroom })
+    if (req.query.maxAmount) {
+        query.where('price', { $lte: req.query.maxAmount })
+    }
+    if (req.query.minBedroom) {
+        query.where('bedrooms', { $gte: req.query.minBedroom })
+    }
+    if (req.query.maxBedroom) {
+        query.where('bedrooms', { $lte: req.query.maxBedroom })
     }
     if (req.query.featured) {
         query.where('featured', 'true')
     }
-    if (req.query.types) {
-        this.validateType(req, res, req.query.types);
-        var typeIds = req.query.types;
-        var ids = typeIds.split(",");
-        query.where('type', { $in: ids })
+    if (req.query.propertyTypes) {
+        // this.validateType(req, res, req.query.types);
+        var typeIds = req.query.propertyTypes;
+        var types = typeIds.split(",");
+        query.where('propertyType', { $in: types })
     }
-    if (req.query.consumption_type) {
-        query.where('consumptionType', req.query.consumption_type )
+    if (req.query.consumptionType) {
+        query.where('consumptionType', req.query.consumptionType)
     }
     if (req.query.postcode) {
         query.where('address.postcode', postcode)
     }
-    if (req.query.contact_person) {
-        query.where('contact.person', req.query.contact_person)
+    if (req.query.reference) {
+        query.where('reference', req.query.reference)
+    }
+    if (req.query.adOwner) {
+        query.where('adOwner.email', req.query.adOwner)
     }
     if (req.query.status) {
         var statusArray = req.query.status.split(",");
         query.where('status', { $in: statusArray })
     }
-    if (req.query.last7days) {
+    if (req.query.lastWeek) {
         var d = new Date();
-        d.setDate(d.getDate()-7);
-        query.where('liveDate', {  $gte : d })
-    }else if(req.query.last1month) {
+        d.setDate(d.getDate() - 7);
+        query.where('datePosted', { $gte: d })
+    } else if (req.query.lastMonth) {
         var d = new Date();
-        d.setDate(d.getDate()-31);
-        query.where('liveDate', {  $gte : d })
+        d.setDate(d.getDate() - 31);
+        query.where('datePosted', { $gte: d })
     }
-    Property.find(query).populate("type", "name").then(result => {
+    Property.find(query).then(result => {
         console.log(`Returning ${result.length} Properties.`);
         res.send(result);
     }).catch(error => {
@@ -201,7 +181,7 @@ exports.featured = (req, res) => {
     console.log('Fetching featured Property');
     let query = Property.find();
     query.where('featured', 'true')
-    Property.find(query).populate("type", "name").then(result => {
+    Property.find(query).then(result => {
         console.log(`Returning featured Property ${result}`);
         res.send(result);
     }).catch(error => {
@@ -214,7 +194,7 @@ exports.featured = (req, res) => {
 
 // Find a single Property with a BrandId
 exports.findOne = (req, res) => {
-    Property.findById(req.params.id).populate("type", "name")
+    Property.findById(req.params.id)
         .then(Property => {
             if (!Property) {
                 return res.status(404).send({ message: `Property not found with id ${req.params.id}` });
@@ -290,16 +270,15 @@ exports.deleteEverything = (req, res) => {
  * @param {Response} res The HTTP Response
  */
 function persist(req, res) {
-    
+
     const property = buildProperty(req);
-    console.log(`Attempting to persist Property ` + JSON.stringify(property));
     // Save Property in the database
     property.save()
         .then(data => {
             console.log(`Persisted Property: ${data._id}`);
             res.status(201).send(data);
         }).catch(err => {
-            console.error('Save failed. '+ err);
+            console.error('Save failed. ' + err);
             res.status(500).send({ message: err.message || "Some error occurred while creating the Property." });
         });
 }
@@ -321,33 +300,41 @@ function buildProperty(req) {
  */
 function buildPropertyJson(req) {
     var data = req.body;
-    var safeId = generateSafeId();
+    var safeId = Utils.randomString(9);
     return {
         title: data.title,
-        pin: safeId,
-        type: data.type,
+        tenure: data.tenure,
+        consumptionType: data.consumptionType,
+        propertyType: data.propertyType,
         size: data.size,
+        reference: safeId,
+        status: data.status,
         summary: data.summary,
         keyFeatures: data.keyFeatures,
         description: data.description,
         bedrooms: data.bedrooms,
         bathrooms: data.bathrooms,
-        rental: data.rental,
-        sale: data.sale,
-        contact: data.contact,
+        rentPeriod: data.rentPeriod,
+        price: data.price,
+        saleAmountOfferOver: data.saleAmountOfferOver,
+        adOwner: data.AdOwner,
         address: data.address,
         stations: data.stations,
         schools: data.schools,
+        hospitals: data.hospitals,
+        malls: data.malls,
+        shops: data.shops,
+        leisureCenters: data.leisureCenters,
+        parks: data.parks,
         superStores: data.superStores,
-        consumptionType: data.consumptionType,
-        tags: data.tags,
-        availableDate: data.availableDate || new Date(),
-        addedDate: data.addedDate || new Date(),
-        liveDate: data.liveDate || new Date(),
-        coverPhoto: data.coverPhoto,
+        dateAvailable: data.dateAvailable || new Date(),
+        datePosted: data.datePosted || new Date(),
+        image: data.image,
         status: data.status || 'Available',
         gallery: data.gallery,
-        floorPlan: data.gallery,
+        floorPlan: data.floorPlan,
+        featured: data.featured,
+        active: data.active,
     };
 }
 /**

@@ -23,14 +23,14 @@ module.exports = (app) => {
         // verifyToken, 
         [
             check('title').notEmpty().isLength({ min: 3, max: 250 }).withMessage('Title is mandatory'),
-            check('type').notEmpty().isLength({ min: 3, max: 250 }).withMessage('Type is mandatory'),
+            check('propertyType').notEmpty().isLength({ min: 3, max: 250 }).withMessage('Type is mandatory'),
             check('description').notEmpty().isLength({ min: 3, max: 250 }).withMessage('Description is mandatory'),
             check('consumptionType').notEmpty().isLength({ min: 3, max: 30 }).withMessage('Consumption Type is mandatory'),
             check('address.postcode').notEmpty().isLength({ min: 5, max: 7 }).withMessage('Postcode is mandatory'),
-            check('coverPhoto').notEmpty().isLength({ min: 3, max: 250 }).withMessage('Cover Photo is mandatory'),
-            check('contact.person').notEmpty().isLength({ min: 3, max: 30 }).withMessage('Contact person is mandatory'),
-            check('contact.email').notEmpty().isEmail().withMessage('Contact Email is mandatory'),
-            check('contact.telephone').notEmpty().isLength({ min: 3, max: 250 }).withMessage('Contact Telephone is mandatory'),
+            // check('image').notEmpty().isLength({ min: 3, max: 250 }).withMessage('Cover Photo is mandatory'),
+            // check('contact.person').notEmpty().isLength({ min: 3, max: 30 }).withMessage('Contact person is mandatory'),
+            check('adOwner.email').notEmpty().isEmail().withMessage('Contact Email is mandatory'),
+            // check('contact.telephone').notEmpty().isLength({ min: 3, max: 250 }).withMessage('Contact Telephone is mandatory'),
         ],
         controller.create);
 
@@ -40,6 +40,6 @@ module.exports = (app) => {
     // Delete a Property with id
     app.delete(path + '/:id', controller.delete);
 
-    //Delete All -- only for non propertyion and can only be done by an admin
+    //Delete All -- only for non production and can only be done by an admin
     app.delete(path, controller.deleteEverything);
 }

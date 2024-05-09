@@ -2,23 +2,22 @@
 var mongoose = require('mongoose');
 //Mongoose Paginate V2
 var aggregatePaginate = require('mongoose-aggregate-paginate-v2');
-const { NameValue, Address, Sale, Rental, Contact, School, SuperStore } = require('./all-properties');
+const { NameValue, Address, AdOwner, School, SuperStore } = require('./all-properties');
 
 // Define a Schema for our property collection
-const PropertySchema= new mongoose.Schema({
+const PropertySchema = new mongoose.Schema({
     title: String, // property name
-    type: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'PropertyType'
-    },
-    tenure: { type: String, enum: ['Freehold', 'Leasehold', 'Shared'] },
-    consumptionType: { type: String, enum: ['Sale', 'Rent'] },
+    tenure: { type: String, enum: ['Freehold', 'Leasehold'] },
+    consumptionType: { type: String, enum: ['Sale', 'Rent', 'Share'] },
     status: { type: String, enum: ['Under Offer', 'Available', 'Let Agreed', 'Sold'] },
-    pin: String, // Property Identification Number
     description: [String],
     keyFeatures: [String],
+    reference: String,
+    size: String,
     summary: String,
-    tags: [String],
+    rentPeriod: String,
+    saleAmountOfferOver: Boolean,
+    price: Number,
     schools: [School],
     superStores: [SuperStore],
     stations: [NameValue],
@@ -27,19 +26,15 @@ const PropertySchema= new mongoose.Schema({
     parks: [NameValue],
     malls: [NameValue],
     leisureCenters: [NameValue],
-    coverPhoto: String,
+    image: String,
     floorPlan: [String],
     gallery: [String],
-    sale: Sale,
-    rental: Rental,
     bathrooms: Number,
-    bedrooms: Number, 
-    size: String, 
-    addedDate: Date,
-    availableDate: Date,
-    liveDate: Date,
+    bedrooms: Number,
+    datePosted: Date,
+    dateAvailable: Date,
     address: Address,
-    contact: Contact,
+    adOwner: AdOwner,
     featured: Boolean,
 }, {
     timestamps: true

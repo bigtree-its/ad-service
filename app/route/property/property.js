@@ -26,7 +26,7 @@ module.exports = (app) => {
             check('propertyType').notEmpty().isLength({ min: 3, max: 250 }).withMessage('Type is mandatory'),
             check('description').notEmpty().isLength({ min: 3, max: 250 }).withMessage('Description is mandatory'),
             check('consumptionType').notEmpty().isLength({ min: 3, max: 30 }).withMessage('Consumption Type is mandatory'),
-            check('address.postcode').notEmpty().isLength({ min: 5, max: 7 }).withMessage('Postcode is mandatory'),
+            check('propertyAddress.postcode').notEmpty().isLength({ min: 5, max: 7 }).withMessage('Postcode is mandatory'),
             // check('image').notEmpty().isLength({ min: 3, max: 250 }).withMessage('Cover Photo is mandatory'),
             // check('contact.person').notEmpty().isLength({ min: 3, max: 30 }).withMessage('Contact person is mandatory'),
             check('adOwner.email').notEmpty().isEmail().withMessage('Contact Email is mandatory'),

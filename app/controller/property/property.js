@@ -144,7 +144,7 @@ exports.findAll = (req, res) => {
         query.where('consumptionType', req.query.consumptionType)
     }
     if (req.query.postcode) {
-        query.where('address.postcode', postcode)
+        query.where('propertyAddress.postcode', postcode)
     }
     if (req.query.reference) {
         query.where('reference', req.query.reference)
@@ -318,7 +318,7 @@ function buildPropertyJson(req) {
         price: data.price,
         saleAmountOfferOver: data.saleAmountOfferOver,
         adOwner: data.AdOwner,
-        address: data.address,
+        propertyAddress: data.propertyAddress,
         stations: data.stations,
         schools: data.schools,
         hospitals: data.hospitals,

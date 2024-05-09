@@ -33,7 +33,7 @@ const PropertySchema = new mongoose.Schema({
     bedrooms: Number,
     datePosted: Date,
     dateAvailable: Date,
-    address: Address,
+    propertyAddress: propertyAddress,
     adOwner: AdOwner,
     featured: Boolean,
 }, {

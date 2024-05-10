@@ -9,6 +9,7 @@ const ChefSchema = new mongoose.Schema({
     name: { type: String, trim: true },
     kitchenName: { type: String, trim: true },
     description: [String],
+    allergenAdvice: [String],
     specials: [String],
     cuisines: [{
         type: String,
@@ -27,9 +28,9 @@ const ChefSchema = new mongoose.Schema({
     coverPhoto: String,
     email: String,
     gallery: [String],
-    serviceAreas: [{
+    postcodeDistricts: [{
         type: String,
-        ref: 'LocalArea'
+        ref: 'PostcodeDistrict'
     }],
     categories: [String],
     keywords: [String],
@@ -46,6 +47,8 @@ const ChefSchema = new mongoose.Schema({
     reviews: Number,
     doDelivery: Boolean,
     doPartyOrders: Boolean,
+    partyDescription: [String],
+    collectionTimings: [String],
     preOrderOnly: Boolean,
     paymentRequireApproval: Boolean,
     open: Boolean,

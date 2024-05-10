@@ -8,7 +8,7 @@ const _ = require('underscore');
 var generateSafeId = require('generate-safe-id');
 // Require Validation Utils
 const { validationResult, errorFormatter } = require('./validation');
-const LocalArea = require('../model/chef/servicearea');
+const PostcodeDistrict = require('../model/common/postcodedistrict');
 
 function isEmpty(data) {
     if (data === undefined || data === null || data.length === 0) {
@@ -47,9 +47,9 @@ exports.create = async(req, res) => {
         return res.status(400).send({ message: error });
     }
 
-    /** Validate ServiceAreas */
+    /** Validate PostcodeDistricts */
     try {
-        this.validateServiceAreas(req, res, );
+        this.validatePostcodeDistricts(req, res, );
     } catch (error) {
         console.log("Error: " + error);
         return res.status(400).send({ message: error });
@@ -99,21 +99,21 @@ exports.validateDish = async(req, res) => {
     }
 };
 
-exports.validateServiceAreas = async(req, res) => {
+exports.validatePostcodeDistricts = async(req, res) => {
     try {
-        var serviceAreas = req.body.serviceAreas;
-        if (isEmpty(serviceAreas)) {
-            throw new Error(`Service Areas are Mandatory`);
+        var postcodeDistricts = req.body.postcodeDistricts;
+        if (isEmpty(postcodeDistricts)) {
+            throw new Error(`Postcode Districts are Mandatory`);
         }
-        console.log('Verifying Service Area : ' + serviceAreas);
-        var records = await LocalArea.find().where('_id').in(serviceAreas).exec();
-        console.log("Verified serviceAreas: " + records);
+        console.log('Verifying Postcode District : ' + postcodeDistricts);
+        var records = await PostcodeDistrict.find().where('_id').in(postcodeDistricts).exec();
+        console.log("Verified postcodeDistricts: " + records);
         if (!records) {
-            throw new Error(`Service Area : ${serviceAreas} not valid.`);
+            throw new Error(`Postcode District : ${postcodeDistricts} not valid.`);
         }
     } catch (error) {
         console.error(error);
-        throw new Error(`Cannot find Service Area ${serviceAreas}`);
+        throw new Error(`Cannot find Postcode District ${postcodeDistricts}`);
     }
 };
 
@@ -182,20 +182,16 @@ exports.paginate = (req, res) => {
 exports.findAll = (req, res) => {
     console.log('Finding chefs..')
     let query = Chef.find();
-    if (req.query.serviceAreas) {
-        query.where('serviceAreas', { $in: req.query.serviceAreas })
-            // query.where('serviceAreas.slug', req.query.serviceArea);
-            // query.where('serviceAreas', { 'slug': req.query.serviceArea });
-            // query.where('serviceAreas', { $elemMatch: { 'slug': req.query.serviceArea } });
-    }
     if (req.query.dishes) {
         query.where('dishes', { $in: req.query.dishes })
+    }
+    if (req.query.postcodeDistricts) {
+        query.where('postcodeDistricts', { $in: req.query.postcodeDistricts })
     }
     if (req.query.cuisines) {
         query.where('cuisines', { $in: req.query.cuisines })
     }
     if (req.query.slots) {
-        this.validateSlots(req, res);
         query.where('slots', { $in: req.query.slots })
     }
     if (req.query.active) {
@@ -215,7 +211,7 @@ exports.findAll = (req, res) => {
     }
     Chef.find(query)
         .populate("cuisines")
-        .populate("serviceAreas")
+        .populate("postcodeDistricts")
         .populate("slots")
         .populate("dishes")
         .then(result => {
@@ -232,7 +228,7 @@ exports.findAll = (req, res) => {
 // Find a single Chef with a BrandId
 exports.findOne = (req, res) => {
     console.log(`Finding a chef ${req.params.id}`);
-    Chef.findById(req.params.id).populate("cuisines").populate("serviceAreas").populate("slots").populate("dishes")
+    Chef.findById(req.params.id).populate("cuisines").populate("postcodeDistricts").populate("slots").populate("dishes")
         .then(data => {
             if (!data) {
                 return res.status(404).send({ message: `Chef not found with id ${req.params.id}` });
@@ -260,7 +256,7 @@ exports.update = (req, res) => {
     // Find Chef and update it with the request body
     Chef.findByIdAndUpdate({ _id: req.params.id }, req.body, { upsert: true, setDefaultsOnInsert: true, new: true })
         .populate("cuisines")
-        .populate("serviceAreas")
+        .populate("postcodeDistricts")
         .populate("slots")
         .populate("dishes")
         .then(Chef => {
@@ -356,10 +352,13 @@ function buildChefJson(req) {
         image: data.image,
         consumptionTypes: data.consumptionTypes,
         description: data.description,
+        partyDescription: data.partyDescription,
+        allergenAdvice: data.allergenAdvice,
+        collectionTimings: data.collectionTimings,
         specials: data.specials,
         slug: slug,
         slots: data.slots,
-        serviceAreas: data.serviceAreas,
+        postcodeDistricts: data.postcodeDistricts,
         categories: data.categories,
         keywords: data.keywords,
         cuisines: data.cuisines,

@@ -18,6 +18,7 @@ const AdOwner = {
     name: String,
     email: String,
     mobile: String,
+    telephone: String,
 }
 
 const School = {

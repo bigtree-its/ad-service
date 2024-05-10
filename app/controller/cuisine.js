@@ -57,9 +57,7 @@ exports.deleteEverything = (req, res) => {
     Cuisine.remove().then(result => {
         res.send({ message: "Deleted all cuisines" });
     }).catch(err => {
-        return res.status(500).send({
-            message: `Could not delete all cuisines. ${err.message}`
-        });
+        res.status(500).send({message: `Could not delete all cuisines. ${err.message}` });
     });
 };
 
@@ -69,15 +67,15 @@ exports.findOne = (req, res) => {
     Cuisine.findOne({ _id: req.params.id })
         .then(cuisine => {
             if (!cuisine) {
-                return cuisineNotFoundWithId(req, res);
+                cuisineNotFoundWithId(req, res);
             }
             res.send(cuisine);
         })
         .catch(err => {
             if (err.kind === 'ObjectId') {
-                return cuisineNotFoundWithId(req, res);
+                cuisineNotFoundWithId(req, res);
             }
-            return res.status(500).send({ message: "Error while retrieving Cuisine with id " + req.params.id });
+            res.status(500).send({ message: "Error while retrieving Cuisine with id " + req.params.id });
         });
 };
 

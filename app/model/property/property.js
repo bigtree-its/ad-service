@@ -12,6 +12,7 @@ const PropertySchema = new mongoose.Schema({
     status: { type: String, enum: ['Under Offer', 'Available', 'Let Agreed', 'Sold'] },
     description: [String],
     keyFeatures: [String],
+    type: String,
     reference: String,
     size: String,
     summary: String,
@@ -33,7 +34,7 @@ const PropertySchema = new mongoose.Schema({
     bedrooms: Number,
     datePosted: Date,
     dateAvailable: Date,
-    propertyAddress: propertyAddress,
+    address: Address,
     adOwner: AdOwner,
     featured: Boolean,
 }, {

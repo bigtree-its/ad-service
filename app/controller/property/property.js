@@ -27,14 +27,20 @@ exports.create = async(req, res) => {
     try {
         validateTenure(req, res);
     } catch (error) {
-        console.log("Error: " + error);
-        return res.status(400).send({ message: error });
+        console.log(error);
+        return res.status(400).send({ message: `${error}` });
+    }
+    try {
+        validateAddress(req, res);
+    } catch (error) {
+        console.log(error);
+        return res.status(400).send({ message: `${error}` });
     }
     try {
         validateStatus(req, res);
     } catch (error) {
-        console.log("Error: " + error);
-        return res.status(400).send({ message: error });
+        console.log(error);
+        return res.status(400).send({ message: `${error}` });
     }
     /** Persist */
     checkDuplicateAndPersist(req, res);
@@ -52,10 +58,21 @@ function validateTenure(req, res) {
                 valid = true;
             }
         }
+    }else{
+        throw new Error(`Property Tenure is mandatory`);
     }
-    if (valid === false) {
-        console.log(`Invalid Property Tenure ${tenure}`);
-        return res.status(400).send({ message: `Invalid Property Tenure ${tenure}` });
+    if (!valid) {
+        throw new Error(`Invalid Property Tenure ${tenure}`);
+    }
+}
+function validateAddress(req, res) {
+    var address = req.body.address;
+    if (address) {
+        if ( !address.propertyNumber || !address.postcode){
+            throw new Error(`Property number and postcode is mandatory`); 
+        }
+    }else{
+        throw new Error(`Property Address is mandatory`);
     }
 }
 
@@ -73,13 +90,13 @@ function validateStatus(req, res) {
     }
     if (valid === false) {
         console.log(`Invalid Property Status ${status}`);
-        return res.status(400).send({ message: `Invalid Property Status ${status}` });
+        res.status(400).send({ message: `Invalid Property Status ${status}` });
     }
 }
 
 
 function checkDuplicateAndPersist(req, res) {
-    Property.exists({ property_number: req.body.address.propertyNumber, postcode: req.body.address.postcode }, function(err, result) {
+    Property.exists({ "address.propertyNumber" : req.body.address.propertyNumber, "postcode": req.body.address.postcode }, function(err, result) {
         if (err) {
             return res.status(500).send({ message: `Error while finding Property with property number ${req.body.address.propertyNumber}` });
         } else if (result) {
@@ -131,26 +148,28 @@ exports.findAll = (req, res) => {
     if (req.query.maxBedroom) {
         query.where('bedrooms', { $lte: req.query.maxBedroom })
     }
+    if (req.query.type) {
+        query.where('type', req.query.type)
+    }
+    if (req.query.postcode) {
+        query.where('address.postcode', req.query.postcode)
+    }
+    if (req.query.owner) {
+        query.where('adOwner.email', req.query.owner)
+    }
     if (req.query.featured) {
         query.where('featured', 'true')
     }
-    if (req.query.propertyTypes) {
-        // this.validateType(req, res, req.query.types);
-        var typeIds = req.query.propertyTypes;
+    if (req.query.types) {
+        var typeIds = req.query.types;
         var types = typeIds.split(",");
-        query.where('propertyType', { $in: types })
+        query.where('type', { $in: types })
     }
     if (req.query.consumptionType) {
         query.where('consumptionType', req.query.consumptionType)
     }
-    if (req.query.postcode) {
-        query.where('propertyAddress.postcode', postcode)
-    }
     if (req.query.reference) {
         query.where('reference', req.query.reference)
-    }
-    if (req.query.adOwner) {
-        query.where('adOwner.email', req.query.adOwner)
     }
     if (req.query.status) {
         var statusArray = req.query.status.split(",");
@@ -195,17 +214,17 @@ exports.featured = (req, res) => {
 // Find a single Property with a BrandId
 exports.findOne = (req, res) => {
     Property.findById(req.params.id)
-        .then(Property => {
-            if (!Property) {
-                return res.status(404).send({ message: `Property not found with id ${req.params.id}` });
+        .then(data => {
+            if (!data) {
+                res.status(404).send({ message: `Property not found with id ${req.params.id}` });
             }
-            res.send(Property);
+            res.send(data);
         })
         .catch(err => {
             if (err.kind === 'ObjectId') {
-                return res.status(404).send({ message: `Property not found with id ${req.params.id}` });
+                res.status(404).send({ message: `Property not found with id ${req.params.id}` });
             }
-            return res.status(500).send({ message: `Error while retrieving Property with id ${req.params.id}` });
+            res.status(500).send({ message: `Error while retrieving Property with id ${req.params.id}` });
         });
 };
 
@@ -214,41 +233,36 @@ exports.update = (req, res) => {
     console.log("Updating Property " + JSON.stringify(req.body));
     // Validate Request
     if (!req.body) {
-        return res.status(400).send({ message: "Property body cannot be empty" });
-    }
-    if (req.body.type) {
-        this.validateType(req, res, req.body.type);
+        res.status(400).send({ message: "Property body cannot be empty" });
     }
     // Find Property and update it with the request body
     Property.findByIdAndUpdate({ _id: req.params.id }, req.body, { new: true })
-        .then(Property => {
-            if (!Property) {
-                return res.status(404).send({ message: `Property not found with id ${req.params.id}` });
+        .then(data => {
+            if (!data) {
+                res.status(404).send({ message: `Property not found with id ${req.params.id}` });
             }
-            res.send(Property);
+            res.send(data);
         }).catch(err => {
             if (err.kind === 'ObjectId') {
-                return res.status(404).send({ message: `Property not found with id ${req.params.id}` });
+                res.status(404).send({ message: `Property not found with id ${req.params.id}` });
             }
-            return res.status(500).send({ message: `Error updating Property with id ${req.params.id}` });
+            res.status(500).send({ message: `Error updating Property with id ${req.params.id}` });
         });
 };
 
 // Deletes a Property with the specified BrandId in the request
 exports.delete = (req, res) => {
     Property.findByIdAndRemove(req.params.id)
-        .then(Property => {
-            if (!Property) {
+        .then(data => {
+            if (!data) {
                 return res.status(404).send({ message: `Property not found with id ${req.params.id}` });
             }
             res.send({ message: "Property deleted successfully!" });
         }).catch(err => {
             if (err.kind === 'ObjectId' || err.name === 'NotFound') {
-                return res.status(404).send({ message: `Property not found with id ${req.params.id}` });
+                res.status(404).send({ message: `Property not found with id ${req.params.id}` });
             }
-            return res.status(500).send({
-                message: `Could not delete Property with id ${req.params.id}`
-            });
+            res.status(500).send({ message: `Could not delete Property with id ${req.params.id}` });
         });
 };
 
@@ -303,9 +317,9 @@ function buildPropertyJson(req) {
     var safeId = Utils.randomString(9);
     return {
         title: data.title,
+        type: data.type,
         tenure: data.tenure,
         consumptionType: data.consumptionType,
-        propertyType: data.propertyType,
         size: data.size,
         reference: safeId,
         status: data.status,
@@ -317,8 +331,6 @@ function buildPropertyJson(req) {
         rentPeriod: data.rentPeriod,
         price: data.price,
         saleAmountOfferOver: data.saleAmountOfferOver,
-        adOwner: data.AdOwner,
-        propertyAddress: data.propertyAddress,
         stations: data.stations,
         schools: data.schools,
         hospitals: data.hospitals,
@@ -330,6 +342,8 @@ function buildPropertyJson(req) {
         dateAvailable: data.dateAvailable || new Date(),
         datePosted: data.datePosted || new Date(),
         image: data.image,
+        address: data.address,
+        adOwner: data.adOwner,
         status: data.status || 'Available',
         gallery: data.gallery,
         floorPlan: data.floorPlan,

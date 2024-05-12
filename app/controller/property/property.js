@@ -30,12 +30,12 @@ exports.create = async(req, res) => {
         console.log(error);
         return res.status(400).send({ message: `${error}` });
     }
-    try {
-        validateAddress(req, res);
-    } catch (error) {
-        console.log(error);
-        return res.status(400).send({ message: `${error}` });
-    }
+    // try {
+    //     validateAddress(req, res);
+    // } catch (error) {
+    //     console.log(error);
+    //     return res.status(400).send({ message: `${error}` });
+    // }
     try {
         validateStatus(req, res);
     } catch (error) {
@@ -58,20 +58,21 @@ function validateTenure(req, res) {
                 valid = true;
             }
         }
-    }else{
+    } else {
         throw new Error(`Property Tenure is mandatory`);
     }
     if (!valid) {
         throw new Error(`Invalid Property Tenure ${tenure}`);
     }
 }
+
 function validateAddress(req, res) {
     var address = req.body.address;
     if (address) {
-        if ( !address.propertyNumber || !address.postcode){
-            throw new Error(`Property number and postcode is mandatory`); 
+        if (!address.propertyNumber || !address.postcode) {
+            throw new Error(`Property number and postcode is mandatory`);
         }
-    }else{
+    } else {
         throw new Error(`Property Address is mandatory`);
     }
 }
@@ -96,7 +97,15 @@ function validateStatus(req, res) {
 
 
 function checkDuplicateAndPersist(req, res) {
-    Property.exists({ "address.propertyNumber" : req.body.address.propertyNumber, "postcode": req.body.address.postcode }, function(err, result) {
+    let query = Property.find();
+    query.where('address.postcode', req.body.address.postcode);
+    if (req.body.address.propertyNumber) {
+        query.where('address.propertyNumber', req.body.address.propertyNumber)
+    }
+    if (req.body.address.addressLine1) {
+        query.where('address.addressLine1', req.body.address.addressLine1)
+    }
+    Property.exists(query, function(err, result) {
         if (err) {
             return res.status(500).send({ message: `Error while finding Property with property number ${req.body.address.propertyNumber}` });
         } else if (result) {
@@ -137,28 +146,38 @@ exports.findAll = (req, res) => {
     console.log('Finding properties..')
     let query = Property.find();
     if (req.query.minAmount) {
-        query.where('price', { $gte: req.query.minAmount })
+        query.where('price', { $gte: req.query.minAmount });
     }
     if (req.query.maxAmount) {
-        query.where('price', { $lte: req.query.maxAmount })
+        query.where('price', { $lte: req.query.maxAmount });
     }
     if (req.query.minBedroom) {
-        query.where('bedrooms', { $gte: req.query.minBedroom })
+        query.where('bedrooms', { $gte: req.query.minBedroom });
     }
     if (req.query.maxBedroom) {
-        query.where('bedrooms', { $lte: req.query.maxBedroom })
+        query.where('bedrooms', { $lte: req.query.maxBedroom });
     }
     if (req.query.type) {
-        query.where('type', req.query.type)
+        query.where('type', req.query.type);
     }
     if (req.query.postcode) {
-        query.where('address.postcode', req.query.postcode)
+        query.where('address.postcode', req.query.postcode);
     }
     if (req.query.owner) {
-        query.where('adOwner.email', req.query.owner)
+        query.where('adOwner.email', req.query.owner);
     }
     if (req.query.featured) {
-        query.where('featured', 'true')
+        query.where('featured', 'true');
+    }
+    if (req.query.approved) {
+        query.where('approved', req.query.approved);
+    } else {
+        query.where('approved', false);
+    }
+    if (req.query.active) {
+        query.where('active', req.query.active);
+    } else {
+        query.where('active', false);
     }
     if (req.query.types) {
         var typeIds = req.query.types;
@@ -348,7 +367,8 @@ function buildPropertyJson(req) {
         gallery: data.gallery,
         floorPlan: data.floorPlan,
         featured: data.featured,
-        active: data.active,
+        active: data.active ? data.active : false,
+        approved: data.approved ? data.approved : false,
     };
 }
 /**

@@ -37,6 +37,8 @@ const PropertySchema = new mongoose.Schema({
     address: Address,
     adOwner: AdOwner,
     featured: Boolean,
+    approved: Boolean,
+    active: Boolean,
 }, {
     timestamps: true
 });

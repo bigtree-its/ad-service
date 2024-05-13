@@ -25,7 +25,7 @@ module.exports = (app) => {
             check('title').notEmpty().isLength({ min: 3, max: 250 }).withMessage('Title is mandatory'),
             check('type').notEmpty().isLength({ min: 3, max: 250 }).withMessage('Type is mandatory'),
             check('price').notEmpty().withMessage('Price is mandatory'),
-            check('description').notEmpty().isLength({ min: 3, max: 250 }).withMessage('Description is mandatory'),
+            check('description').notEmpty().isLength({ min: 50 }).withMessage('Description is mandatory'),
             check('consumptionType').notEmpty().isLength({ min: 3, max: 30 }).withMessage('Consumption Type is mandatory'),
             check('address.postcode').notEmpty().isLength({ min: 5, max: 7 }).withMessage('Postcode is mandatory'),
             // check('image').notEmpty().isLength({ min: 3, max: 250 }).withMessage('Cover Photo is mandatory'),

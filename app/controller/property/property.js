@@ -6,8 +6,6 @@ const _ = require('underscore');
 var mongoose = require('mongoose');
 //Require Generate Safe Id for Random unique id Generation
 // var generateSafeId = require('generate-safe-id');
-var utils = require('../../utils/utils');
-// var randomString = require('../../utils/utils.js');
 const Utils = require('../../utils/utils.js');
 
 // Require Validation Utils
@@ -15,39 +13,42 @@ const { validationResult, errorFormatter } = require('../validation');
 
 
 // Create and Save a new Property
-exports.create = async(req, res) => {
+exports.create = async (req, res) => {
 
     console.log("Creating new Property " + req.body.title);
     /** Check for validation errors */
     const errors = validationResult(req).formatWith(errorFormatter);
     if (!errors.isEmpty()) {
-        return res.json({ errors: _.uniq(errors.array()) });
+        return res.status(400).json({ errors: _.uniq(errors.array()) });
     }
 
-    try {
-        validateTenure(req, res);
-    } catch (error) {
-        console.log(error);
-        return res.status(400).send({ message: `${error}` });
+    var error = validateTenure(req);
+    if (error) {
+        console.error(error);
+        return res.status(400).send(Utils.buildError(error));
     }
+
     // try {
     //     validateAddress(req, res);
     // } catch (error) {
     //     console.log(error);
     //     return res.status(400).send({ message: `${error}` });
     // }
-    try {
-        validateStatus(req, res);
-    } catch (error) {
-        console.log(error);
-        return res.status(400).send({ message: `${error}` });
+    var error = validateStatus(req);
+    if (error) {
+        console.error(error);
+        return res.status(400).send(Utils.buildError(error));
     }
+
     /** Persist */
     checkDuplicateAndPersist(req, res);
 };
 
 
-function validateTenure(req, res) {
+function validateTenure(req) {
+    if ( req.body.type === 'Garage' || req.body.type === 'Commercial'){
+        return;
+    }
     var types = ['Freehold', 'Leasehold', 'Shared'];
     var valid = false;
     var tenure = req.body.tenure;
@@ -59,10 +60,10 @@ function validateTenure(req, res) {
             }
         }
     } else {
-        throw new Error(`Property Tenure is mandatory`);
+        return "Property Tenure is mandatory";
     }
     if (!valid) {
-        throw new Error(`Invalid Property Tenure ${tenure}`);
+        return "Invalid Property Tenure ${tenure}";
     }
 }
 
@@ -70,10 +71,10 @@ function validateAddress(req, res) {
     var address = req.body.address;
     if (address) {
         if (!address.propertyNumber || !address.postcode) {
-            throw new Error(`Property number and postcode is mandatory`);
+           return `Property number and postcode is mandatory`;
         }
     } else {
-        throw new Error(`Property Address is mandatory`);
+        return `Property Address is mandatory`;
     }
 }
 
@@ -90,8 +91,7 @@ function validateStatus(req, res) {
         }
     }
     if (valid === false) {
-        console.log(`Invalid Property Status ${status}`);
-        res.status(400).send({ message: `Invalid Property Status ${status}` });
+        return `Invalid Property Status ${status}`;
     }
 }
 
@@ -105,12 +105,12 @@ function checkDuplicateAndPersist(req, res) {
     if (req.body.address.addressLine1) {
         query.where('address.addressLine1', req.body.address.addressLine1)
     }
-    Property.exists(query, function(err, result) {
+    Property.exists(query, function (err, result) {
         if (err) {
             return res.status(500).send({ message: `Error while finding Property with property number ${req.body.address.propertyNumber}` });
         } else if (result) {
-            console.log(`Property already exist`);
-            res.status(400).send({ message: `Property already exist.` });
+            console.error(`Property already exist`);
+            res.status(400).send(Utils.buildError(`Property already exist.`));
         } else {
             persist(req, res);
         }
@@ -129,7 +129,7 @@ exports.paginate = (req, res) => {
         this.validateCategory(res, req.query.categories);
         query.where('categories', { $in: req.query.categories })
     }
-    Property.aggregatePaginate(query, options, function(err, result) {
+    Property.aggregatePaginate(query, options, function (err, result) {
         if (result) {
             console.log(`Returning ${result.docs.length} Properties.`);
             res.send(result);
@@ -145,18 +145,21 @@ exports.paginate = (req, res) => {
 exports.findAll = (req, res) => {
     console.log('Finding properties..')
     let query = Property.find();
-    if (req.query.minAmount) {
+    if (req.query.minAmount && req.query.maxAmount) {
+        query.where('price', { $gte: req.query.minAmount, $lte: req.query.maxAmount });
+    } else if (req.query.minAmount && !req.query.maxAmount) {
         query.where('price', { $gte: req.query.minAmount });
-    }
-    if (req.query.maxAmount) {
+    } else if (req.query.maxAmount && !req.query.minAmount) {
         query.where('price', { $lte: req.query.maxAmount });
     }
-    if (req.query.minBedroom) {
+    if (req.query.minBedroom && req.query.maxBedroom) {
+        query.where('bedrooms', { $gte: req.query.minBedroom, $lte: req.query.maxBedroom });
+    } else if (req.query.minBedroom && !req.query.maxBedroom) {
         query.where('bedrooms', { $gte: req.query.minBedroom });
-    }
-    if (req.query.maxBedroom) {
+    } else if (req.query.maxBedroom && !req.query.minBedroom) {
         query.where('bedrooms', { $lte: req.query.maxBedroom });
     }
+
     if (req.query.type) {
         query.where('type', req.query.type);
     }
@@ -167,17 +170,13 @@ exports.findAll = (req, res) => {
         query.where('adOwner.email', req.query.owner);
     }
     if (req.query.featured) {
-        query.where('featured', 'true');
+        query.where('featured', true);
     }
     if (req.query.approved) {
         query.where('approved', req.query.approved);
-    } else {
-        query.where('approved', false);
-    }
+    } 
     if (req.query.active) {
         query.where('active', req.query.active);
-    } else {
-        query.where('active', false);
     }
     if (req.query.types) {
         var typeIds = req.query.types;
@@ -249,7 +248,7 @@ exports.findOne = (req, res) => {
 
 // Update a Property 
 exports.update = (req, res) => {
-    console.log("Updating Property " + JSON.stringify(req.body));
+    console.log("Updating Property " + req.params.id);
     // Validate Request
     if (!req.body) {
         res.status(400).send({ message: "Property body cannot be empty" });

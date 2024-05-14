@@ -13,13 +13,7 @@ const SuperStore = {
     distance: String,
     address: Address,
 }
-const AdOwner = {
-    _id: String,
-    name: String,
-    email: String,
-    mobile: String,
-    telephone: String,
-}
+
 
 const School = {
     name: String,
@@ -70,4 +64,4 @@ const ReturnPolicy = {
 
 }
 
-module.exports = { Extra, SuperStore, School, Address, Sale, Rental, Contact, Attribute, ReturnPolicy, NameValue, AdOwner }
+module.exports = { Extra, SuperStore, School, Address, Sale, Rental, Contact, Attribute, ReturnPolicy, NameValue }

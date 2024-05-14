@@ -58,4 +58,12 @@ const ServiceDistrict = {
     region: String,
 }
 
-module.exports = { ServiceDistrict, Customer, Address, Contact, NameValue, Extra, Variant, ProductInfo, SupplierBasic }
+const AdOwner = {
+    _id: String,
+    name: String,
+    email: String,
+    mobile: String,
+    telephone: String,
+}
+
+module.exports = { AdOwner, ServiceDistrict, Customer, Address, Contact, NameValue, Extra, Variant, ProductInfo, SupplierBasic }

@@ -13,6 +13,10 @@ const Contact = {
     mobile: String,
     telephone: String
 }
+const EnquiryResponse = {
+    message: String,
+    date: Date,
+}
 
 const NameValue = {
     name: String,
@@ -66,4 +70,4 @@ const AdOwner = {
     telephone: String,
 }
 
-module.exports = { AdOwner, ServiceDistrict, Customer, Address, Contact, NameValue, Extra, Variant, ProductInfo, SupplierBasic }
+module.exports = { EnquiryResponse, AdOwner, ServiceDistrict, Customer, Address, Contact, NameValue, Extra, Variant, ProductInfo, SupplierBasic }

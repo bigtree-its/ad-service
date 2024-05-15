@@ -243,6 +243,7 @@ function buildAd(req) {
 function buildAdJson(req) {
     var data = req.body;
     var safeId = Utils.randomString(9).toUpperCase();
+    console.log('Unique reference for this ad ' + safeId)
     return {
         title: data.title,
         category: data.category,

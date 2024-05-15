@@ -1,13 +1,13 @@
 //Require Mongoose
 var mongoose = require('mongoose');
-const uuid = require('node-uuid');
+// const uuid = require('node-uuid');
 const { Address } = require('../property/all-properties');
 const { AdOwner } = require('../common/modals');
 // Define a Schema for our Ad collection
 const AdSchema = new mongoose.Schema({
-    _id: { type: String, default: uuid.v4 },
     category: { type: String, trim: true },
     title: { type: String, trim: true },
+    reference: { type: String, trim: true },
     description: [String],
     keyFeatures: [String],
     address: Address,

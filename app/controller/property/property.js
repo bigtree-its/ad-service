@@ -175,8 +175,8 @@ exports.findAll = (req, res) => {
     if (req.query.postcode) {
         query.where("address.postcode", req.query.postcode);
     }
-    if (req.query.owner) {
-        query.where("adOwner.email", req.query.owner);
+    if (req.query.adOwner) {
+        query.where("adOwner.email", req.query.adOwner);
     }
     if (req.query.featured) {
         query.where("featured", true);

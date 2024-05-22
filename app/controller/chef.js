@@ -207,7 +207,7 @@ exports.findAll = (req, res) => {
         query.where('noMinimumOrder', true);
     }
     if (req.query.email) {
-        query.where('email', req.query.email)
+        query.where('contact.email', req.query.email)
     }
     Chef.find(query)
         .populate("cuisines")

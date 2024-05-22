@@ -45,6 +45,9 @@ exports.findAll = (req, res) => {
     if (req.query.customer) {
         query.where("customer.email", req.query.customer);
     }
+    if (req.query.adOwner) {
+        query.where("adOwner.email", req.query.adOwner);
+    }
     AdEnquiry.find(query)
         .then((result) => {
             console.log(`Returning ${result.length} enquiries.`);

@@ -3,7 +3,6 @@ var mongoose = require('mongoose');
 const uuid = require('node-uuid');
 // Define a Schema for our Cuisine collection
 const CuisineSchema = new mongoose.Schema({
-    _id: { type: String, default: uuid.v4 },
     name: { type: String, trim: true },
     image: { type: String, trim: true },
     slug: { type: String, trim: true },

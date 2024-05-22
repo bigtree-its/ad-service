@@ -3,7 +3,6 @@ var mongoose = require('mongoose');
 const uuid = require('node-uuid');
 // Define a Schema for our PostcodeDistrict collection
 const PostcodeDistrictSchema = new mongoose.Schema({
-    _id: { type: String, default: uuid.v4 },
     active: Boolean,
     prefix: { type: String, trim: true },
     area: { type: String, trim: true },

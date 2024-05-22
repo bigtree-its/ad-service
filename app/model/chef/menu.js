@@ -4,7 +4,6 @@ const uuid = require('node-uuid');
 const { Extra } = require('../common');
 // Define a Schema for our Menu collection
 const MenuSchema = new mongoose.Schema({
-    _id: { type: String, default: uuid.v4 },
     chefId: { type: String, default: uuid.v4 },
     collectionId: { type: String, default: uuid.v4 },
     name: String,

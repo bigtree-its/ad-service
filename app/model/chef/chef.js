@@ -5,8 +5,6 @@ const uuid = require('node-uuid');
 
 // Define a Schema for our Chef collection
 const ChefSchema = new mongoose.Schema({
-    _id: { type: String, default: uuid.v4 },
-    name: { type: String, trim: true },
     kitchenName: { type: String, trim: true },
     description: [String],
     allergenAdvice: [String],
@@ -25,8 +23,6 @@ const ChefSchema = new mongoose.Schema({
     }],
     slug: { type: String, trim: true },
     image: String,
-    coverPhoto: String,
-    email: String,
     gallery: [String],
     postcodeDistricts: [{
         type: String,

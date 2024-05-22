@@ -5,7 +5,6 @@ const { Extra } = require('../common');
 const { PartyBundleCandidate } = require('./common-foods');
 // Define a Schema for our PartyBundle collection
 const PartyBundleSchema = new mongoose.Schema({
-    _id: { type: String, default: uuid.v4 },
     chefId: { type: String, default: uuid.v4 },
     collectionId: { type: String, default: uuid.v4 },
     name: String,

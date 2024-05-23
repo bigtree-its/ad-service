@@ -2,7 +2,7 @@ module.exports = (app) => {
     const controller = require('../controller/common/postcodedistrict');
     const { check } = require('express-validator');
 
-    const path = process.env.CONTEXT_PATH + '/postcode-districts';
+    const path = process.env.CONTEXT_PATH + '/postcode-areas';
 
     // Public routes
     // Retrieve all PostalDistrict

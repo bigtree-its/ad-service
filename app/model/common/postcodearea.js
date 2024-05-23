@@ -1,17 +1,12 @@
 //Require Mongoose
 var mongoose = require('mongoose');
 const uuid = require('node-uuid');
-// Define a Schema for our PostcodeDistrict collection
-const PostcodeDistrictSchema = new mongoose.Schema({
+// Define a Schema for our PostcodeArea collection
+const PostcodeAreaSchema = new mongoose.Schema({
+    _id: { type: String, default: uuid.v4 },
     active: Boolean,
-    area: [{
-        type: String,
-        ref: 'PostcodeArea'
-    }],
     prefix: { type: String, trim: true },
-    coverage: [String],
-    region: { type: String, trim: true },
-    postTown: { type: String, trim: true },
+    name: { type: String, trim: true },
     slug: { type: String, trim: true },
 }, {
     timestamps: true
@@ -21,7 +16,7 @@ const PostcodeDistrictSchema = new mongoose.Schema({
 // The first argument is the singular name of the collection your model is for. 
 // ** Mongoose automatically looks for the plural, lower cased version of your model name.
 // ** Thus, for the example above, the model Tank is for the tanks collection in the database.
-var PostcodeDistrict = mongoose.model('PostcodeDistrict', PostcodeDistrictSchema);
+var PostcodeArea = mongoose.model('PostcodeArea', PostcodeAreaSchema);
 
-//Export function to create "PostcodeDistrict" model class
-module.exports = PostcodeDistrict;
+//Export function to create "PostcodeArea" model class
+module.exports = PostcodeArea;

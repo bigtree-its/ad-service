@@ -1,4 +1,6 @@
 const PostcodeDistrict = require('../../model/common/postcodedistrict');
+const PostcodeArea = require('../../model/common/postcodearea');
+
 //Require Underscore JS ( Visit: http://underscorejs.org/#)
 const _ = require('underscore');
 
@@ -13,10 +15,17 @@ exports.create = (req, res) => {
     if (!errors.isEmpty()) {
         return res.json({ errors: _.uniq(errors.array()) });
     }
+    /** Validate Area */
+    var error = this.validateArea(req, res);
+    if (error) {
+        console.error(error);
+        return res.status(400).send(Utils.buildError(error));
+    }
+    
     var slug = getSlug(req.body.prefix, req.body.area);
     console.log(`Finding if a PostcodeDistrict already exist for: ${slug}`);
 
-    PostcodeDistrict.exists({ slug: slug }, function(err, result) {
+    PostcodeDistrict.exists({ slug: slug }, function (err, result) {
         if (err) {
             return res.status(500).send({ message: `Error while finding PostcodeDistrict for: ${slug}` });
         } else if (result) {
@@ -27,6 +36,21 @@ exports.create = (req, res) => {
         }
     });
 
+};
+
+exports.validateArea = async (req, res) => {
+    try {
+        var area = req.body.area;
+        if (!area) {
+            return `Area is Mandatory`;
+        }
+        var records = await PostcodeArea.findOne({ _id: area }).exec();
+        if (!records) {
+            return `Some or more cuisines : ${area} not valid.`;
+        }
+    } catch (error) {
+        return `Cannot find Postcode area ${area}`;
+    }
 };
 
 // Retrieve and return all PostcodeDistrict from the database.

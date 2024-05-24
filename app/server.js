@@ -72,7 +72,7 @@ app.use(function(req, res, next) {
 
 // Other routes
 require('./route/chef')(app);
-require('./route/common/imagekit_auth')(app);
+require('./route/common/imagekit')(app);
 require('./route/ad/ad')(app);
 require('./route/ad/adEnquiry')(app);
 require('./route/postcodedistrict')(app);

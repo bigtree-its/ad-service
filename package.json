@@ -1,7 +1,7 @@
 {
-    "name": "property-service",
+    "name": "ad-service",
     "version": "1.0.0",
-    "description": "Microservice for properties",
+    "description": "Microservice for free ads",
     "main": "app/server.js",
     "scripts": {
         "start": "node  app/server.js",
@@ -12,9 +12,9 @@
         "RestAPI",
         "Products",
         "MongoDB",
-        "OpenEcomm"
+        "HeyYo"
     ],
-    "author": "OpenEcomm.co.uk",
+    "author": "Nava Kannusamy",
     "license": "MIT",
     "dependencies": {
         "body-parser": "^1.19.0",
@@ -32,7 +32,8 @@
         "mongoose-paginate-v2": "^1.3.13",
         "node-uuid": "^1.4.8",
         "nodemon": "^2.0.7",
-        "underscore": "^1.12.0"
+        "underscore": "^1.12.0",
+        "uuid": "^9.0.1"
     },
     "devDependencies": {
         "@babel/cli": "^7.12.10",

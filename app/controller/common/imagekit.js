@@ -32,7 +32,7 @@ exports.listFiles = (req, res) => {
 
 exports.deleteFile = (req, res) => {
     console.log("Deleting of file " + req.params.id);
-    imageKit.deleteFile(req.params.fileId, function(error, result) {
+    imageKit.deleteFile(req.params.id, function(error, result) {
         if (error) {
             console.log(error);
             res.status(400);

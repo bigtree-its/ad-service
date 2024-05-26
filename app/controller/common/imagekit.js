@@ -31,19 +31,22 @@ exports.listFiles = (req, res) => {
 };
 
 exports.deleteFile = (req, res) => {
-    console.log("Deleting of file " + req.query.fileId);
-    imageKit.deleteFile(req.query.fileId, function(error, result) {
-        if (error) console.log(error);
-        else {
+    console.log("Deleting of file " + req.params.id);
+    imageKit.deleteFile(req.params.fileId, function(error, result) {
+        if (error) {
+            console.log(error);
+            res.status(400);
+            res.send(error);
+        } else {
             res.status(204);
-            res.send();
+            res.send(result);
         }
     });
 };
 
 exports.getFile = (req, res) => {
-    console.log("Fetching details of file " + req.query.fileId);
-    imageKit.getFileDetails(req.query.fileId, function(error, result) {
+    console.log("Fetching details of file " + req.params.id);
+    imageKit.getFileDetails(req.params.id, function(error, result) {
         if (error) {
             console.log(error);
             res.status(400);

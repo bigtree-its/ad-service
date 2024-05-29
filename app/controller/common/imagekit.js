@@ -4,6 +4,7 @@ const crypto = require("crypto");
 const http = require("https");
 const { Buffer } = require("node:buffer");
 var ImageKit = require("imagekit");
+const multer = require("multer");
 
 const privateKey = process.env.IMAGEKIT_PRIVATEKEY;
 const publicKey = process.env.IMAGEKIT_PUBLICKEY;
@@ -15,6 +16,31 @@ var imageKit = new ImageKit({
     privateKey: `${privateKey}`,
     urlEndpoint: `${urlEndpoint}`,
 });
+
+exports.upload = (req, res) => {
+    console.log("API Endpoint for file uploads");
+    const files = req.files;
+    const errors = [];
+    // Validate file types and sizes
+    files.forEach((file) => {
+        const allowedTypes = ["image/jpeg", "image/png", "image/jpg", "image/gif"];
+        const maxSize = 1 * 1024 * 1024; // 5MB
+
+        if (!allowedTypes.includes(file.mimetype)) {
+            errors.push(`Invalid file type: ${file.originalname}`);
+        }
+
+        if (file.size > maxSize) {
+            errors.push(`File too large: ${file.originalname}`);
+        }
+    });
+
+    // Handle validation errors
+    if (errors.length > 0) {
+        // Remove uploaded files
+        return res.status(400).json({ errors });
+    }
+};
 
 exports.listFiles = (req, res) => {
     var options = {};

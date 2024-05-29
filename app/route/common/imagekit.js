@@ -6,4 +6,5 @@ module.exports = (app) => {
     app.delete(path + "/files/:id", controller.deleteFile);
     app.get(path + "/files/:id", controller.getFile);
     app.get(path + "/files", controller.listFiles);
+    app.post(path + "/upload", controller.upload);
 };

@@ -4,7 +4,7 @@ const crypto = require("crypto");
 const http = require("https");
 const { Buffer } = require("node:buffer");
 var ImageKit = require("imagekit");
-const multer = require("multer");
+var formidable = require('formidable');
 
 const privateKey = process.env.IMAGEKIT_PRIVATEKEY;
 const publicKey = process.env.IMAGEKIT_PUBLICKEY;
@@ -18,6 +18,23 @@ var imageKit = new ImageKit({
 });
 
 exports.upload = (req, res) => {
+    console.log('Request Headers ' + JSON.stringify(req.headers))
+    var form = new formidable.IncomingForm();
+    form.parse(req, function(err, fields, files) {
+        console.log('Files ' + files.length)
+            //   var oldpath = files.filetoupload.filepath;
+            //   var newpath = 'C:/Users/Your Name/' + files.filetoupload.originalFilename;
+            //   fs.rename(oldpath, newpath, function (err) {
+            //     if (err) throw err;
+            //     res.write('File uploaded and moved!');
+            //     res.end();
+            //   });
+    });
+    res.write('File uploaded and moved!');
+    res.end();
+}
+
+exports.upload2 = (req, res) => {
     console.log("API Endpoint for file uploads");
     const files = req.files;
     const errors = [];

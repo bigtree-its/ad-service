@@ -29,6 +29,8 @@ exports.create = async(req, res) => {
 
 function checkDuplicateAndPersist(req, res) {
     let query = Ad.find();
+    query.where('dateAvailable', req.body.dateAvailable);
+    query.where('price', req.body.price);
     query.where('category', req.body.category);
     query.where('address.postcode', req.body.address.postcode);
     if (req.body.address.propertyNumber) {

@@ -19,6 +19,7 @@ var imageKit = new ImageKit({
 
 exports.upload = (req, res) => {
     console.log('Request Headers ' + JSON.stringify(req.headers))
+    console.log('Request Files ' + JSON.stringify(req.files))
     var form = new formidable.IncomingForm();
     form.parse(req, function(err, fields, files) {
         console.log('Files ' + files.length)

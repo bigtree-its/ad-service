@@ -198,7 +198,7 @@ exports.delete = (req, res) => {
 
 // Deletes a Ad with the specified BrandId in the request
 exports.deleteEverything = (req, res) => {
-    Ad.remove().then(result => {
+    Ad.deleteMany().then(result => {
         res.send({ message: "Deleted all Ads" });
     }).catch(err => {
         return res.status(500).send({

@@ -55,7 +55,10 @@ function uploadFile(req, res) {
             return uploadUsingPromise(req, data, file);
         });
     });
-    res.status(200).send("Success");
+    res.status(200);
+    res.send({
+        status: "Success"
+    });
 }
 
 function uploadUsingPromise(req, data, file) {

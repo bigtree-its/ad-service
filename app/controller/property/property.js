@@ -323,7 +323,7 @@ exports.delete = (req, res) => {
 
 // Deletes a Property with the specified BrandId in the request
 exports.deleteEverything = (req, res) => {
-    Property.remove()
+    Property.deleteMany()
         .then((result) => {
             res.send({ message: "Deleted all Properties" });
         })

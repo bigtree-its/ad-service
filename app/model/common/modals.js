@@ -18,6 +18,18 @@ const EnquiryResponse = {
     date: Date,
 }
 
+const ImageKitImg = {
+    fileId: String,
+    name: String,
+    size: String,
+    filePath: String,
+    url: String,
+    fileType: String,
+    height: String,
+    width: String,
+    thumbnailUrl: String,
+}
+
 const NameValue = {
     name: String,
     value: String,
@@ -70,4 +82,4 @@ const AdOwner = {
     telephone: String,
 }
 
-module.exports = { EnquiryResponse, AdOwner, ServiceDistrict, Customer, Address, Contact, NameValue, Extra, Variant, ProductInfo, SupplierBasic }
+module.exports = { ImageKitImg, EnquiryResponse, AdOwner, ServiceDistrict, Customer, Address, Contact, NameValue, Extra, Variant, ProductInfo, SupplierBasic }

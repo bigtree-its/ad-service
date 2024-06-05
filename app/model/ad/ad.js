@@ -2,7 +2,7 @@
 var mongoose = require('mongoose');
 // const uuid = require('node-uuid');
 const { Address } = require('../property/all-properties');
-const { AdOwner } = require('../common/modals');
+const { AdOwner, ImageKitImg } = require('../common/modals');
 // Define a Schema for our Ad collection
 const AdSchema = new mongoose.Schema({
     category: { type: String, trim: true },
@@ -11,8 +11,8 @@ const AdSchema = new mongoose.Schema({
     description: [String],
     keyFeatures: [String],
     address: Address,
-    image: { type: String, trim: true },
-    gallery: [String],
+    image: ImageKitImg,
+    gallery: [ImageKitImg],
     price: Number,
     adOwner: AdOwner,
     datePosted: Date,

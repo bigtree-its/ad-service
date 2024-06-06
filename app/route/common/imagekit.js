@@ -4,6 +4,7 @@ const privateKey = process.env.IMAGEKIT_PRIVATEKEY;
 const publicKey = process.env.IMAGEKIT_PUBLICKEY;
 const urlEndpoint = process.env.IMAGEKIT_URL_ENDPOINT;
 const fs = require("node:fs");
+const { Buffer } = require("node:buffer");
 const controller = require("../../controller/common/imagekit.js");
 //Require Ad Model
 const Ad = require("../../model/ad/ad.js");
@@ -26,8 +27,13 @@ const storage = multer.diskStorage({
     },
 });
 
+const memStorage = multer.memoryStorage();
+
 // Initialize Multer with the storage configuration
-const upload = multer({ storage: storage });
+const uploadToFile = multer({ storage: storage });
+const uploadToMem = multer({ storage: memStorage });
+
+
 // const upload = multer({ dest: "uploads/" });
 module.exports = (app) => {
     // Public routes
@@ -36,24 +42,21 @@ module.exports = (app) => {
     app.get(path + "/files/:id", controller.getFile);
     app.get(path + "/files", controller.listFiles);
     // app.post(path + "/upload_images", upload.single("file"), uploadFile);
-    app.post(path + "/upload_images", upload.array("files", 5), uploadFile);
-    // app.post(
-    //     path + "/upload_images",
-    //     upload.fields([{ name: "files", maxCount: 5 }]),
-    //     uploadFile
-    // );
+    app.post(path + "/upload_images", uploadToMem.array("files", 5), uploadFile);
 };
 
 function uploadFile(req, res) {
     var fileKeys = Object.keys(req.files);
+    console.log('Files ' + fileKeys)
     fileKeys.map(function(key) { // return array of promises
         var file = req.files[key];
-        fs.readFile(file.path, "base64", (err, data) => {
-            if (err) {
-                console.error(err);
-            }
-            return uploadUsingPromise(req, data, file);
-        });
+        return readFileFromMemStorageAndUploadToImageKit(req, file);
+        // fs.readFile(file.path, "base64", (err, data) => {
+        //     if (err) {
+        //         console.error(err);
+        //     }
+        //     return uploadUsingPromise(req, data, file);
+        // });
     });
     res.status(200);
     res.send({
@@ -61,7 +64,35 @@ function uploadFile(req, res) {
     });
 }
 
-function uploadUsingPromise(req, data, file) {
+function readFileFromMemStorageAndUploadToImageKit(req, file) {
+    console.log(`Uploading file  ${file.originalname}`);
+    const b64 = Buffer.from(file.buffer).toString("base64");
+    return imageKit
+        .upload({
+            file: b64, // File content to upload
+            fileName: file.originalname, // Desired file name
+            extensions: [{
+                name: "google-auto-tagging",
+                maxTags: 5,
+                minConfidence: 95,
+            }, ],
+            transformation: {
+                pre: "l-text,i-Imagekit,fs-50,l-end",
+                post: [{
+                    type: "transformation",
+                    value: "w-100",
+                }, ],
+            },
+        })
+        .then((response) => {
+            updateAd(req, response);
+        })
+        .catch((error) => {
+            console.log(error);
+        });
+}
+
+function readFilesFromDiskAndUploadToImageKit(req, data, file) {
     console.log(`Uploading ${file.path} using promise `);
     return imageKit
         .upload({
@@ -98,6 +129,11 @@ function buildAd(body) {
     return new Ad(body);
 }
 
+/**
+ * Update the Ad with Images from ImageKit
+ * @param {*} req 
+ * @param {*} image 
+ */
 function updateAd(req, image) {
     let query = Ad.find();
     query.where("reference", req.query.adReference);

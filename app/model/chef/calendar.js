@@ -1,11 +1,10 @@
 //Require Mongoose
 var mongoose = require('mongoose');
-const uuid = require('node-uuid');
 
 // Define a Schema for our Calendar collection
 const CalendarSchema = new mongoose.Schema({
-    _id: { type: String, default: uuid.v4 },
-    chefId: { type: String, default: uuid.v4 },
+    _id: { type: String, trim: true },
+    chefId: { type: String, trim: true },
     date: Date,
     description: [String],
     foods: [{

@@ -2,13 +2,13 @@
 const _ = require("underscore");
 
 // Require Validation Utils
-const { validationResult, errorFormatter } = require("./validation");
-const Collection = require("../model/chef/collection");
+const { validationResult, errorFormatter } = require("../validation");
+const Collection = require("../../model/cloudkitchen/collection");
 
 // Create and Save a new Collection
 
 // Create and Save a new Collection
-exports.create = (req, res) => {
+exports.create = async(req, res) => {
     console.log("Request to create new Collection " + JSON.stringify(req.body));
     // Validate Request
     const errors = validationResult(req).formatWith(errorFormatter);
@@ -16,22 +16,16 @@ exports.create = (req, res) => {
         return res.json({ errors: _.uniq(errors.array()) });
     }
     var slug = getSlug(req.body.name);
-    Collection.exists({ slug: slug, chefId: req.body.chefId },
-        function(err, result) {
-            if (err) {
-                return res
-                    .status(500)
-                    .send({ message: `Error while finding Collection for: ${slug}` });
-            } else if (result) {
-                console.log(`Collection already exist for: ${slug}`);
-                res
-                    .status(400)
-                    .send({ message: `Collection already exist for: ${slug}` });
-            } else {
-                persist(req, res);
-            }
-        }
-    );
+    var _id = await Collection.exists({ slug: slug, cloudKitchenId: req.body.cloudKitchenId });
+    if (_id) {
+        console.log(`Collection already exist with name ${req.body.name}`);
+        res
+            .status(400)
+            .send({ message: `Collection already exist with name ${req.body.name}` });
+    } else {
+        persist(req, res);
+    }
+
 };
 
 // Retrieve and return all Collections from the database.
@@ -59,13 +53,13 @@ exports.findAll = (req, res) => {
 exports.lookup = (req, res) => {
     let query = Collection.find();
     if (req.query.chef) {
-        query.where('chefId', req.query.chef);
-        // query.where({ chefId: { '$regex': '.*' + req.query.chef + '.*', '$options': 'i' } })
+        query.where('cloudKitchenId', req.query.cloudKitchenId);
+        // query.where({ cloudKitchenId: { '$regex': '.*' + req.query.chef + '.*', '$options': 'i' } })
     }
     // if (req.query.chef) {
     //     // query.where('name', { $regex: '.*' + req.query.name + '.*' })
     //     query.where({
-    //         chefId: { $regex: ".*" + req.query.chef + ".*", $options: "i" },
+    //         cloudKitchenId: { $regex: ".*" + req.query.chef + ".*", $options: "i" },
     //     });
     // }
     Collection.find(query)
@@ -83,7 +77,7 @@ exports.lookup = (req, res) => {
 
 // Deletes all
 exports.deleteEverything = (req, res) => {
-    Collection.remove()
+    Collection.deleteMany()
         .then((result) => {
             res.send({ message: "Deleted all Collections" });
         })
@@ -144,7 +138,7 @@ exports.update = (req, res) => {
 // Delete a Collection with the specified CollectionId in the request
 exports.delete = (req, res) => {
 
-    if (req.query.chef) {
+    if (req.query.cloudKitchenId) {
         deleteManyByQuery(req);
     } else {
         deleteOneById(req, res);
@@ -155,12 +149,12 @@ exports.delete = (req, res) => {
 function deleteManyByQuery(req) {
     let query = Collection.find();
     query.where({
-        chefId: { $regex: ".*" + req.query.chef + ".*", $options: "i" },
+        cloudKitchenId: { $regex: ".*" + req.query.cloudKitchenId + ".*", $options: "i" },
     });
     Collection.deleteMany(query)
         .then(function() {
             // Success
-            console.log("Collections for chef deleted");
+            console.log("Collections for cloud kitchen deleted");
         })
         .catch(function(error) {
             // Failure
@@ -169,7 +163,7 @@ function deleteManyByQuery(req) {
 }
 
 function deleteOneById(req, res) {
-    Collection.findByIdAndRemove(req.params.id)
+    Collection.findByIdAndDelete(req.params.id)
         .then((Collection) => {
             if (!Collection) {
                 return CollectionNotFoundWithId(req, res);
@@ -237,7 +231,7 @@ function buildCollectionObject(req) {
 function buildCollectionJson(req) {
     return {
         name: req.body.name,
-        chefId: req.body.chefId,
+        cloudKitchenId: req.body.cloudKitchenId,
         image: req.body.image,
         active: req.body.active,
         slug: req.body.slug ||

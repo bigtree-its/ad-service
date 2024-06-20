@@ -1,5 +1,5 @@
 module.exports = (app) => {
-    const controller = require('../controller/common/postcodedistrict');
+    const controller = require('../../controller/common/postcodedistrict');
     const { check } = require('express-validator');
 
     const path = process.env.CONTEXT_PATH + '/postcode-districts';

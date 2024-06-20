@@ -1,10 +1,10 @@
-const Review = require("../model/chef/review");
-const Chef = require("../model/chef/chef");
+const Review = require("../../model/cloudkitchen/review");
+const CloudKitchen = require("../../model/cloudkitchen/cloudkitchen");
 //Require Underscore JS ( Visit: http://underscorejs.org/#)
 const _ = require("underscore");
 
 // Require Validation Utils
-const { validationResult, errorFormatter } = require("./validation");
+const { validationResult, errorFormatter } = require("../validation");
 
 // Create and Save a new Review
 exports.create = (req, res) => {
@@ -14,7 +14,7 @@ exports.create = (req, res) => {
     if (!errors.isEmpty()) {
         return res.json({ errors: _.uniq(errors.array()) });
     }
-    Review.exists({ order: req.body.order }, function (err, result) {
+    Review.exists({ order: req.body.order }, function(err, result) {
         if (err) {
             return res
                 .status(500)
@@ -35,10 +35,10 @@ exports.create = (req, res) => {
 // Retrieve and return all Menu from the database.
 exports.findAll = (req, res) => {
     let query = Review.find();
-    if (req.query.chef) {
-        query.where("chef", req.query.chef);
+    if (req.query.cloudKitchenId) {
+        query.where("cloudKitchenId", req.query.cloudKitchenId);
         // query.where('name', { $regex: '.*' + req.query.name + '.*' })
-        // query.where({ chef: { '$regex': '.*' + req.query.chef + '.*', '$options': 'i' } })
+        // query.where({ cloudKitchenId: { '$regex': '.*' + req.query.cloudKitchenId + '.*', '$options': 'i' } })
     }
     if (req.query.order) {
         query.where("order", req.query.order);
@@ -161,19 +161,19 @@ function persist(req, res) {
 }
 
 async function updateChef(req) {
-    const chefId = req.body.chef;
-    const totalReviews = await Review.countDocuments({ chef: req.body.chef });
+    const cloudKitchenIdId = req.body.cloudKitchenId;
+    const totalReviews = await Review.countDocuments({ cloudKitchenId: req.body.cloudKitchenId });
     const avgResult = await Review.aggregate([{
-        $match: {
-            chef: chefId,
+            $match: {
+                cloudKitchenId: cloudKitchenIdId,
+            },
         },
-    },
-    {
-        $group: {
-            _id: null,
-            avgValue: { "$avg": { "$ifNull": ["$rating", 0] } }
+        {
+            $group: {
+                _id: null,
+                avgValue: { "$avg": { "$ifNull": ["$rating", 0] } }
+            }
         }
-    }
     ]);
     const avgRating = avgResult[0].avgValue;
     var rounded = Math.round(avgRating * 10) / 10
@@ -184,22 +184,22 @@ async function updateChef(req) {
         rating: rounded,
     };
 
-    Chef.findByIdAndUpdate({ _id: req.body.chef }, x, {
-        upsert: true,
-        setDefaultsOnInsert: true,
-        new: true,
-    })
+    Chef.findByIdAndUpdate({ _id: req.body.cloudKitchenId }, x, {
+            upsert: true,
+            setDefaultsOnInsert: true,
+            new: true,
+        })
         .then((Chef) => {
             if (!Chef) {
                 console.log(
-                    `Cannot update review count. Chef not found with id ${req.body.chef}`
+                    `Cannot update review count. Chef not found with id ${req.body.cloudKitchenId}`
                 );
             }
         })
         .catch((err) => {
             if (err.kind === "ObjectId") {
                 console.log(
-                    `Cannot update review count. Chef not found with id ${req.body.chef}`
+                    `Cannot update review count. Chef not found with id ${req.body.cloudKitchenId}`
                 );
             }
         });
@@ -233,7 +233,7 @@ function buildReviewObject(req) {
  */
 function buildReviewJson(req) {
     return {
-        chef: req.body.chef,
+        cloudKitchenId: req.body.cloudKitchenId,
         rating: req.body.rating,
         title: req.body.title,
         comment: req.body.comment,

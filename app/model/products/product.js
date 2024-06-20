@@ -1,14 +1,14 @@
 //Require Mongoose
 var mongoose = require('mongoose');
-const uuid = require('node-uuid');
+
 //Mongoose Paginate V2
 var aggregatePaginate = require('mongoose-aggregate-paginate-v2');
 const { Variant, ProductInfo, SupplierBasic } = require('../common/modals');
 
 // Define a Schema for our Product collection
-const ProductSchema= new mongoose.Schema({
+const ProductSchema = new mongoose.Schema({
     name: String, // Product name
-    group: { type: String, default: uuid.v4 },
+    group: { type: String, trim: true },
     supplier: SupplierBasic,
     productInfo: [ProductInfo],
     shortDesc: String,

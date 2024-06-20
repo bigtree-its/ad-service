@@ -1,11 +1,10 @@
 //Require Mongoose
 var mongoose = require('mongoose');
-
 const { Extra } = require('../common');
-// Define a Schema for our Menu collection
-const MenuSchema = new mongoose.Schema({
-    chefId: { type: String, trim: true },
-    collectionId: { type: String, trim: true },
+// Define a Schema for our Food collection
+const FoodSchema = new mongoose.Schema({
+    cloudKitchenId: String,
+    collectionId: String,
     name: String,
     slug: String,
     image: String,
@@ -33,7 +32,7 @@ const MenuSchema = new mongoose.Schema({
 // The first argument is the singular name of the collection your model is for. 
 // ** Mongoose automatically looks for the plural, lower cased version of your model name.
 // ** Thus, for the example above, the model Tank is for the tanks collection in the database.
-var Menu = mongoose.model('Menu', MenuSchema);
+var Food = mongoose.model('Food', FoodSchema);
 
-//Export function to create "Menu" model class
-module.exports = Menu;
+//Export function to create "Food" model class
+module.exports = Food;

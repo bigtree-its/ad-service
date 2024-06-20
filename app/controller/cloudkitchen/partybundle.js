@@ -2,8 +2,8 @@
 const _ = require("underscore");
 
 // Require Validation Utils
-const { validationResult, errorFormatter } = require("./validation");
-const PartyBundle = require("../model/chef/partybundle");
+const { validationResult, errorFormatter } = require("../validation");
+const PartyBundle = require("../../model/cloudkitchen/partybundle");
 
 // Create and Save a new PartyBundle
 exports.create = (req, res) => {
@@ -14,8 +14,8 @@ exports.create = (req, res) => {
         return res.json({ errors: _.uniq(errors.array()) });
     }
     var slug = getSlug(req.body.name);
-    PartyBundle.exists({ slug: slug, chefId: req.body.chefId },
-        function (err, result) {
+    PartyBundle.exists({ slug: slug, cloudKitchenId: req.body.cloudKitchenId },
+        function(err, result) {
             if (err) {
                 return res
                     .status(500)
@@ -40,7 +40,7 @@ exports.findAll = (req, res) => {
             path: 'partyBundleCandidates',
             populate: {
                 path: 'items',
-                model: 'Menu'
+                model: 'Food'
             }
         })
         .then((data) => {
@@ -63,14 +63,14 @@ exports.findAll = (req, res) => {
 exports.lookup = (req, res) => {
     let query = PartyBundle.find();
     if (req.query.chef) {
-        query.where("chefId", req.query.chef);
+        query.where("cloudKitchenId", req.query.chef);
     }
     PartyBundle.find(query)
         .populate({
             path: 'partyBundleCandidates',
             populate: {
                 path: 'items',
-                model: 'Menu'
+                model: 'Food'
             }
         })
         .then((result) => {
@@ -106,7 +106,7 @@ exports.findOne = (req, res) => {
             path: 'partyBundleCandidates',
             populate: {
                 path: 'items',
-                model: 'Menu'
+                model: 'Food'
             }
         })
         .then((PartyBundle) => {
@@ -136,8 +136,8 @@ exports.update = (req, res) => {
     }
     // Find PartyBundle and update it with the request body
     PartyBundle.findByIdAndUpdate(
-        req.params.id, { $set: req.body }, { new: true }
-    )
+            req.params.id, { $set: req.body }, { new: true }
+        )
         .then((PartyBundle) => {
             if (!PartyBundle) {
                 return PartyBundleNotFoundWithId(req, res);
@@ -166,14 +166,14 @@ exports.delete = (req, res) => {
 function deleteManyByQuery(req) {
     let query = PartyBundle.find();
     query.where({
-        chefId: { $regex: ".*" + req.query.chef + ".*", $options: "i" },
+        cloudKitchenId: { $regex: ".*" + req.query.chef + ".*", $options: "i" },
     });
     PartyBundle.deleteMany(query)
-        .then(function () {
+        .then(function() {
             // Success
             console.log("PartyBundles for chef deleted");
         })
-        .catch(function (error) {
+        .catch(function(error) {
             // Failure
             console.log(error);
         });
@@ -248,7 +248,7 @@ function buildPartyBundleJson(req) {
     return {
         active: req.body.active ? req.body.active : false,
         name: req.body.name,
-        chefId: req.body.chefId,
+        cloudKitchenId: req.body.cloudKitchenId,
         collectionId: req.body.collectionId,
         vegetarian: req.body.vegetarian,
         partyBundleCandidates: req.body.partyBundleCandidates,
@@ -258,9 +258,9 @@ function buildPartyBundleJson(req) {
         discounted: req.body.discounted,
         slug: req.body.slug ||
             req.body.name
-                .trim()
-                .replace(/[\W_]+/g, "-")
-                .toLowerCase(),
+            .trim()
+            .replace(/[\W_]+/g, "-")
+            .toLowerCase(),
     };
 }
 

@@ -1,19 +1,19 @@
 module.exports = (app) => {
-    const controller = require('../controller/dish.js');
-    const { verifyToken } = require('../security/security.js');
+    const controller = require('../../controller/cloudkitchen/cuisine.js');
+    const { verifyToken } = require('../../security/security.js');
     const { check } = require('express-validator');
 
-    const path = process.env.CONTEXT_PATH + '/dishes';
+    const path = process.env.CONTEXT_PATH + '/cuisines';
 
     // Public routes
-    // Retrieve all Dish
+    // Retrieve all Cuisine
     app.get(path, controller.findAll);
 
-    // Retrieve a single Dish with Id
+    // Retrieve a single Cuisine with Id
     app.get(path + '/:id', controller.findOne);
 
     // Private routes
-    // Creates a new Dish
+    // Creates a new Cuisine
     app.post(path,
         // verifyToken, 
         [
@@ -21,10 +21,10 @@ module.exports = (app) => {
         ],
         controller.create);
 
-    // Update a Dish with id
+    // Update a Cuisine with id
     app.put(path + '/:id', controller.update);
 
-    // Delete a Dish with id
+    // Delete a Cuisine with id
     app.delete(path + '/:id', controller.delete);
 
     //Delete All -- only for non production and can only be done by an admin

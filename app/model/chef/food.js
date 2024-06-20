@@ -1,10 +1,10 @@
 //Require Mongoose
 var mongoose = require('mongoose');
-const uuid = require('node-uuid');
+
 const { Extra } = require('../common');
 // Define a Schema for our Food collection
 const FoodSchema = new mongoose.Schema({
-    chefId: { type: String, default: uuid.v4 },
+    chefId: { type: String, trim: true },
     name: String,
     slug: String,
     category: String,

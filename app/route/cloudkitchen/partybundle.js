@@ -1,36 +1,32 @@
 module.exports = (app) => {
-    const controller = require('../controller/servicearea.js');
-    const { verifyToken } = require('../security/security.js');
+    const controller = require('../../controller/cloudkitchen/partybundle.js');
+    const { verifyToken } = require('../../security/security.js');
     const { check } = require('express-validator');
 
-    const path = process.env.CONTEXT_PATH + '/serviceareas';
+    const path = process.env.CONTEXT_PATH + '/party-bundles';
 
     // Public routes
-    // Retrieve all LocalArea
-    app.get(path, controller.findAll);
+    // Retrieve all Menu
+    app.get(path, controller.lookup);
 
-    // Lookup
-    app.get(path + '/lookup', controller.lookup);
-
-    // Retrieve a single LocalArea with Id
+    // Retrieve a single Menu with Id
     app.get(path + '/:id', controller.findOne);
 
-
-
     // Private routes
-    // Creates a new LocalArea
+    // Creates a new Menu
     app.post(path,
         // verifyToken, 
         [
             check('name').notEmpty().isLength({ min: 3, max: 250 }).withMessage('Name is mandatory'),
-            check('city').notEmpty().isLength({ min: 3, max: 250 }).withMessage('City is mandatory')
+            check('price').notEmpty().withMessage('Price is mandatory'),
+            check('cloudKitchenId').notEmpty().withMessage('Cloud Kitchen is mandatory')
         ],
         controller.create);
 
-    // Update a LocalArea with id
+    // Update a Menu with id
     app.put(path + '/:id', controller.update);
 
-    // Delete a LocalArea with id
+    // Delete a Menu with id
     app.delete(path + '/:id', controller.delete);
 
     //Delete All -- only for non production and can only be done by an admin

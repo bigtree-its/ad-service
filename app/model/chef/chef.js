@@ -1,7 +1,6 @@
 //Require Mongoose
 var mongoose = require('mongoose');
 const { Address, Contact } = require('../common');
-const uuid = require('node-uuid');
 
 // Define a Schema for our Chef collection
 const ChefSchema = new mongoose.Schema({

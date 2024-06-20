@@ -1,7 +1,6 @@
 //Require Underscore JS ( Visit: http://underscorejs.org/#)
 const _ = require('underscore');
 //Require Generate Safe Id for Random unique id Generation
-var generateSafeId = require('generate-safe-id');
 const Supplier = require('../model/common/supplier');
 const { validationResult } = require('express-validator');
 const { errorFormatter } = require('./validation');
@@ -15,7 +14,7 @@ function isEmpty(data) {
 }
 
 // Create and Save a new Supplier
-exports.create = async (req, res) => {
+exports.create = async(req, res) => {
 
     console.log("Creating new Supplier ");
     /** Check for validation errors */
@@ -30,7 +29,7 @@ exports.create = async (req, res) => {
 
 function checkDuplicateAndPersist(req, res) {
     console.log(`Checking if Supplier already exist..`);
-    Supplier.exists({ email: req.body.email }, function (err, result) {
+    Supplier.exists({ email: req.body.email }, function(err, result) {
         if (err) {
             return res.status(500).send({ message: `Error while finding Supplier with email ${req.body.email}` });
         } else if (result) {
@@ -56,7 +55,7 @@ exports.paginate = (req, res) => {
     if (req.query.postcode) {
         query.where('address.postcode', { $in: req.query.postcode })
     }
-    Supplier.aggregatePaginate(query, options, function (err, result) {
+    Supplier.aggregatePaginate(query, options, function(err, result) {
         if (result) {
             console.log(`Returning ${result.docs.length} Suppliers.`);
             res.send(result);
@@ -72,7 +71,7 @@ exports.paginate = (req, res) => {
 exports.findAll = (req, res) => {
     console.log('Finding Suppliers..')
     let query = Supplier.find();
-   
+
     if (req.query.active) {
         query.where('active', req.query.active)
     }
@@ -80,7 +79,7 @@ exports.findAll = (req, res) => {
         query.where('delivery', true);
     }
     if (req.query.noMinimumOrder) {
-        query.where('minimumOrder', 0); 
+        query.where('minimumOrder', 0);
     }
     if (req.query.email) {
         query.where('email', req.query.email)

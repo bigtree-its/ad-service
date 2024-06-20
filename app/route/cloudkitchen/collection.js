@@ -1,5 +1,5 @@
 module.exports = (app) => {
-    const controller = require('../controller/collection.js');
+    const controller = require('../../controller/cloudkitchen/collection.js');
     const { check } = require('express-validator');
 
     const path = process.env.CONTEXT_PATH + '/collections';
@@ -16,8 +16,8 @@ module.exports = (app) => {
     app.post(path,
         // verifyToken, 
         [
-            check('name').notEmpty().isLength({ min: 3, max: 250 }).withMessage('Name is mandatory'),
-            check('chefId').notEmpty().isLength({ min: 3, max: 250 }).withMessage('Chef is mandatory')
+            check('name').notEmpty().withMessage('Name is mandatory'),
+            check('cloudKitchenId').notEmpty().withMessage('CloudKitchenId is mandatory')
         ],
         controller.create);
 

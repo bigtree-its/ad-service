@@ -1,5 +1,6 @@
+const controller = require("../../controller/common/postcodearea");
+
 module.exports = (app) => {
-    const controller = require('../controller/common/postcodedistrict');
     const { check } = require('express-validator');
 
     const path = process.env.CONTEXT_PATH + '/postcode-areas';
@@ -16,11 +17,9 @@ module.exports = (app) => {
     app.post(path,
         // verifyToken, 
         [
-            check('prefix').notEmpty().isLength({ min: 3, max: 4 }).withMessage('prefix is mandatory'),
-            check('name').notEmpty().isLength({ min: 3, max: 50 }).withMessage('name is mandatory'),
-            check('coverage').notEmpty().isLength({ min: 3 }).withMessage('region is mandatory'),
-            check('region').notEmpty().isLength({ min: 3, max: 50 }).withMessage('region is mandatory'),
-            check('postTown').notEmpty().isLength({ min: 3, max: 50 }).withMessage('PostTown is mandatory')
+            check('prefix').notEmpty().isLength({ min: 1, max: 2 }).withMessage('prefix is mandatory'),
+            check('area').notEmpty().withMessage('Area e.g Glasgow is mandatory'),
+            check('region').notEmpty().withMessage('Region is mandatory e.g Scotland'),
         ],
         controller.create);
 

@@ -1,12 +1,12 @@
 //Require Mongoose
 var mongoose = require('mongoose');
-const uuid = require('node-uuid');
+
 const { Extra } = require('../common');
 const { PartyBundleCandidate } = require('./common-foods');
 // Define a Schema for our PartyBundle collection
 const PartyBundleSchema = new mongoose.Schema({
-    chefId: { type: String, default: uuid.v4 },
-    collectionId: { type: String, default: uuid.v4 },
+    chefId: { type: String, trim: true },
+    collectionId: { type: String, trim: true },
     name: String,
     slug: String,
     price: Number,

@@ -1,11 +1,15 @@
 //Require Mongoose
 var mongoose = require('mongoose');
-
-// Define a Schema for our Slot collection
-const SlotSchema = new mongoose.Schema({
-    name: { type: String, trim: true },
-    slug: { type: String, trim: true },
-    logo: String,
+const { Customer } = require('../common');
+// Define a Schema for our Review collection
+const ReviewSchema = new mongoose.Schema({
+    chef: String,
+    rating: Number,
+    title: String,
+    comment: String,
+    customer: Customer,
+    order: { type: String, trim: true },
+    date: Date
 }, {
     timestamps: true
 });
@@ -14,7 +18,7 @@ const SlotSchema = new mongoose.Schema({
 // The first argument is the singular name of the collection your model is for. 
 // ** Mongoose automatically looks for the plural, lower cased version of your model name.
 // ** Thus, for the example above, the model Tank is for the tanks collection in the database.
-var Slot = mongoose.model('Slot', SlotSchema);
+var Review = mongoose.model('Review', ReviewSchema);
 
-//Export function to create "Slot" model class
-module.exports = Slot;
+//Export function to create "Review" model class
+module.exports = Review;

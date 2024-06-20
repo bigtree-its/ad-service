@@ -1,9 +1,9 @@
 module.exports = (app) => {
-    const controller = require('../controller/partybundle.js');
-    const { verifyToken } = require('../security/security.js');
+    const controller = require('../../controller/cloudkitchen/food.js');
+    const { verifyToken } = require('../../security/security.js');
     const { check } = require('express-validator');
 
-    const path = process.env.CONTEXT_PATH + '/party-bundles';
+    const path = process.env.CONTEXT_PATH + '/menus';
 
     // Public routes
     // Retrieve all Menu
@@ -18,8 +18,9 @@ module.exports = (app) => {
         // verifyToken, 
         [
             check('name').notEmpty().isLength({ min: 3, max: 250 }).withMessage('Name is mandatory'),
+            check('collectionId').notEmpty().withMessage('Collection is mandatory'),
             check('price').notEmpty().withMessage('Price is mandatory'),
-            check('chefId').notEmpty().isLength({ min: 3, max: 250 }).withMessage('Chef is mandatory')
+            check('cloudKitchenId').notEmpty().isLength({ min: 3, max: 250 }).withMessage('CloudKitchen Id is mandatory')
         ],
         controller.create);
 

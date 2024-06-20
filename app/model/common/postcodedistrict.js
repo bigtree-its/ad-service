@@ -1,16 +1,17 @@
 //Require Mongoose
 var mongoose = require('mongoose');
-const uuid = require('node-uuid');
 // Define a Schema for our PostcodeDistrict collection
 const PostcodeDistrictSchema = new mongoose.Schema({
     active: Boolean,
-    area: [{
-        type: String,
-        ref: 'PostcodeArea'
-    }],
+    // Generally area will be The City e,g G for Glasgow
+    area: { type: String, trim: true },
+    // G76
     prefix: { type: String, trim: true },
-    coverage: [String],
-    region: { type: String, trim: true },
+    // The localities e.g Clarkston, Waterfoot, Busby
+    coverage: { type: String, trim: true },
+    // The county e.g East Renfrewshire
+    council: { type: String, trim: true },
+    // The city.eg. Glasgow
     postTown: { type: String, trim: true },
     slug: { type: String, trim: true },
 }, {

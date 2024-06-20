@@ -42,7 +42,7 @@ const { verifyToken } = require('./security/security');
 mongoose.Promise = global.Promise;
 
 // connect to database
-mongoose.connect(process.env.DB_URL, { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false })
+mongoose.connect(process.env.DB_URL)
     .then(() => { console.log("Successfully connected to database"); })
     .catch(err => {
         console.error("Cannot connect to the database. Exiting now", err);
@@ -71,22 +71,23 @@ app.use(function(req, res, next) {
 // });
 
 // Other routes
-require('./route/chef')(app);
+require('./route/cloudkitchen/cloudkitchen')(app);
 require('./route/common/imagekit')(app);
 require('./route/ad/ad')(app);
 require('./route/ad/adEnquiry')(app);
-require('./route/postcodedistrict')(app);
-require('./route/servicearea')(app);
-require('./route/calendar')(app);
-require('./route/cuisine')(app);
-require('./route/dish')(app);
-require('./route/slot')(app);
+// require('./route/common/postcodedistrict')(app);
+require('./route/common/postcode-district-csv-loader')(app);
+require('./route/common/postcodearea')(app);
+require('./route/common/postcodedistrict')(app);
+require('./route/cloudkitchen/calendar')(app);
+require('./route/cloudkitchen/cuisine')(app);
+require('./route/cloudkitchen/dish')(app);
 require('./route/supplier')(app);
-require('./route/collection')(app);
+require('./route/cloudkitchen/collection')(app);
 require('./route/category')(app);
-require('./route/review')(app);
-require('./route/menu')(app);
-require('./route/partybundle')(app);
+require('./route/cloudkitchen/review')(app);
+require('./route/cloudkitchen/food')(app);
+require('./route/cloudkitchen/partybundle')(app);
 require('./route/products/product')(app);
 require('./route/products/group')(app);
 require('./route/products/feedback')(app);

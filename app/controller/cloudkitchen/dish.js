@@ -1,9 +1,9 @@
-const Dish = require('../model/chef/dish');
+const Dish = require('../../model/cloudkitchen/dish');
 //Require Underscore JS ( Visit: http://underscorejs.org/#)
 const _ = require('underscore');
 
 // Require Validation Utils
-const { validationResult, errorFormatter } = require('./validation');
+const { validationResult, errorFormatter } = require('../validation');
 
 // Create and Save a new Dish
 exports.create = (req, res) => {

@@ -1,11 +1,11 @@
 //Require Mongoose
 var mongoose = require('mongoose');
-const uuid = require('node-uuid');
+
 const { Customer } = require('../common/modals');
 // Define a Schema for our Feedback collection
 const FeedbackSchema = new mongoose.Schema({
-    _id: { type: String, default: uuid.v4 },
-    product: { type: String, default: uuid.v4 },
+    _id: { type: String, trim: true },
+    product: { type: String, trim: true },
     rating: Number,
     title: String,
     comment: String,

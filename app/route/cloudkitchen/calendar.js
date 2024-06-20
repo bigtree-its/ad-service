@@ -1,6 +1,6 @@
 module.exports = (app) => {
-    const controller = require('../controller/calendar.js');
-    const { verifyToken } = require('../security/security');
+    const controller = require('../../controller/cloudkitchen/calendar.js');
+    const { verifyToken } = require('../../security/security.js');
     const { check } = require('express-validator');
 
     const path = process.env.CONTEXT_PATH + '/calendars';
@@ -21,11 +21,11 @@ module.exports = (app) => {
             check('foods').notEmpty().withMessage('Foods must not be empty'),
             check('date').custom((date_ob, { req }) => {
                 if (date_ob > req.body.date) {
-                  throw new Error('Date must be a future date');
+                    throw new Error('Date must be a future date');
                 }
                 // Indicates the success of this synchronous custom validator
                 return true;
-              })
+            })
         ],
         controller.create);
 

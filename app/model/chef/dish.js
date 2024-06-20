@@ -1,6 +1,6 @@
 //Require Mongoose
 var mongoose = require('mongoose');
-const uuid = require('node-uuid');
+
 // Define a Schema for our Dish collection
 const DishSchema = new mongoose.Schema({
     name: { type: String, trim: true },

@@ -1,6 +1,6 @@
 //Require Mongoose
 var mongoose = require('mongoose');
-// const uuid = require('node-uuid');
+// 
 const { Address } = require('../property/all-properties');
 const { AdOwner, ImageKitImg } = require('../common/modals');
 // Define a Schema for our Ad collection

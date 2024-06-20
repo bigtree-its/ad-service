@@ -1,10 +1,10 @@
 //Require Mongoose
 var mongoose = require('mongoose');
-const uuid = require('node-uuid');
+
 const { Customer } = require('../common');
 // Define a Schema for our Review collection
 const ReviewSchema = new mongoose.Schema({
-    chef: { type: String, default: uuid.v4 },
+    chef: { type: String, trim: true },
     rating: Number,
     title: String,
     comment: String,

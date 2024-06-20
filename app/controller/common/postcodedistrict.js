@@ -3,7 +3,7 @@ const PostcodeArea = require('../../model/common/postcodearea');
 
 //Require Underscore JS ( Visit: http://underscorejs.org/#)
 const _ = require('underscore');
-
+const Utils = require('../../utils/utils.js');
 // Require Validation Utils
 const { validationResult, errorFormatter } = require('../validation');
 
@@ -16,16 +16,16 @@ exports.create = (req, res) => {
         return res.json({ errors: _.uniq(errors.array()) });
     }
     /** Validate Area */
-    var error = this.validateArea(req, res);
-    if (error) {
-        console.error(error);
-        return res.status(400).send(Utils.buildError(error));
-    }
-    
-    var slug = getSlug(req.body.prefix, req.body.area);
+    // var error = this.validateArea(req, res);
+    // if (error) {
+    //     console.error(error);
+    //     return res.status(400).send(Utils.buildError(error));
+    // }
+
+    var slug = getSlug(req.body.prefix, req.body.coverage);
     console.log(`Finding if a PostcodeDistrict already exist for: ${slug}`);
 
-    PostcodeDistrict.exists({ slug: slug }, function (err, result) {
+    PostcodeDistrict.exists({ slug: slug }, function(err, result) {
         if (err) {
             return res.status(500).send({ message: `Error while finding PostcodeDistrict for: ${slug}` });
         } else if (result) {
@@ -38,15 +38,15 @@ exports.create = (req, res) => {
 
 };
 
-exports.validateArea = async (req, res) => {
+exports.validateArea = async(req, res) => {
     try {
         var area = req.body.area;
         if (!area) {
             return `Area is Mandatory`;
         }
-        var records = await PostcodeArea.findOne({ _id: area }).exec();
+        var records = await PostcodeArea.findOne({ prefix: area }).exec();
         if (!records) {
-            return `Some or more cuisines : ${area} not valid.`;
+            return `Area ${area} not valid.`;
         }
     } catch (error) {
         return `Cannot find Postcode area ${area}`;
@@ -63,8 +63,11 @@ exports.lookup = (req, res) => {
         // query.where('prefix', req.query.prefix);
         query.where({ 'prefix': { '$regex': req.query.prefix, $options: 'i' } });
     }
-    if (req.query.region) {
-        query.where('region', req.query.region);
+    if (req.query.council) {
+        query.where('council', req.query.council);
+    }
+    if (req.query.coverage) {
+        query.where({ coverage: { "$in": [req.query.coverage] } });
     }
     if (req.query.postTown) {
         query.where('postTown', req.query.postTown);
@@ -84,7 +87,7 @@ exports.lookup = (req, res) => {
 
 // Deletes all
 exports.deleteEverything = (req, res) => {
-    PostcodeDistrict.remove().then(result => {
+    PostcodeDistrict.deleteMany().then(result => {
         res.send({ message: "Deleted all PostcodeDistricts" });
     }).catch(err => {
         return res.status(500).send({
@@ -201,7 +204,8 @@ function buildPostcodeDistrictJson(req) {
         active: true,
         prefix: req.body.prefix,
         area: req.body.area,
-        region: req.body.region,
+        coverage: req.body.coverage,
+        council: req.body.council,
         postTown: req.body.postTown,
         slug: req.body.slug || getSlug(req.body.prefix, req.body.area)
     };

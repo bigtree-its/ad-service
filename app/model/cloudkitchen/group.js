@@ -1,11 +1,11 @@
 //Require Mongoose
 var mongoose = require('mongoose');
 
-// Define a Schema for our Slot collection
-const SlotSchema = new mongoose.Schema({
+// Define a Schema for our Group collection
+const GroupSchema = new mongoose.Schema({
+    cloudKitchenId: { type: String, trim: true },
     name: { type: String, trim: true },
-    slug: { type: String, trim: true },
-    logo: String,
+    slug: { type: String, trim: true }
 }, {
     timestamps: true
 });
@@ -14,7 +14,7 @@ const SlotSchema = new mongoose.Schema({
 // The first argument is the singular name of the collection your model is for. 
 // ** Mongoose automatically looks for the plural, lower cased version of your model name.
 // ** Thus, for the example above, the model Tank is for the tanks collection in the database.
-var Slot = mongoose.model('Slot', SlotSchema);
+var Group = mongoose.model('Group', GroupSchema);
 
-//Export function to create "Slot" model class
-module.exports = Slot;
+//Export function to create "Group" model class
+module.exports = Group;

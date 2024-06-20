@@ -30,3 +30,7 @@ Server URL: http://localhost:8081/ads
 | GET by id | /products/{id} |
 | PUT by id | /products/{id} |
 | DELETE by id | /products/{id} |
+
+
+DB
+adserviceapi | tkc7vSNgzfbDnKVE

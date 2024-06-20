@@ -1,5 +1,4 @@
 const PostcodeArea = require('../../model/common/postcodearea');
-
 //Require Underscore JS ( Visit: http://underscorejs.org/#)
 const _ = require('underscore');
 
@@ -17,7 +16,7 @@ exports.create = (req, res) => {
     var slug = getSlug(req.body.prefix, req.body.area);
     console.log(`Finding if a PostcodeArea already exist for: ${slug}`);
 
-    PostcodeArea.exists({ slug: slug }, function (err, result) {
+    PostcodeArea.exists({ slug: slug }, function(err, result) {
         if (err) {
             return res.status(500).send({ message: `Error while finding PostcodeArea for: ${slug}` });
         } else if (result) {
@@ -39,6 +38,9 @@ exports.lookup = (req, res) => {
     }
     if (req.query.name) {
         query.where('name', req.query.name);
+    }
+    if (req.query.region) {
+        query.where('region', req.query.region);
     }
     query.where({ active: true });
     PostcodeArea.find(query).then(result => {
@@ -171,9 +173,8 @@ function buildPostcodeAreaJson(req) {
     return {
         active: true,
         prefix: req.body.prefix,
-        name: req.body.name,
+        area: req.body.area,
         region: req.body.region,
-        postTown: req.body.postTown,
         slug: req.body.slug || getSlug(req.body.prefix, req.body.area)
     };
 }

@@ -1,9 +1,9 @@
 //Require Mongoose
 var mongoose = require('mongoose');
-const uuid = require('node-uuid');
+
 // Define a Schema for our Group collection
 const GroupSchema = new mongoose.Schema({
-    _id: { type: String, default: uuid.v4 },
+    _id: { type: String, trim: true },
     name: String,
     department: String,
     slug: String,

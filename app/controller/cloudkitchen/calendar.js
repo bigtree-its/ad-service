@@ -1,9 +1,9 @@
-const Calendar = require('../model/chef/calendar');
+const Calendar = require('../../model/cloudkitchen/calendar');
 //Require Underscore JS ( Visit: http://underscorejs.org/#)
 const _ = require('underscore');
 
 // Require Validation Utils
-const { validationResult, errorFormatter } = require('./validation');
+const { validationResult, errorFormatter } = require('../validation');
 
 // Create and Save a new Calendar
 exports.create = (req, res) => {
@@ -14,12 +14,12 @@ exports.create = (req, res) => {
         return res.json({ errors: _.uniq(errors.array()) });
     }
     console.log(`Finding if a Calendar already exist`);
-    Calendar.exists({ chefId: req.body.chefId, date: req.body.date }, function(err, result) {
+    Calendar.exists({ cloudKitchenId: req.body.cloudKitchenId, date: req.body.date }, function(err, result) {
         if (err) {
-            return res.status(500).send({ message: `Error while finding Calendar for Chef ${req.body.chefId} on ${req.body.date}` });
+            return res.status(500).send({ message: `Error while finding Calendar for CloudKitchen ${req.body.cloudKitchenId} on ${req.body.date}` });
         } else if (result) {
-            console.log(`Calendar already exist for Chef ${req.body.chefId} on ${req.body.date}`);
-            res.status(400).send({ message: `Calendar already exist for Chef ${req.body.chefId} on ${req.body.date}` });
+            console.log(`Calendar already exist for CloudKitchen ${req.body.cloudKitchenId} on ${req.body.date}`);
+            res.status(400).send({ message: `Calendar already exist for CloudKitchen ${req.body.cloudKitchenId} on ${req.body.date}` });
         } else {
             persist(req, res);
         }
@@ -29,7 +29,7 @@ exports.create = (req, res) => {
 
 
 // Retrieve and return all Calendars from the database.
-exports.findAll = (req, res) => {   
+exports.findAll = (req, res) => {
     if (Object.keys(req.query).length > 0) {
         return this.lookup(req, res);
     }
@@ -60,7 +60,7 @@ exports.lookup = (req, res) => {
     let query = Calendar.find();
     console.log(`Looking for calendars with ${req.query}`);
     if (req.query.chef) {
-        query.where({ chefId: req.query.chef })
+        query.where({ cloudKitchenId: req.query.chef })
     }
     if (req.query.date) {
         query.where({ date: req.query.date })
@@ -73,7 +73,7 @@ exports.lookup = (req, res) => {
         console.log(`Calendars with start date ${tomorrow}, end date: ${endDate}`)
         query.where({ date: { $gte: tomorrow, $lte: endDate } })
     }
-    
+
     Calendar.find(query)
         .populate({
             path: 'foods'
@@ -207,7 +207,7 @@ function buildCalendarObject(req) {
  */
 function buildCalendarJson(req) {
     return {
-        chefId: req.body.chefId,
+        cloudKitchenId: req.body.cloudKitchenId,
         date: req.body.date,
         foods: req.body.foods,
         description: req.body.description

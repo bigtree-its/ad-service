@@ -1,6 +1,5 @@
 //Require Mongoose
 var mongoose = require('mongoose');
-const uuid = require('node-uuid');
 const { Customer, AdOwner, EnquiryResponse } = require('../common/modals');
 // Define a Schema for our AdEnquiry collection
 const AdEnquirySchema = new mongoose.Schema({

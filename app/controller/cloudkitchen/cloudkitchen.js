@@ -249,11 +249,11 @@ exports.update = (req, res) => {
     if (req.body.type) {
         this.validateType(req, res, req.body.type);
     }
+    const filter = { _id: req.params.id };
     // Find CloudKitchen and update it with the request body
-    CloudKitchen.findByIdAndUpdate({ _id: req.params.id }, req.body, { upsert: true, setDefaultsOnInsert: true, new: true })
+    CloudKitchen.findOneAndUpdate(filter, req.body)
         .populate("cuisines")
         .populate("serviceAreas")
-        .populate("slots")
         .populate("dishes")
         .then(CloudKitchen => {
             if (!CloudKitchen) {

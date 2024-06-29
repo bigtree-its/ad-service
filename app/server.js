@@ -84,7 +84,6 @@ require('./route/cloudkitchen/cuisine')(app);
 require('./route/cloudkitchen/dish')(app);
 require('./route/supplier')(app);
 require('./route/cloudkitchen/collection')(app);
-require('./route/category')(app);
 require('./route/cloudkitchen/review')(app);
 require('./route/cloudkitchen/food')(app);
 require('./route/cloudkitchen/partybundle')(app);

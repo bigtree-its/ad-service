@@ -18,7 +18,7 @@ module.exports = (app) => {
         // verifyToken, 
         [
             check('title').notEmpty().isLength({ min: 3, max: 250 }).withMessage('Title is mandatory'),
-            check('comment').notEmpty().isLength({ min: 3, max: 500 }).withMessage('Comment is mandatory'),
+            check('comment').notEmpty().withMessage('Comment is mandatory'),
             check('cloudKitchenId').notEmpty().withMessage('Cloud Kitchen Id is mandatory'),
             check('customer').notEmpty().withMessage('Customer is mandatory'),
             check('rating').notEmpty().isLength({ min: 0, max: 2 }).withMessage('Rating is mandatory'),

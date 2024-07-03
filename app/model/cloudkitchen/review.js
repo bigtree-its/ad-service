@@ -3,7 +3,7 @@ var mongoose = require('mongoose');
 const { Customer } = require('../common');
 // Define a Schema for our Review collection
 const ReviewSchema = new mongoose.Schema({
-    chef: String,
+    cloudKitchenId: String,
     rating: Number,
     title: String,
     comment: String,

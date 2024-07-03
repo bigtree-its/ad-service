@@ -7,29 +7,22 @@ const _ = require("underscore");
 const { validationResult, errorFormatter } = require("../validation");
 
 // Create and Save a new Review
-exports.create = (req, res) => {
+exports.create = async(req, res) => {
     console.log("Creating new review " + JSON.stringify(req.body));
     // Validate Request
     const errors = validationResult(req).formatWith(errorFormatter);
     if (!errors.isEmpty()) {
         return res.json({ errors: _.uniq(errors.array()) });
     }
-    Review.exists({ order: req.body.order }, function(err, result) {
-        if (err) {
-            return res
-                .status(500)
-                .send({
-                    message: `Error while finding Review with order ${req.body.order}`,
-                });
-        } else if (result) {
-            console.log(`Review already exist for order ${req.body.order}`);
-            res
-                .status(400)
-                .send({ message: `Review already exist for order ${req.body.order}` });
-        } else {
-            persist(req, res);
-        }
-    });
+    var _id = await Review.exists({ order: req.body.order });
+    if (_id) {
+        console.log(`Review already exist for order ${req.body.order}`);
+        res
+            .status(400)
+            .send({ message: `Review already exist for order ${req.body.order}` });
+    } else {
+        persist(req, res);
+    }
 };
 
 // Retrieve and return all Menu from the database.
@@ -60,7 +53,7 @@ exports.findAll = (req, res) => {
 
 // Deletes all
 exports.deleteEverything = (req, res) => {
-    Review.remove()
+    Review.deleteMany()
         .then((result) => {
             res.send({ message: "Deleted all reviews" });
         })
@@ -85,11 +78,9 @@ exports.findOne = (req, res) => {
             if (err.kind === "ObjectId") {
                 return reviewNotFoundWithId(req, res);
             }
-            return res
-                .status(500)
-                .send({
-                    message: "Error while retrieving Review with id " + req.params.id,
-                });
+            return res.status(500).send({
+                message: "Error while retrieving Review with id " + req.params.id,
+            });
         });
 };
 
@@ -125,7 +116,7 @@ exports.delete = (req, res) => {
             if (!review) {
                 return reviewNotFoundWithId(req, res);
             }
-            this.updateChef();
+            this.updateCloudKitchen();
             res.send({ message: "Review deleted successfully!" });
         })
         .catch((err) => {
@@ -150,7 +141,7 @@ function persist(req, res) {
     review
         .save()
         .then((data) => {
-            updateChef(req);
+            updateCloudKitchen(req);
             res.status(201).send(data);
         })
         .catch((err) => {
@@ -160,9 +151,11 @@ function persist(req, res) {
         });
 }
 
-async function updateChef(req) {
+async function updateCloudKitchen(req) {
     const cloudKitchenIdId = req.body.cloudKitchenId;
-    const totalReviews = await Review.countDocuments({ cloudKitchenId: req.body.cloudKitchenId });
+    const totalReviews = await Review.countDocuments({
+        cloudKitchenId: req.body.cloudKitchenId,
+    });
     const avgResult = await Review.aggregate([{
             $match: {
                 cloudKitchenId: cloudKitchenIdId,
@@ -171,37 +164,31 @@ async function updateChef(req) {
         {
             $group: {
                 _id: null,
-                avgValue: { "$avg": { "$ifNull": ["$rating", 0] } }
-            }
-        }
+                avgValue: { $avg: { $ifNull: ["$rating", 0] } },
+            },
+        },
     ]);
-    const avgRating = avgResult[0].avgValue;
-    var rounded = Math.round(avgRating * 10) / 10
-    console.log(`Average Rating: ${rounded}`);
-    console.log(`Total Reviews: ${totalReviews}`);
+    var rating = 0;
+    if (avgResult && avgResult.length > 0) {
+        const avgRating = avgResult[0].avgValue;
+        rating = Math.round(avgRating * 10) / 10;
+    }
+
     var x = {
         reviews: totalReviews,
-        rating: rounded,
+        rating: rating,
     };
-
-    Chef.findByIdAndUpdate({ _id: req.body.cloudKitchenId }, x, {
-            upsert: true,
-            setDefaultsOnInsert: true,
-            new: true,
-        })
-        .then((Chef) => {
-            if (!Chef) {
-                console.log(
-                    `Cannot update review count. Chef not found with id ${req.body.cloudKitchenId}`
-                );
+    console.log(`Rating for Kitchen : ${JSON.stringify(x)}`);
+    const filter = { _id: req.body.cloudKitchenId };
+    // Find CloudKitchen and update it with the request body
+    CloudKitchen.findOneAndUpdate(filter, x)
+        .then((CloudKitchen) => {
+            if (!CloudKitchen) {
+                console.error(`Error when updating kitchen rating. CloudKitchen not found with id ${req.body.cloudKitchenId}`);
             }
         })
         .catch((err) => {
-            if (err.kind === "ObjectId") {
-                console.log(
-                    `Cannot update review count. Chef not found with id ${req.body.cloudKitchenId}`
-                );
-            }
+            console.error(`Error when updating kitchen rating. CloudKitchen not found with id ${req.body.cloudKitchenId}`);
         });
 }
 

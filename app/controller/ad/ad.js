@@ -27,7 +27,7 @@ exports.create = async(req, res) => {
 };
 
 
-function checkDuplicateAndPersist(req, res) {
+async function checkDuplicateAndPersist(req, res) {
     let query = Ad.find();
     query.where('dateAvailable', req.body.dateAvailable);
     query.where('price', req.body.price);
@@ -39,16 +39,16 @@ function checkDuplicateAndPersist(req, res) {
     if (req.body.address.addressLine1) {
         query.where('address.addressLine1', req.body.address.addressLine1)
     }
-    Ad.exists(query, function(err, result) {
-        if (err) {
-            return res.status(500).send({ message: `Error while finding Ad ${req.body.address.postcode}` });
-        } else if (result) {
-            console.error(`Ad already exist`);
-            res.status(400).send(Utils.buildError(`Ad already exist.`));
-        } else {
-            persist(req, res);
-        }
-    });
+    var _id = await Ad.exists(query);
+    if (_id) {
+        console.log(`Ad already exist`);
+        res
+            .status(400)
+            .send({ message: `Ad already exist` });
+    } else {
+        persist(req, res);
+    }
+
 }
 
 exports.paginate = (req, res) => {

@@ -1,7 +1,7 @@
 //Require Mongoose
 var mongoose = require('mongoose');
 // 
-const { Address } = require('../property/all-properties');
+const { PostalLocation } = require('../property/all-properties');
 const { AdOwner, ImageKitImg } = require('../common/modals');
 // Define a Schema for our Ad collection
 const AdSchema = new mongoose.Schema({
@@ -10,16 +10,23 @@ const AdSchema = new mongoose.Schema({
     reference: { type: String, trim: true },
     description: [String],
     keyFeatures: [String],
-    address: Address,
+    location: PostalLocation,
     image: ImageKitImg,
     gallery: [ImageKitImg],
     price: Number,
+    deliveryFee: Number,
     adOwner: AdOwner,
     datePosted: Date,
     dateAvailable: Date,
     featured: Boolean,
     approved: Boolean,
     active: Boolean,
+    offersOver: Boolean,
+    fixedPrice: Boolean,
+    free: Boolean,
+    collectionOnly: Boolean,
+    delivery: Boolean,
+    freeDelivery: Boolean,
     slug: { type: String, trim: true },
 }, {
     timestamps: true

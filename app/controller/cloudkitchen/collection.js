@@ -52,7 +52,7 @@ exports.findAll = (req, res) => {
 // Retrieve and return all Collections from the database.
 exports.lookup = (req, res) => {
     let query = Collection.find();
-    if (req.query.chef) {
+    if (req.query.cloudKitchenId) {
         query.where('cloudKitchenId', req.query.cloudKitchenId);
         // query.where({ cloudKitchenId: { '$regex': '.*' + req.query.chef + '.*', '$options': 'i' } })
     }
@@ -234,6 +234,9 @@ function buildCollectionJson(req) {
         cloudKitchenId: req.body.cloudKitchenId,
         image: req.body.image,
         active: req.body.active,
+        orderBy: req.body.orderBy,
+        readyBy: req.body.readyBy,
+        timeBound: req.body.timeBound,
         slug: req.body.slug ||
             req.body.name
             .trim()

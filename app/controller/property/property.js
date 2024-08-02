@@ -166,11 +166,15 @@ exports.findAll = (req, res) => {
         query.where("bedrooms", { $lte: req.query.maxBedroom });
     }
 
+    if (req.query.area) {
+        query.where("address.postcode",
+            { $regex: new RegExp("^" +req.query.area, "i") });
+    }
     if (req.query.type) {
         query.where("type", req.query.type);
     }
-    if (req.query.location) {
-        query.where("address.city", req.query.location);
+    if (req.query.city) {
+        query.where("address.city", req.query.city);
     }
     if (req.query.postcode) {
         query.where("address.postcode", req.query.postcode);
@@ -272,54 +276,44 @@ exports.update = (req, res) => {
     console.log("Updating Property " + req.params.id);
     // Validate Request
     if (!req.body) {
-        res.status(400).send({ message: "Property body cannot be empty" });
+        res.status(400).send({ message: "Ad body cannot be empty" });
     }
     // Find Property and update it with the request body
-    Property.findByIdAndUpdate({ _id: req.params.id }, req.body, { new: true })
-        .then((data) => {
+    Property.updateOne({ reference: req.params.id }, req.body, { new: true })
+        .then(data => {
             if (!data) {
-                res
-                    .status(404)
-                    .send({ message: `Property not found with id ${req.params.id}` });
+                res.status(404).send({ message: `Property not found with reference ${req.params.id}` });
             }
+            console.log('Property updated '+ req.params.id)
             res.send(data);
-        })
-        .catch((err) => {
-            if (err.kind === "ObjectId") {
-                res
-                    .status(404)
-                    .send({ message: `Property not found with id ${req.params.id}` });
+        }).catch(err => {
+            console.log('Error while updating Property '+ JSON.stringify(err))
+            if (err.kind === 'ObjectId') {
+                res.status(404).send({ message: `Property not found with reference ${req.params.id}` });
             }
-            res
-                .status(500)
-                .send({ message: `Error updating Property with id ${req.params.id}` });
+            res.status(500).send({ message: `Error updating Property with reference ${req.params.id}` });
         });
 };
 
-// Deletes a Property with the specified BrandId in the request
+// Deletes a Property with the specified reference in the request
 exports.delete = (req, res) => {
-    Property.findByIdAndRemove(req.params.id)
-        .then((data) => {
+    console.log('Deleting an Property '+ req.params.id)
+    Property.deleteOne({ reference: req.params.id })
+        .then(data => {
             if (!data) {
-                return res
-                    .status(404)
-                    .send({ message: `Property not found with id ${req.params.id}` });
+                return res.status(404).send({ message: `Property not found with reference ${req.params.id}` });
             }
+            console.log('Property deleted '+ req.params.id)
             res.send({ message: "Property deleted successfully!" });
-        })
-        .catch((err) => {
-            if (err.kind === "ObjectId" || err.name === "NotFound") {
-                res
-                    .status(404)
-                    .send({ message: `Property not found with id ${req.params.id}` });
+        }).catch(err => {
+            console.log('Error while deleting Property '+ JSON.stringify(err))
+            if (err.kind === 'ObjectId' || err.name === 'NotFound') {
+                res.status(404).send({ message: `Property not found with reference ${req.params.id}` });
             }
-            res
-                .status(500)
-                .send({
-                    message: `Could not delete Property with id ${req.params.id}`,
-                });
+            res.status(500).send({ message: `Could not delete Property with reference ${req.params.id}` });
         });
 };
+
 
 // Deletes a Property with the specified BrandId in the request
 exports.deleteEverything = (req, res) => {

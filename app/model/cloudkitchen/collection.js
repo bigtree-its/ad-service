@@ -5,7 +5,10 @@ const CollectionSchema = new mongoose.Schema({
     name: { type: String, trim: true },
     cloudKitchenId: { type: String, trim: true },
     slug: { type: String, trim: true },
-    image: { type: String, trim: true }
+    image: { type: String, trim: true },
+    readyBy: Date,
+    orderBy: Date,
+    timeBound: Boolean,
 }, {
     timestamps: true
 });

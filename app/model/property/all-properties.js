@@ -8,6 +8,15 @@ const Address = {
     latitude: Number,
     longitude: Number,
 }
+
+const PostalLocation = {
+    postcode: String,
+    city: String,
+    country: String,
+    coverage: String,
+    postcodeDistrict: String,
+}
+
 const SuperStore = {
     name: String,
     distance: String,
@@ -64,4 +73,4 @@ const ReturnPolicy = {
 
 }
 
-module.exports = { Extra, SuperStore, School, Address, Sale, Rental, Contact, Attribute, ReturnPolicy, NameValue }
+module.exports = { Extra, SuperStore, School, Address, Sale, Rental, Contact, Attribute, ReturnPolicy, NameValue , PostalLocation}

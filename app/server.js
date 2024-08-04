@@ -78,6 +78,7 @@ require('./route/ad/adEnquiry')(app);
 // require('./route/common/postcodedistrict')(app);
 require('./route/common/postcode-district-csv-loader')(app);
 require('./route/common/postcodearea')(app);
+require('./route/common/image')(app);
 require('./route/common/postcodedistrict')(app);
 require('./route/cloudkitchen/calendar')(app);
 require('./route/cloudkitchen/cuisine')(app);

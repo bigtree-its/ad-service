@@ -8,6 +8,7 @@ const { Buffer } = require("node:buffer");
 const controller = require("../../controller/common/imagekit.js");
 //Require Ad Model
 const Ad = require("../../model/ad/ad.js");
+const ImgKitImage = require("../../model/common/image.js");
 const path = process.env.CONTEXT_PATH + "/imagekit";
 var counter = 0;
 // Initialize
@@ -48,9 +49,11 @@ module.exports = (app) => {
 function uploadFile(req, res) {
     var fileKeys = Object.keys(req.files);
     console.log('Files ' + fileKeys)
-    fileKeys.map(function(key) { // return array of promises
+    fileKeys.map(function (key) { // return array of promises
         var file = req.files[key];
-        return readFileFromMemStorageAndUploadToImageKit(req, file);
+        console.log('Uploading file ' + file.originalname)
+        Promise.resolve(readFileFromMemStorageAndUploadToImageKit(req, file));
+
         // fs.readFile(file.path, "base64", (err, data) => {
         //     if (err) {
         //         console.error(err);
@@ -58,6 +61,7 @@ function uploadFile(req, res) {
         //     return uploadUsingPromise(req, data, file);
         // });
     });
+    console.log('Sending response back to Client')
     res.status(200);
     res.send({
         status: "Success"
@@ -65,7 +69,7 @@ function uploadFile(req, res) {
 }
 
 function readFileFromMemStorageAndUploadToImageKit(req, file) {
-    console.log(`Uploading file  ${file.originalname}`);
+    // console.log(`Uploading file  ${file.originalname}`);
     const b64 = Buffer.from(file.buffer).toString("base64");
     return imageKit
         .upload({
@@ -75,17 +79,18 @@ function readFileFromMemStorageAndUploadToImageKit(req, file) {
                 name: "google-auto-tagging",
                 maxTags: 5,
                 minConfidence: 95,
-            }, ],
+            },],
             transformation: {
                 pre: "l-text,i-Imagekit,fs-50,l-end",
                 post: [{
                     type: "transformation",
                     value: "w-100",
-                }, ],
+                },],
             },
         })
         .then((response) => {
-            updateAd(req, response);
+            addImage(req.query.adReference, response);
+            console.log('Uploading complete ' + response.url)
         })
         .catch((error) => {
             console.log(error);
@@ -102,13 +107,13 @@ function readFilesFromDiskAndUploadToImageKit(req, data, file) {
                 name: "google-auto-tagging",
                 maxTags: 5,
                 minConfidence: 95,
-            }, ],
+            },],
             transformation: {
                 pre: "l-text,i-Imagekit,fs-50,l-end",
                 post: [{
                     type: "transformation",
                     value: "w-100",
-                }, ],
+                },],
             },
         })
         .then((response) => {
@@ -140,7 +145,7 @@ function updateAd(req, image) {
     Ad.find(query)
         .then((result) => {
             console.log(
-                `Found ${result.length} Ad with reference ${req.query.adReference}`
+                `Found ${result.length} Ad with reference ${result}`
             );
             const Ad = buildAd(result[0]);
             var gallery = [].concat.apply([], Ad.gallery);
@@ -152,4 +157,33 @@ function updateAd(req, image) {
         .catch((error) => {
             console.error("Error while fetching Ad from database. " + error.message);
         });
+}
+
+function addImage(reference, payload) {
+    var ImgImage = new ImgKitImage(buildImageJson(reference, payload));
+    ImgImage.save()
+        .then(data => {
+            console.log('Saved image '+ JSON.stringify(data))
+        }).catch(err => {
+            console.log('Error when saving image '+ slug +". "+ err)
+        });
+
+}
+
+/**
+ * Builds Image Json from Request
+ * 
+ * @param {Request} payload 
+ */
+function buildImageJson(reference, payload) {
+    var slug = reference.trim().replace(/[\W_]+/g, "-").toLowerCase() + "-" + payload.fileId.trim().replace(/[\W_]+/g, "_").toLowerCase();
+    return {
+        fileId: payload.fileId,
+        reference: reference,
+        url: payload.url,
+        name: payload.name,
+        thumbnail: payload.thumbnail,
+        active: true,
+        slug: slug
+    };
 }

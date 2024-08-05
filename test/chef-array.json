@@ -17,7 +17,7 @@
             "telephone": "07979191176"
         },
         "description": [
-            "NMAD Foods are comited to provide quality foos"
+            "YIMLY Foods are comited to provide quality foos"
         ],
         "specials": [],
         "cuisines": [
@@ -72,9 +72,9 @@
             "Breakfast"
         ],
         "_id": "721dc4e3-b87c-4da3-8ff5-8c6b2907614e",
-        "name": "NMAD",
-        "displayName": "NMAD Foods",
-        "slug": "NMAD-foods",
+        "name": "YIMLY",
+        "displayName": "YIMLY Foods",
+        "slug": "YIMLY-foods",
         "rating": 5,
         "reviews": 300,
         "coverPhoto": "https://thumbs.dreamstime.com/b/chef-woman-portrait-kitchen-23037212.jpg",

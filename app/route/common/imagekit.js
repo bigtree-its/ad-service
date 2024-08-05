@@ -81,7 +81,7 @@ function readFileFromMemStorageAndUploadToImageKit(req, file) {
                 minConfidence: 95,
             },],
             transformation: {
-                pre: "l-text,i-Imagekit,fs-50,l-end",
+                pre: "l-text,i-Yimly,fs-10,l-end",
                 post: [{
                     type: "transformation",
                     value: "w-100",
@@ -109,7 +109,7 @@ function readFilesFromDiskAndUploadToImageKit(req, data, file) {
                 minConfidence: 95,
             },],
             transformation: {
-                pre: "l-text,i-Imagekit,fs-50,l-end",
+                pre: "l-text,i-Yimly,fs-50,l-end",
                 post: [{
                     type: "transformation",
                     value: "w-100",

@@ -17,7 +17,7 @@
             "telephone": "07979191176"
         },
         "description": [
-            "YIMLY Foods are comited to provide quality foos"
+            "poply Foods are comited to provide quality foos"
         ],
         "specials": [],
         "cuisines": [
@@ -72,9 +72,9 @@
             "Breakfast"
         ],
         "_id": "721dc4e3-b87c-4da3-8ff5-8c6b2907614e",
-        "name": "YIMLY",
-        "displayName": "YIMLY Foods",
-        "slug": "YIMLY-foods",
+        "name": "poply",
+        "displayName": "poply Foods",
+        "slug": "poply-foods",
         "rating": 5,
         "reviews": 300,
         "coverPhoto": "https://thumbs.dreamstime.com/b/chef-woman-portrait-kitchen-23037212.jpg",

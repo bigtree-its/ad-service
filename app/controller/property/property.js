@@ -92,29 +92,22 @@ function validateStatus(req, res) {
     }
 }
 
-function checkDuplicateAndPersist(req, res) {
+
+async function checkDuplicateAndPersist(req, res) {
     let query = Property.find();
-    query.where("address.postcode", req.body.address.postcode);
-    if (req.body.address.propertyNumber) {
-        query.where("address.propertyNumber", req.body.address.propertyNumber);
+    query.where('dateAvailable', req.body.dateAvailable);
+    query.where('price', req.body.price);
+    query.where('location.postcode', req.body.location.postcode);
+    var _id = await Property.exists(query);
+    if (_id) {
+        console.log(`Property already exist`);
+        res
+            .status(400)
+            .send({ message: `Property already exist` });
+    } else {
+        persist(req, res);
     }
-    if (req.body.address.addressLine1) {
-        query.where("address.addressLine1", req.body.address.addressLine1);
-    }
-    Property.exists(query, function(err, result) {
-        if (err) {
-            return res
-                .status(500)
-                .send({
-                    message: `Error while finding Property with property number ${req.body.address.propertyNumber}`,
-                });
-        } else if (result) {
-            console.error(`Property already exist`);
-            res.status(400).send(Utils.buildError(`Property already exist.`));
-        } else {
-            persist(req, res);
-        }
-    });
+
 }
 
 exports.paginate = (req, res) => {
@@ -166,19 +159,22 @@ exports.findAll = (req, res) => {
         query.where("bedrooms", { $lte: req.query.maxBedroom });
     }
 
-    if (req.query.area) {
-        query.where("address.postcode",
-            { $regex: new RegExp("^" +req.query.area, "i") });
+    if (req.query.postcode) {
+        filter.where('location.postcode', req.query.postcode, "i");
+    }
+    if (req.query.city) {
+        filter.where({ 'location.city': { '$regex': req.query.city, $options: 'i' } });
+    }
+    if (req.query.coverage) {
+        filter.where({ 'location.coverage': { '$regex': req.query.coverage, $options: 'i' } });
+    }
+    if (req.query.postcodeDistrict) {
+        filter.where({ 'location.postcodeDistrict': { '$regex': req.query.postcodeDistrict, $options: 'i' } });
     }
     if (req.query.type) {
         query.where("type", req.query.type);
     }
-    if (req.query.city) {
-        query.where("address.city", req.query.city);
-    }
-    if (req.query.postcode) {
-        query.where("address.postcode", req.query.postcode);
-    }
+    
     if (req.query.adOwner) {
         query.where("adOwner.email", req.query.adOwner);
     }
@@ -279,7 +275,7 @@ exports.update = (req, res) => {
         res.status(400).send({ message: "Ad body cannot be empty" });
     }
     // Find Property and update it with the request body
-    Property.updateOne({ reference: req.params.id }, req.body, { new: true })
+    Property.updateOne({ _id:req.params.id }, req.body, { new: true })
         .then(data => {
             if (!data) {
                 res.status(404).send({ message: `Property not found with reference ${req.params.id}` });
@@ -317,39 +313,69 @@ exports.delete = (req, res) => {
 
 // Deletes a Property with the specified BrandId in the request
 exports.deleteEverything = (req, res) => {
-    Property.deleteMany()
-        .then((result) => {
-            res.send({ message: "Deleted all Properties" });
-        })
-        .catch((err) => {
+    let filter = Property.find();
+    if (req.query.reference) {
+        filter.where({ 'reference': { '$regex': req.query.reference, $options: 'i' } });
+        Property.deleteMany(filter).then(result => {
+            console.log('Deleted Property ' + JSON.stringify(result));
+            Image.find(filter).then(result => {
+                console.log('Found images for Property ' + JSON.stringify(result));
+                result.forEach(img => {
+                    deleteImagekitImage(img.fileId);
+                    deleteImage(img.fileId);
+                });
+            }).catch(err => {
+                console.error('Image Delete failed: ' + JSON.stringify(err))
+            });
+            res.send({ message: "Property deleted successfully!" });
+        }).catch(err => {
             return res.status(500).send({
-                message: `Could not delete all Properties. ${err.message}`,
+                message: `Could not delete all Properties. ${err.message}`
             });
         });
+    } else {
+        res.status(500).send({ message: `Property Reference manadatory` });
+    }
 };
 
+function deleteImage(fileId) {
+    let filter = Image.find();
+    filter.where({ 'fileId': { '$regex': fileId, $options: 'i' } });
+    Image.deleteMany(filter).then(result => {
+        console.log('Deleted Image ' + JSON.stringify(result));
+    }).catch(err => {
+        console.error('Image Delete failed: ' + JSON.stringify(err))
+    });
+}
+
+function deleteImagekitImage(fileId) {
+    console.log("Deleting imagekit file " + fileId);
+    imageKit.deleteFile(fileId, function (error, result) {
+        if (error) {
+            console.log(error);
+        } else {
+            console.log('Deleted imagekit file ' + JSON.stringify(result));
+        }
+    });
+}
+
 /**
- * Persists new Property Model
- *
- * @param {Request} req The HTTP Request
+ * Persists new Property Model 
+ * 
+ * @param {Request} req The HTTP Request 
  * @param {Response} res The HTTP Response
  */
 function persist(req, res) {
-    const property = buildProperty(req);
+
+    const Property = buildProperty(req);
     // Save Property in the database
-    property
-        .save()
-        .then((data) => {
+    Property.save()
+        .then(data => {
             console.log(`Persisted Property: ${data._id}`);
             res.status(201).send(data);
-        })
-        .catch((err) => {
-            console.error("Save failed. " + err);
-            res
-                .status(500)
-                .send({
-                    message: err.message || "Some error occurred while creating the Property.",
-                });
+        }).catch(err => {
+            console.error('Save failed. ' + err);
+            res.status(500).send({ message: err.message || "Some error occurred while creating the Property." });
         });
 }
 
@@ -398,7 +424,7 @@ function buildPropertyJson(req) {
         dateAvailable: data.dateAvailable || new Date(),
         datePosted: data.datePosted || new Date(),
         image: data.image,
-        address: data.address,
+        location: data.location,
         adOwner: data.adOwner,
         status: data.status || "Available",
         gallery: data.gallery,

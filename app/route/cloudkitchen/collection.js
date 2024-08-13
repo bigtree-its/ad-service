@@ -25,7 +25,7 @@ module.exports = (app) => {
     app.put(path + '/:id', controller.update);
 
     // Delete a Collection with id
-    app.delete(path + '/:id', controller.delete);
+    app.delete(path + '/:id', controller.deleteOne);
 
     //Delete All -- only for non production and can only be done by an admin
     app.delete(path, controller.deleteEverything);

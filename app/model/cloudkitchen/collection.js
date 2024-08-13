@@ -3,12 +3,18 @@ var mongoose = require('mongoose');
 // Define a Schema for our Collection collection
 const CollectionSchema = new mongoose.Schema({
     name: { type: String, trim: true },
+    description: { type: String, trim: true },
     cloudKitchenId: { type: String, trim: true },
     slug: { type: String, trim: true },
     image: { type: String, trim: true },
     readyBy: Date,
     orderBy: Date,
-    timeBound: Boolean,
+    preOrder: Boolean,
+    pickupOnly: Boolean,
+    delivery: Boolean,
+    fixedDay: String,
+    orderBefore: Number,
+    orderBeforeUnit: { type: String, trim: true },
 }, {
     timestamps: true
 });

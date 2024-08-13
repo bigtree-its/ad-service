@@ -2,7 +2,7 @@
 var mongoose = require('mongoose');
 //Mongoose Paginate V2
 var aggregatePaginate = require('mongoose-aggregate-paginate-v2');
-const { NameValue, Address, School, SuperStore } = require('./all-properties');
+const { NameValue, Address, School, SuperStore, PostalLocation } = require('./all-properties');
 const { AdOwner } = require('../common/modals');
 
 // Define a Schema for our property collection
@@ -35,7 +35,7 @@ const PropertySchema = new mongoose.Schema({
     bedrooms: Number,
     datePosted: Date,
     dateAvailable: Date,
-    address: Address,
+    location: PostalLocation,
     adOwner: AdOwner,
     featured: Boolean,
     approved: Boolean,

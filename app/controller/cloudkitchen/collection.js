@@ -1,6 +1,6 @@
 //Require Underscore JS ( Visit: http://underscorejs.org/#)
 const _ = require("underscore");
-
+const Image = require('../../model/common/image');
 // Require Validation Utils
 const { validationResult, errorFormatter } = require("../validation");
 const Collection = require("../../model/cloudkitchen/collection");
@@ -8,7 +8,7 @@ const Collection = require("../../model/cloudkitchen/collection");
 // Create and Save a new Collection
 
 // Create and Save a new Collection
-exports.create = async(req, res) => {
+exports.create = async (req, res) => {
     console.log("Request to create new Collection " + JSON.stringify(req.body));
     // Validate Request
     const errors = validationResult(req).formatWith(errorFormatter);
@@ -28,7 +28,6 @@ exports.create = async(req, res) => {
 
 };
 
-// Retrieve and return all Collections from the database.
 // Retrieve and return all Collections from the database.
 exports.findAll = (req, res) => {
     console.log("Received request to get all Collections");
@@ -75,19 +74,6 @@ exports.lookup = (req, res) => {
         });
 };
 
-// Deletes all
-exports.deleteEverything = (req, res) => {
-    Collection.deleteMany()
-        .then((result) => {
-            res.send({ message: "Deleted all Collections" });
-        })
-        .catch((err) => {
-            return res.status(500).send({
-                message: `Could not delete all Collections. ${err.message}`,
-            });
-        });
-};
-
 // Find a single Collection with a CollectionId
 exports.findOne = (req, res) => {
     console.log("Received request get a Collection with id " + req.params.id);
@@ -118,14 +104,13 @@ exports.update = (req, res) => {
             .send({ message: "Collection body can not be empty" });
     }
     // Find Collection and update it with the request body
-    Collection.findByIdAndUpdate(req.params.id, { $set: req.body }, { new: true })
-        .then((Collection) => {
-            if (!Collection) {
-                return CollectionNotFoundWithId(req, res);
-            }
-            res.send(Collection);
+    Collection.updateOne({ _id: req.params.id }, { $set: req.body }, { new: true })
+        .then(result => {
+            console.log('Collection updated')
+            res.send(result);
         })
         .catch((err) => {
+            console.log(JSON.stringify(err))
             if (err.kind === "ObjectId") {
                 return CollectionNotFoundWithId(req, res);
             }
@@ -135,50 +120,40 @@ exports.update = (req, res) => {
         });
 };
 
-// Delete a Collection with the specified CollectionId in the request
-exports.delete = (req, res) => {
-
-    if (req.query.cloudKitchenId) {
-        deleteManyByQuery(req);
-    } else {
-        deleteOneById(req, res);
-    }
-
+// Deletes a Collection with the specified BrandId in the request
+exports.deleteOne = async (req, res) => {
+    console.log('Deleting an Collection ' + req.params.id);
+    Collection.deleteOne({ _id: req.params.id })
+        .then(data => {
+            console.log('Delete Collection ' + JSON.stringify(data));
+            res.send({ message: "Collection deleted successfully!" });
+        }).catch(err => {
+            console.log('Error while deleting Collection ' + JSON.stringify(err))
+            if (err.kind === 'ObjectId' || err.name === 'NotFound') {
+                res.status(404).send({ message: `Collection not found with id ${req.params.id}` });
+            } else {
+                res.status(500).send({ message: `Could not delete Collection with id ${req.params.id}` });
+            }
+        });
 };
 
-function deleteManyByQuery(req) {
-    let query = Collection.find();
-    query.where({
-        cloudKitchenId: { $regex: ".*" + req.query.cloudKitchenId + ".*", $options: "i" },
-    });
-    Collection.deleteMany(query)
-        .then(function() {
-            // Success
-            console.log("Collections for cloud kitchen deleted");
-        })
-        .catch(function(error) {
-            // Failure
-            console.log(error);
-        });
-}
-
-function deleteOneById(req, res) {
-    Collection.findByIdAndDelete(req.params.id)
-        .then((Collection) => {
-            if (!Collection) {
-                return CollectionNotFoundWithId(req, res);
-            }
-            res.send({ message: "Collection deleted successfully!" });
-        })
-        .catch((err) => {
-            if (err.kind === "ObjectId" || err.name === "NotFound") {
-                return CollectionNotFoundWithId(req, res);
-            }
+// Deletes a Collection with the specified BrandId in the request
+exports.deleteEverything = (req, res) => {
+    let filter = Collection.find();
+    if (req.query.cloudKitchenId) {
+        filter.where({ 'cloudKitchenId': { '$regex': req.query.cloudKitchenId, $options: 'i' } });
+        Collection.deleteMany(filter).then(result => {
+            console.log('Deleted Collections ' + JSON.stringify(result));
+            res.send({ message: "Collections deleted successfully!" });
+        }).catch(err => {
             return res.status(500).send({
-                message: "Could not delete Collection with id " + req.params.id,
+                message: `Could not delete all Collections. ${err.message}`
             });
         });
-}
+    } else {
+        res.status(500).send({ message: `Collection cloudKitchenId manadatory` });
+    }
+};
 
 /**
  * Persists new Collection document
@@ -231,17 +206,23 @@ function buildCollectionObject(req) {
 function buildCollectionJson(req) {
     return {
         name: req.body.name,
+        description: req.body.description,
         cloudKitchenId: req.body.cloudKitchenId,
         image: req.body.image,
         active: req.body.active,
         orderBy: req.body.orderBy,
         readyBy: req.body.readyBy,
-        timeBound: req.body.timeBound,
+        preOrder: req.body.preOrder,
+        pickupOnly: req.body.pickupOnly,
+        delivery: req.body.delivery,
+        fixedDay: req.body.fixedDay,
+        orderBefore: req.body.orderBefore,
+        orderBeforeUnit: req.body.orderBeforeUnit,
         slug: req.body.slug ||
             req.body.name
-            .trim()
-            .replace(/[\W_]+/g, "-")
-            .toLowerCase(),
+                .trim()
+                .replace(/[\W_]+/g, "-")
+                .toLowerCase(),
     };
 }
 

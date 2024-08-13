@@ -1,7 +1,7 @@
 const Food = require('../../model/cloudkitchen/food');
 //Require Underscore JS ( Visit: http://underscorejs.org/#)
 const _ = require('underscore');
-
+const ImageUtils = require('../../utils/image-utils');
 // Require Validation Utils
 const { validationResult, errorFormatter } = require('../validation');
 
@@ -53,17 +53,6 @@ exports.lookup = (req, res) => {
 };
 
 
-// Deletes all
-exports.deleteEverything = (req, res) => {
-    Food.deleteMany().then(result => {
-        res.send({ message: "Deleted all foods" });
-    }).catch(err => {
-        return res.status(500).send({
-            message: `Could not delete all foods. ${err.message}`
-        });
-    });
-};
-
 // Find a single Food with a FoodId
 exports.findOne = (req, res) => {
     console.log("Received request get a food with id " + req.params.id);
@@ -90,11 +79,12 @@ exports.update = (req, res) => {
         return res.status(400).send({ message: "Food body can not be empty" });
     }
     // Find Food and update it with the request body
-    Food.findByIdAndUpdate(req.params.id, { $set: req.body }, { new: true })
+    Food.updateOne({_id:req.params.id}, { $set: req.body }, {returnDocument: 'after'} )
         .then(food => {
             if (!food) {
                 return foodNotFoundWithId(req, res);
             }
+            console.log('Updated food '+ JSON.stringify(food))
             res.send(food);
         }).catch(err => {
             if (err.kind === 'ObjectId') {
@@ -106,23 +96,46 @@ exports.update = (req, res) => {
         });
 };
 
-// Delete a Food with the specified FoodId in the request
+// Deletes a Food with the specified BrandId in the request
 exports.delete = (req, res) => {
-    Food.findByIdAndDelete(req.params.id)
-        .then(food => {
-            if (!food) {
-                return foodNotFoundWithId(req, res);
-            }
+    console.log('Deleting a Food ' + req.params.id);
+    Food.deleteOne({ _id: req.params.id })
+        .then(result => {
+            console.log('Deleted Food ' + JSON.stringify(result));
             res.send({ message: "Food deleted successfully!" });
+            ImageUtils.deleteImages(req.params.id)
         }).catch(err => {
+            console.log('Error while deleting Food ' + JSON.stringify(err))
             if (err.kind === 'ObjectId' || err.name === 'NotFound') {
-                return foodNotFoundWithId(req, res);
+                res.status(404).send({ message: `Food not found with id ${req.params.id}` });
+            }else{
+                res.status(500).send({ message: `Could not delete Food with id ${req.params.id}` });
             }
-            return res.status(500).send({
-                message: "Could not delete Food with id " + req.params.id
-            });
         });
 };
+
+// Deletes a Food with the specified BrandId in the request
+exports.deleteEverything = async (req, res) => {
+    let filter = Food.find();
+    if (req.query.cloudKitchenId) {
+        filter.where({ 'cloudKitchenId': { '$regex': req.query.cloudKitchenId, $options: 'i' } });
+        var _ids = await Food.find(filter, {_id: 1});
+        if ( _ids){
+            console.log('Deleting foods '+ JSON.stringify(_ids));
+        }
+        Food.deleteMany(filter).then(result => {
+            console.log('Deleted Food ' + JSON.stringify(result));
+            res.send({ message: "Food deleted successfully!" });
+            ImageUtils.deleteImages(_ids)
+        }).catch(err => {
+            console.error(`Could not delete all Foods. ${err.message}`);
+            return res.status(500).send(`Could not delete all Foods. ${err.message}`);
+        });
+    } else {
+        res.status(500).send({ message: `CloudKitchenId is manadatory` });
+    }
+};
+
 
 /**
  * Persists new Food document
@@ -135,6 +148,7 @@ function persist(req, res) {
     // Save Food in the database
     food.save()
         .then(data => {
+            console.log('Created new food '+ JSON.stringify(food))
             res.status(201).send(data);
         }).catch(err => {
             res.status(500).send({

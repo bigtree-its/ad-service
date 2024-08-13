@@ -1,28 +1,14 @@
 //Require Ad Model
 const Ad = require('../../model/ad/ad.js');
-const Image = require('../../model/common/image');
+const ImageUtils = require('../../utils/image-utils');
 //Require Underscore JS ( Visit: http://underscorejs.org/#)
 const _ = require('underscore');
-var ImageKit = require("imagekit");
-//Require Mongoose
-var mongoose = require('mongoose');
 //Require Generate Safe Id for Random unique id Generation
 // var generateSafeId = require('generate-safe-id');
 const Utils = require('../../utils/utils.js');
 
-const privateKey = process.env.IMAGEKIT_PRIVATEKEY;
-const publicKey = process.env.IMAGEKIT_PUBLICKEY;
-const urlEndpoint = process.env.IMAGEKIT_URL_ENDPOINT;
-
 // Require Validation Utils
 const { validationResult, errorFormatter } = require('../validation.js');
-
-// Initialize
-const imageKit = new ImageKit({
-    publicKey: `${publicKey}`,
-    privateKey: `${privateKey}`,
-    urlEndpoint: `${urlEndpoint}`,
-});
 
 // Create and Save a new Ad
 exports.create = async (req, res) => {
@@ -87,20 +73,16 @@ exports.findAll = (req, res) => {
     }
 
     if (req.query.postcode) {
-        filter.where('location.postcode', req.query.postcode, "i");
+        filter.where({ 'location.postcode': { '$regex': req.postcode.city, $options: 'i' } });
     }
     if (req.query.city) {
-        filter.where("location.city",
-            { $regex: new RegExp("^" + req.query.city, "i") });
+        filter.where({ 'location.city': { '$regex': req.query.city, $options: 'i' } });
     }
     if (req.query.coverage) {
         filter.where({ 'location.coverage': { '$regex': req.query.coverage, $options: 'i' } });
     }
     if (req.query.postcodeDistrict) {
         filter.where({ 'location.postcodeDistrict': { '$regex': req.query.postcodeDistrict, $options: 'i' } });
-    }
-    if (req.query.coverage) {
-        filter.where({ 'location.coverage': { '$regex': req.query.coverage, $options: 'i' } });
     }
     if (req.query.category) {
         filter.where('category', req.query.category, "i");
@@ -196,41 +178,47 @@ exports.update = (req, res) => {
     // Validate Request
     if (!req.body) {
         res.status(400).send({ message: "Ad body cannot be empty" });
+    } else {
+        // Find Ad and update it with the request body
+        Ad.updateOne({ reference: req.params.id }, req.body, { new: true })
+            .then(data => {
+                if (!data) {
+                    res.status(404).send({ message: `Ad not found with reference ${req.params.id}` });
+                } else {
+                    console.log('Ad updated ' + req.params.id)
+                    res.send(data);
+                }
+
+            }).catch(err => {
+                console.log('Error while updating ad ' + JSON.stringify(err))
+                if (err.kind === 'ObjectId') {
+                    res.status(404).send({ message: `Ad not found with id ${req.params.id}` });
+                } else {
+                    res.status(500).send({ message: `Error updating Ad with id ${req.params.id}` });
+                }
+            });
     }
-    // Find Ad and update it with the request body
-    Ad.updateOne({ reference: req.params.id }, req.body, { new: true })
-        .then(data => {
-            if (!data) {
-                res.status(404).send({ message: `Ad not found with reference ${req.params.id}` });
-            }
-            console.log('Ad updated ' + req.params.id)
-            res.send(data);
-        }).catch(err => {
-            console.log('Error while updating ad ' + JSON.stringify(err))
-            if (err.kind === 'ObjectId') {
-                res.status(404).send({ message: `Ad not found with id ${req.params.id}` });
-            }
-            res.status(500).send({ message: `Error updating Ad with id ${req.params.id}` });
-        });
+
 };
 
 // Deletes a Ad with the specified BrandId in the request
-exports.delete = (req, res) => {
-    console.log('Deleting an Ad ' + req.params.id)
+exports.delete = async (req, res) => {
+    console.log('Deleting an Ad ' + req.params.id);
+    var references = await Ad.find({ _id: req.params.id }, 'reference -_id');
     Ad.deleteOne({ _id: req.params.id })
-        .then(data => {
-            if (!data) {
-                return res.status(404).send({ message: `Ad not found with reference ${req.params.id}` });
-            }
-            console.log('Ad deleted ' + req.params.id);
-
+        .then(result => {
+            console.log('Deleted Ad ' + JSON.stringify(result));
             res.send({ message: "Ad deleted successfully!" });
+            if (references) {
+                ImageUtils.deleteImages(references)
+            }
         }).catch(err => {
-            console.log('Error while deleting ad ' + JSON.stringify(err))
+            console.error('Error while deleting ad ' + JSON.stringify(err))
             if (err.kind === 'ObjectId' || err.name === 'NotFound') {
                 res.status(404).send({ message: `Ad not found with id ${req.params.id}` });
+            } else {
+                res.status(500).send({ message: `Could not delete Ad with id ${req.params.id}` });
             }
-            res.status(500).send({ message: `Could not delete Ad with id ${req.params.id}` });
         });
 };
 
@@ -241,16 +229,8 @@ exports.deleteEverything = (req, res) => {
         filter.where({ 'reference': { '$regex': req.query.reference, $options: 'i' } });
         Ad.deleteMany(filter).then(result => {
             console.log('Deleted Ad ' + JSON.stringify(result));
-            Image.find(filter).then(result => {
-                console.log('Found images for ad ' + JSON.stringify(result));
-                result.forEach(img => {
-                    deleteImagekitImage(img.fileId);
-                    deleteImage(img.fileId);
-                });
-            }).catch(err => {
-                console.error('Image Delete failed: ' + JSON.stringify(err))
-            });
             res.send({ message: "Ad deleted successfully!" });
+            ImageUtils.deleteImages(req.query.reference)
         }).catch(err => {
             return res.status(500).send({
                 message: `Could not delete all Ads. ${err.message}`
@@ -259,29 +239,9 @@ exports.deleteEverything = (req, res) => {
     } else {
         res.status(500).send({ message: `Ad Reference manadatory` });
     }
-
 };
 
-function deleteImage(fileId) {
-    let filter = Image.find();
-    filter.where({ 'fileId': { '$regex': fileId, $options: 'i' } });
-    Image.deleteMany(filter).then(result => {
-        console.log('Deleted Image ' + JSON.stringify(result));
-    }).catch(err => {
-        console.error('Image Delete failed: ' + JSON.stringify(err))
-    });
-}
 
-function deleteImagekitImage(fileId) {
-    console.log("Deleting imagekit file " + fileId);
-    imageKit.deleteFile(fileId, function (error, result) {
-        if (error) {
-            console.log(error);
-        } else {
-            console.log('Deleted imagekit file ' + JSON.stringify(result));
-        }
-    });
-}
 /**
  * Persists new Ad Model 
  * 

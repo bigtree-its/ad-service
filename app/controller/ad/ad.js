@@ -85,7 +85,7 @@ exports.findAll = (req, res) => {
         filter.where({ 'location.postcodeDistrict': { '$regex': req.query.postcodeDistrict, $options: 'i' } });
     }
     if (req.query.category) {
-        filter.where('category', req.query.category, "i");
+        filter.where({ 'category': { '$regex': req.query.category, $options: 'i' } });
     }
     if (req.query.adOwner) {
         filter.where('adOwner.email', req.query.adOwner);

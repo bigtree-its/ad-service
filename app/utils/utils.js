@@ -28,4 +28,30 @@ function isEmpty(data) {
     }
     return false;
 }
-module.exports = { randomString, isEmpty, buildError }
+
+/**
+ * Utility that waits for @predicate function to return truthy, testing at @interval until @timeout is reached.
+ *
+ * Example: await until(() => spy.called);
+ *
+ * @param {Function} predicate
+ * @param {Number} interval
+ * @param {Number} timeout
+ *
+ * @return {Promise}
+ */
+async function until(predicate, interval = 500, timeout = 30 * 1000) {
+    const start = Date.now();
+
+    let done = false;
+    do {
+        if (predicate()) {
+            done = true;
+        } else if (Date.now() > (start + timeout)) {
+            throw new Error(`Timed out waiting for predicate to return true after ${timeout}ms.`);
+        }
+        await new Promise((resolve) => setTimeout(resolve, interval));
+    } while (done !== true);
+}
+
+module.exports = { randomString, isEmpty, buildError, until }

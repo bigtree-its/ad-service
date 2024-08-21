@@ -13,20 +13,20 @@ const imageKit = new ImageKit({
 });
 
 exports.deleteImages = async (references) => {
-    console.log('Deleting images for references '+ JSON.stringify(references))
+    console.log('Deleting images for references ' + JSON.stringify(references))
     let filter = Image.find();
     filter.where({ 'reference': { $in: references } });
 
     // MongoDb always returns _id, we dont need it, we only need fileId
     var fileIds = await Image.find(filter, 'fileId -_id');
-    if ( fileIds){
-        console.log('Found Images with fileIds : '+ JSON.stringify(fileIds));
+    if (fileIds) {
+        console.log('Found Images with fileIds : ' + JSON.stringify(fileIds));
     }
-   
+
     Image.deleteMany(filter).then(result => {
         console.log('Deleted Image(s) ' + JSON.stringify(result));
-        if ( fileIds){
-            console.log('Deleting remote images with fileIds '+ JSON.stringify(fileIds));
+        if (fileIds) {
+            console.log('Deleting remote images with fileIds ' + JSON.stringify(fileIds));
             deleteMany(fileIds);
         }
     }).catch(err => {
@@ -35,11 +35,12 @@ exports.deleteImages = async (references) => {
 }
 
 
-async function deleteMany(fileIds){
+async function deleteMany(fileIds) {
     var ids = [];
     [...fileIds].forEach(element => {
         ids.push(element.fileId);
     });
     const response = await imageKit.bulkDeleteFiles(ids);
-    console.log('ImageKit response '+ JSON.stringify(response));
+    console.log('ImageKit response ' + JSON.stringify(response));
 }
+

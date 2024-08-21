@@ -6,11 +6,15 @@ const urlEndpoint = process.env.IMAGEKIT_URL_ENDPOINT;
 const fs = require("node:fs");
 const { Buffer } = require("node:buffer");
 const controller = require("../../controller/common/imagekit.js");
+const Utils = require("../../utils/utils.js");
 //Require Ad Model
 const Ad = require("../../model/ad/ad.js");
+const Property = require("../../model/property/property.js");
+const Collection = require("../../model/cloudkitchen/collection.js");
+const Food = require("../../model/cloudkitchen/food.js");
 const ImgKitImage = require("../../model/common/image.js");
 const path = process.env.CONTEXT_PATH + "/imagekit";
-var counter = 0;
+
 // Initialize
 const imageKit = new ImageKit({
     publicKey: `${publicKey}`,
@@ -43,7 +47,7 @@ module.exports = (app) => {
     app.get(path + "/files/:id", controller.getFile);
     app.get(path + "/files", controller.listFiles);
     // app.post(path + "/upload_images", upload.single("file"), uploadFile);
-    app.post(path + "/upload_images", uploadToMem.array("files", 5), uploadFile);
+    app.post(path + "/upload_images", uploadToMem.array("files", 5), storeFileAsync);
 };
 
 function uploadFile(req, res) {
@@ -68,6 +72,44 @@ function uploadFile(req, res) {
     });
 }
 
+async function storeFileAsync(req, res) {
+    var fileKeys = Object.keys(req.files);
+    console.log('Files ' + fileKeys);
+    var imagekitResponses = [];
+    await fileKeys.map(async function (key) {
+        var file = req.files[key];
+        const b64 = Buffer.from(file.buffer).toString("base64");
+        console.log('Uploading file ' + file.originalname);
+        const response = await imageKit.upload({ file: b64, fileName: file.originalname, extensions: [{ name: "google-auto-tagging", maxTags: 5, minConfidence: 95, },], transformation: { pre: "l-text,i-currific,fs-10,l-end", post: [{ type: "transformation", value: "w-100", },], }, });
+        console.log('Upload response ' + JSON.stringify(response));
+        imagekitResponses.push(response);
+    });
+    await Utils.until(function uploaded() {
+        if (req.files.length == imagekitResponses.length) {
+            return true;
+        } else {
+            return false;
+        }
+    });
+
+    console.log('Sending response back to Client');
+    res.status(200);
+    res.send({ status: "Success" });
+    imagekitResponses.forEach(e => {
+        addImage(req.query.entityId, e);
+    });
+    if (req.query.entity === 'ads') {
+        updateAd(imagekitResponses[0].url, req.query.entityId);
+    } else if (req.query.entity === 'properties') {
+        updateProperty(imagekitResponses[0].url, req.query.entityId);
+    } else if (req.query.entity === 'collections') {
+        updateCollection(imagekitResponses[0].url, req.query.entityId);
+    } else if (req.query.entity === 'foods') {
+        updateFood(imagekitResponses[0].url, req.query.entityId);
+    }
+}
+
+
 function readFileFromMemStorageAndUploadToImageKit(req, file) {
     // console.log(`Uploading file  ${file.originalname}`);
     const b64 = Buffer.from(file.buffer).toString("base64");
@@ -81,7 +123,7 @@ function readFileFromMemStorageAndUploadToImageKit(req, file) {
                 minConfidence: 95,
             },],
             transformation: {
-                pre: "l-text,i-tinybit,fs-10,l-end",
+                pre: "l-text,i-currific,fs-10,l-end",
                 post: [{
                     type: "transformation",
                     value: "w-100",
@@ -109,7 +151,7 @@ function readFilesFromDiskAndUploadToImageKit(req, data, file) {
                 minConfidence: 95,
             },],
             transformation: {
-                pre: "l-text,i-tinybit,fs-50,l-end",
+                pre: "l-text,i-currific,fs-50,l-end",
                 post: [{
                     type: "transformation",
                     value: "w-100",
@@ -136,36 +178,91 @@ function buildAd(body) {
 
 /**
  * Update the Ad with Images from ImageKit
- * @param {*} req 
- * @param {*} image 
+ * @param {*} entityId 
+ * @param {*} url 
  */
-function updateAd(req, image) {
-    let query = Ad.find();
-    query.where("reference", req.query.adReference);
-    Ad.find(query)
-        .then((result) => {
-            console.log(
-                `Found ${result.length} Ad with reference ${result}`
-            );
-            const Ad = buildAd(result[0]);
-            var gallery = [].concat.apply([], Ad.gallery);
-            gallery.push(image);
-            Ad.gallery = gallery;
-            Ad.save();
-            console.log(`Added image ${image.fileId} to Ad ${req.query.adReference}`);
-        })
-        .catch((error) => {
-            console.error("Error while fetching Ad from database. " + error.message);
-        });
+function updateAd(url, entityId) {
+    var body = {};
+    body.image= url;
+    Ad.updateOne({ reference: entityId }, body, { new: true })
+            .then(data => {
+                if (!data) {
+                    console.error('Could not update Ad with image ')
+                } else {
+                    console.log(`Ad ${entityId} updated with image ${url}`);
+                }
+            }).catch(err => {
+                console.log('Error while updating ad ' + JSON.stringify(err))
+            });
 }
 
-function addImage(reference, payload) {
-    var ImgImage = new ImgKitImage(buildImageJson(reference, payload));
+/**
+ * Update the Ad with Images from ImageKit
+ * @param {*} entityId 
+ * @param {*} url 
+ */
+function updateProperty(url, entityId) {
+    var body = {};
+    body.image= url;
+    Property.updateOne({ reference: entityId }, body, { new: true })
+            .then(data => {
+                if (!data) {
+                    console.error('Could not update Property with image ')
+                } else {
+                    console.log(`Property ${entityId} updated with image ${url}`);
+                }
+            }).catch(err => {
+                console.log('Error while updating Property ' + JSON.stringify(err))
+            });
+}
+
+/**
+ * Update the Food with Images from ImageKit
+ * @param {*} entityId 
+ * @param {*} url 
+ */
+function updateFood(url, entityId) {
+    var body = {};
+    body.image= url;
+    Food.updateOne({ _id: entityId }, body, { new: true })
+            .then(data => {
+                if (!data) {
+                    console.error('Could not update Food with image ')
+                } else {
+                    console.log(`Food ${entityId} updated with image ${url}`);
+                }
+            }).catch(err => {
+                console.log('Error while updating Food ' + JSON.stringify(err))
+            });
+}
+
+/**
+ * Update the Collection with Images from ImageKit
+ * @param {*} entityId 
+ * @param {*} url 
+ */
+function updateCollection(url, entityId) {
+    var body = {};
+    body.image= url;
+    Collection.updateOne({ _id: entityId }, body, { new: true })
+            .then(data => {
+                if (!data) {
+                    console.error('Could not update Collection with image ')
+                } else {
+                    console.log(`Collection ${entityId} updated with image ${url}`);
+                }
+            }).catch(err => {
+                console.log('Error while updating Collection ' + JSON.stringify(err))
+            });
+}
+
+function addImage(entityId, payload) {
+    var ImgImage = new ImgKitImage(buildImageJson(entityId, payload));
     ImgImage.save()
         .then(data => {
-            console.log('Saved image '+ JSON.stringify(data))
+            console.log('Saved image ' + JSON.stringify(data))
         }).catch(err => {
-            console.log('Error when saving image '+ slug +". "+ err)
+            console.log('Error when saving image ' + slug + ". " + err)
         });
 
 }
@@ -175,11 +272,11 @@ function addImage(reference, payload) {
  * 
  * @param {Request} payload 
  */
-function buildImageJson(reference, payload) {
-    var slug = reference.trim().replace(/[\W_]+/g, "-").toLowerCase() + "-" + payload.fileId.trim().replace(/[\W_]+/g, "_").toLowerCase();
+function buildImageJson(entityId, payload) {
+    var slug = entityId.trim().replace(/[\W_]+/g, "-").toLowerCase() + "-" + payload.fileId.trim().replace(/[\W_]+/g, "_").toLowerCase();
     return {
         fileId: payload.fileId,
-        reference: reference,
+        reference: entityId,
         url: payload.url,
         name: payload.name,
         thumbnail: payload.thumbnail,

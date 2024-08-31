@@ -6,7 +6,7 @@ const { validationResult, errorFormatter } = require("../validation");
 const PartyBundle = require("../../model/cloudkitchen/partybundle");
 
 // Create and Save a new PartyBundle
-exports.create = (req, res) => {
+exports.create = async (req, res) => {
     console.log("Request to create new PartyBundle " + JSON.stringify(req.body));
     // Validate Request
     const errors = validationResult(req).formatWith(errorFormatter);
@@ -14,22 +14,15 @@ exports.create = (req, res) => {
         return res.json({ errors: _.uniq(errors.array()) });
     }
     var slug = getSlug(req.body.name);
-    PartyBundle.exists({ slug: slug, cloudKitchenId: req.body.cloudKitchenId },
-        function(err, result) {
-            if (err) {
-                return res
-                    .status(500)
-                    .send({ message: `Error while finding PartyBundle for: ${slug}` });
-            } else if (result) {
-                console.log(`PartyBundle already exist for: ${slug}`);
-                res
-                    .status(400)
-                    .send({ message: `PartyBundle already exist for: ${slug}` });
-            } else {
-                persist(req, res);
-            }
-        }
-    );
+    var _id = await PartyBundle.exists({ slug: slug, cloudKitchenId: req.body.cloudKitchenId });
+    if (_id) {
+        console.log(`PartyBundle already exist with name ${slug}`);
+        res
+            .status(400)
+            .send({ message: `PartyBundle already exist with name ${slug}` });
+    } else {
+        persist(req, res);
+    }
 };
 
 // Retrieve and return all PartyBundles from the database.
@@ -163,39 +156,43 @@ exports.delete = (req, res) => {
     }
 };
 
-function deleteManyByQuery(req) {
-    let query = PartyBundle.find();
-    query.where({
-        cloudKitchenId: { $regex: ".*" + req.query.chef + ".*", $options: "i" },
-    });
-    PartyBundle.deleteMany(query)
-        .then(function() {
-            // Success
-            console.log("PartyBundles for chef deleted");
-        })
-        .catch(function(error) {
-            // Failure
-            console.log(error);
-        });
-}
 
-function deleteOneById(req, res) {
-    PartyBundle.findByIdAndRemove(req.params.id)
-        .then((PartyBundle) => {
-            if (!PartyBundle) {
-                return PartyBundleNotFoundWithId(req, res);
-            }
+// Deletes a Collection with the specified BrandId in the request
+exports.deleteOne = async (req, res) => {
+    console.log('Deleting a PartyBundle ' + req.params.id);
+    PartyBundle.deleteOne({ _id: req.params.id })
+        .then(data => {
+            console.log('Deleted PartyBundle ' + JSON.stringify(data));
             res.send({ message: "PartyBundle deleted successfully!" });
-        })
-        .catch((err) => {
-            if (err.kind === "ObjectId" || err.name === "NotFound") {
-                return PartyBundleNotFoundWithId(req, res);
+        }).catch(err => {
+            console.log('Error while deleting PartyBundle ' + JSON.stringify(err))
+            if (err.kind === 'ObjectId' || err.name === 'NotFound') {
+                res.status(404).send({ message: `PartyBundle not found with id ${req.params.id}` });
+            } else {
+                res.status(500).send({ message: `Could not delete PartyBundle with id ${req.params.id}` });
             }
+        });
+};
+
+// Deletes a Collection with the specified BrandId in the request
+exports.deleteEverything = (req, res) => {
+    let filter = PartyBundle.find();
+    if (req.query.cloudKitchenId) {
+        filter.where({ 'cloudKitchenId': { '$regex': req.query.cloudKitchenId, $options: 'i' } });
+        PartyBundle.deleteMany(filter).then(result => {
+            console.log('Deleted PartyBundles ' + JSON.stringify(result));
+            res.send({ message: "PartyBundles deleted successfully!" });
+        }).catch(err => {
+            console.log('Error while deleting PartyBundles ' + JSON.stringify(err))
             return res.status(500).send({
-                message: "Could not delete PartyBundle with id " + req.params.id,
+                message: `Could not delete all PartyBundles. ${err.message}`
             });
         });
-}
+    } else {
+        res.status(500).send({ message: `PartyBundle cloudKitchenId manadatory` });
+    }
+};
+
 
 /**
  * Persists new PartyBundle document
@@ -208,15 +205,17 @@ function persist(req, res) {
     // Save PartyBundle in the database
     PartyBundle.save()
         .then((data) => {
-            console.log("New PartyBundle created: " + data.name);
+            console.log('Party Bundle created ' + JSON.stringify(data));
             res.status(201).send(data);
         })
         .catch((err) => {
+            console.log('Party Bundle creation error ' + JSON.stringify(err));
             res.status(500).send({
                 message: err.message || "Some error occurred while creating the PartyBundle.",
             });
         });
 }
+
 
 /**
  * Sends 404 HTTP Response with Message

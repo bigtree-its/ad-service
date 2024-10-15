@@ -1,4 +1,5 @@
 const Image = require('../../model/common/image');
+const ImageKitController = require("../../controller/common/imagekit.js");
 //Require Underscore JS ( Visit: http://underscorejs.org/#)
 const _ = require('underscore');
 
@@ -52,9 +53,19 @@ function persist(req, res) {
 // Retrieve and return all Image from the database.
 exports.lookup = (req, res) => {
     let query = Image.find();
+    if (req.query.entity) {
+        query.where({
+            entity: { $regex: ".*" + req.query.entity + ".*", $options: "i" },
+        });
+    }
     if (req.query.reference) {
         query.where({
             reference: { $regex: ".*" + req.query.reference + ".*", $options: "i" },
+        });
+    }
+    if (req.query.url) {
+        query.where({
+            url: { $regex: ".*" + req.query.url + ".*", $options: "i" },
         });
     }
     if (req.query.fileId) {
@@ -119,11 +130,21 @@ exports.update = (req, res) => {
 
 
 // Deletes all
-exports.deleteEverything = (req, res) => {
+exports.deleteEverything = async (req, res) => {
     let query = Image.find();
+    if (req.query.entity) {
+        query.where({
+            entity: { $regex: ".*" + req.query.entity + ".*", $options: "i" },
+        });
+    }
     if (req.query.reference) {
         query.where({
             reference: { $regex: ".*" + req.query.reference + ".*", $options: "i" },
+        });
+    }
+    if (req.query.url) {
+        query.where({
+            url: { $regex: ".*" + req.query.url + ".*", $options: "i" },
         });
     }
     if (req.query.fileId) {
@@ -131,20 +152,34 @@ exports.deleteEverything = (req, res) => {
             fileId: { $regex: ".*" + req.query.fileId + ".*", $options: "i" },
         });
     }
-    Image.deleteMany(query).then(result => {
-        console.log("Deleted: "+ JSON.stringify(result))
-        res.send({ message: "Deleted Images" });
-    }).catch(err => {
-        return res.status(500).send({
-            message: `Could not delete all Images. ${err.message}`
+    // console.log('Deleting images matching query ' + JSON.stringify(query))
+    await Image.find(query).then(result => {
+        console.log(result);
+        result.forEach(async e => {
+            // Delete from Local
+            console.log('Deleting image ' + JSON.stringify(e));
+            await e.deleteOne();
+            await ImageKitController.deleteByFileId(e.fileId);
         });
+    }).catch(error => {
+        console.error(error);
     });
+    res.send({ message: "Deleted Images" });
+
+    // Image.deleteMany(query).then(result => {
+    //     console.log("Deleted: " + JSON.stringify(result))
+    //     res.send({ message: "Deleted Images" });
+    // }).catch(err => {
+    //     return res.status(500).send({
+    //         message: `Could not delete all Images. ${err.message}`
+    //     });
+    // });
 };
 
 // Delete One
 exports.deleteOne = (req, res) => {
     Image.deleteMany(req.params.id).then(result => {
-        console.log("Deleted: "+ JSON.stringify(result))
+        console.log("Deleted: " + JSON.stringify(result))
         res.send({ message: "Deleted Image" });
     }).catch(err => {
         console.log(`Could not delete Image. ${err.message}`)

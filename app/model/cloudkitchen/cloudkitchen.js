@@ -15,6 +15,7 @@ const CloudKitchenSchema = new mongoose.Schema({
         type: String,
         ref: 'Dish'
     }],
+    url: { type: String, trim: true },
     slug: { type: String, trim: true },
     image: String,
     serviceAreas: [String],

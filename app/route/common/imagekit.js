@@ -12,6 +12,7 @@ const Ad = require("../../model/ad/ad.js");
 const Property = require("../../model/property/property.js");
 const Collection = require("../../model/cloudkitchen/collection.js");
 const Food = require("../../model/cloudkitchen/food.js");
+const PartyBundle = require("../../model/cloudkitchen/partybundle.js");
 const ImgKitImage = require("../../model/common/image.js");
 const path = process.env.CONTEXT_PATH + "/imagekit";
 
@@ -50,40 +51,23 @@ module.exports = (app) => {
     app.post(path + "/upload_images", uploadToMem.array("files", 5), storeFileAsync);
 };
 
-function uploadFile(req, res) {
-    var fileKeys = Object.keys(req.files);
-    console.log('Files ' + fileKeys)
-    fileKeys.map(function (key) { // return array of promises
-        var file = req.files[key];
-        console.log('Uploading file ' + file.originalname)
-        Promise.resolve(readFileFromMemStorageAndUploadToImageKit(req, file));
-
-        // fs.readFile(file.path, "base64", (err, data) => {
-        //     if (err) {
-        //         console.error(err);
-        //     }
-        //     return uploadUsingPromise(req, data, file);
-        // });
-    });
-    console.log('Sending response back to Client')
-    res.status(200);
-    res.send({
-        status: "Success"
-    });
-}
 
 async function storeFileAsync(req, res) {
     var fileKeys = Object.keys(req.files);
     console.log('Files ' + fileKeys);
     var imagekitResponses = [];
+
+    // Iterate all images and upload into Image Kit Asynchronously
     await fileKeys.map(async function (key) {
         var file = req.files[key];
         const b64 = Buffer.from(file.buffer).toString("base64");
-        console.log('Uploading file ' + file.originalname);
-        const response = await imageKit.upload({ file: b64, fileName: file.originalname, extensions: [{ name: "google-auto-tagging", maxTags: 5, minConfidence: 95, },], transformation: { pre: "l-text,i-currific,fs-10,l-end", post: [{ type: "transformation", value: "w-100", },], }, });
-        console.log('Upload response ' + JSON.stringify(response));
+        console.log('Uploading file to ImageKit ' + file.originalname);
+        const response = await imageKit.upload({ file: b64, fileName: file.originalname, extensions: [{ name: "google-auto-tagging", maxTags: 5, minConfidence: 95, },], transformation: { pre: "l-text,i-homegrub,fs-10,l-end", post: [{ type: "transformation", value: "w-100", },], }, });
+        console.log('Upload response from Imagekit ' + JSON.stringify(response));
         imagekitResponses.push(response);
     });
+
+    // Wait until all images are uploaded
     await Utils.until(function uploaded() {
         if (req.files.length == imagekitResponses.length) {
             return true;
@@ -95,77 +79,36 @@ async function storeFileAsync(req, res) {
     console.log('Sending response back to Client');
     res.status(200);
     res.send({ status: "Success" });
+
+    // Iterate all response and update relevant entities in Mongo DB
     imagekitResponses.forEach(e => {
-        addImage(req.query.entityId, e);
+        //First store the Imagekit response into MongoDB collection
+        addImage(req.query.entity, req.query.reference, e);
     });
-    if (req.query.entity === 'ads') {
-        updateAd(imagekitResponses[0].url, req.query.entityId);
-    } else if (req.query.entity === 'properties') {
-        updateProperty(imagekitResponses[0].url, req.query.entityId);
-    } else if (req.query.entity === 'collections') {
-        updateCollection(imagekitResponses[0].url, req.query.entityId);
-    } else if (req.query.entity === 'foods') {
-        updateFood(imagekitResponses[0].url, req.query.entityId);
+
+
+    // Wait until all images are uploaded
+    await Utils.until(function uploaded() {
+        if (req.files.length == imagekitResponses.length) {
+            return true;
+        } else {
+            return false;
+        }
+    });
+
+    if (req.query.entity === 'Ad') {
+        updateAd(imagekitResponses[0].url, req.query.reference);
+    } else if (req.query.entity === 'Property') {
+        updateProperty(imagekitResponses[0].url, req.query.reference);
+    } else if (req.query.entity === 'Collection') {
+        updateCollection(imagekitResponses[0].url, req.query.reference);
+    } else if (req.query.entity === 'Food') {
+        updateMenuCoverPhoto(imagekitResponses[0].url, req.query.reference);
+    }else if (req.query.entity === 'PartyBundle') {
+        updatePartyBundleCoverPhoto(imagekitResponses[0].url, req.query.reference);
     }
 }
 
-
-function readFileFromMemStorageAndUploadToImageKit(req, file) {
-    // console.log(`Uploading file  ${file.originalname}`);
-    const b64 = Buffer.from(file.buffer).toString("base64");
-    return imageKit
-        .upload({
-            file: b64, // File content to upload
-            fileName: file.originalname, // Desired file name
-            extensions: [{
-                name: "google-auto-tagging",
-                maxTags: 5,
-                minConfidence: 95,
-            },],
-            transformation: {
-                pre: "l-text,i-currific,fs-10,l-end",
-                post: [{
-                    type: "transformation",
-                    value: "w-100",
-                },],
-            },
-        })
-        .then((response) => {
-            addImage(req.query.reference, response);
-            console.log('Uploading complete ' + response.url)
-        })
-        .catch((error) => {
-            console.log(error);
-        });
-}
-
-function readFilesFromDiskAndUploadToImageKit(req, data, file) {
-    console.log(`Uploading ${file.path} using promise `);
-    return imageKit
-        .upload({
-            file: data, // File content to upload
-            fileName: file.originalname, // Desired file name
-            extensions: [{
-                name: "google-auto-tagging",
-                maxTags: 5,
-                minConfidence: 95,
-            },],
-            transformation: {
-                pre: "l-text,i-currific,fs-50,l-end",
-                post: [{
-                    type: "transformation",
-                    value: "w-100",
-                },],
-            },
-        })
-        .then((response) => {
-            fs.unlinkSync(file.path);
-            updateAd(req, response);
-        })
-        .catch((error) => {
-            console.log(error);
-        });
-}
 
 /**
  * Builds Ad from incoming Request.
@@ -178,89 +121,108 @@ function buildAd(body) {
 
 /**
  * Update the Ad with Images from ImageKit
- * @param {*} entityId 
+ * @param {*} reference 
  * @param {*} url 
  */
-function updateAd(url, entityId) {
+function updateAd(url, reference) {
     var body = {};
-    body.image= url;
-    Ad.updateOne({ reference: entityId }, body, { new: true })
-            .then(data => {
-                if (!data) {
-                    console.error('Could not update Ad with image ')
-                } else {
-                    console.log(`Ad ${entityId} updated with image ${url}`);
-                }
-            }).catch(err => {
-                console.log('Error while updating ad ' + JSON.stringify(err))
-            });
+    body.image = url;
+    Ad.updateOne({ reference: reference }, body, { new: true })
+        .then(data => {
+            if (!data) {
+                console.error('Could not update Ad with image ')
+            } else {
+                console.log(`Ad ${reference} updated with image ${url}`);
+            }
+        }).catch(err => {
+            console.log('Error while updating ad ' + JSON.stringify(err))
+        });
 }
 
 /**
  * Update the Ad with Images from ImageKit
- * @param {*} entityId 
+ * @param {*} reference 
  * @param {*} url 
  */
-function updateProperty(url, entityId) {
+function updateProperty(url, reference) {
     var body = {};
-    body.image= url;
-    Property.updateOne({ reference: entityId }, body, { new: true })
-            .then(data => {
-                if (!data) {
-                    console.error('Could not update Property with image ')
-                } else {
-                    console.log(`Property ${entityId} updated with image ${url}`);
-                }
-            }).catch(err => {
-                console.log('Error while updating Property ' + JSON.stringify(err))
-            });
+    body.image = url;
+    Property.updateOne({ reference: reference }, body, { new: true })
+        .then(data => {
+            if (!data) {
+                console.error('Could not update Property with image ')
+            } else {
+                console.log(`Property ${reference} updated with image ${url}`);
+            }
+        }).catch(err => {
+            console.log('Error while updating Property ' + JSON.stringify(err))
+        });
 }
 
 /**
  * Update the Food with Images from ImageKit
- * @param {*} entityId 
+ * @param {*} reference 
  * @param {*} url 
  */
-function updateFood(url, entityId) {
+function updateMenuCoverPhoto(url, reference) {
     var body = {};
-    body.image= url;
-    Food.updateOne({ _id: entityId }, body, { new: true })
-            .then(data => {
-                if (!data) {
-                    console.error('Could not update Food with image ')
-                } else {
-                    console.log(`Food ${entityId} updated with image ${url}`);
-                }
-            }).catch(err => {
-                console.log('Error while updating Food ' + JSON.stringify(err))
-            });
+    body.image = url;
+    Food.updateOne({ _id: reference }, body, { new: true })
+        .then(data => {
+            if (!data) {
+                console.error('Could not update Food with image ')
+            } else {
+                console.log(`Food ${reference} updated with image ${url}`);
+            }
+        }).catch(err => {
+            console.log('Error while updating Food ' + JSON.stringify(err))
+        });
+}
+/**
+ * Update the PartyBundle with Images from ImageKit
+ * @param {*} reference 
+ * @param {*} url 
+ */
+function updatePartyBundleCoverPhoto(url, reference) {
+    var body = {};
+    body.image = url;
+    PartyBundle.updateOne({ _id: reference }, body, { new: true })
+        .then(data => {
+            if (!data) {
+                console.error('Could not update PartyBundle with image ')
+            } else {
+                console.log(`PartyBundle ${reference} updated with image ${url}`);
+            }
+        }).catch(err => {
+            console.log('Error while updating PartyBundle ' + JSON.stringify(err))
+        });
 }
 
 /**
  * Update the Collection with Images from ImageKit
- * @param {*} entityId 
+ * @param {*} reference 
  * @param {*} url 
  */
-function updateCollection(url, entityId) {
+function updateCollection(url, reference) {
     var body = {};
-    body.image= url;
-    Collection.updateOne({ _id: entityId }, body, { new: true })
-            .then(data => {
-                if (!data) {
-                    console.error('Could not update Collection with image ')
-                } else {
-                    console.log(`Collection ${entityId} updated with image ${url}`);
-                }
-            }).catch(err => {
-                console.log('Error while updating Collection ' + JSON.stringify(err))
-            });
+    body.image = url;
+    Collection.updateOne({ _id: reference }, body, { new: true })
+        .then(data => {
+            if (!data) {
+                console.error('Could not update Collection with image ')
+            } else {
+                console.log(`Collection ${reference} updated with image ${url}`);
+            }
+        }).catch(err => {
+            console.log('Error while updating Collection ' + JSON.stringify(err))
+        });
 }
 
-function addImage(entityId, payload) {
-    var ImgImage = new ImgKitImage(buildImageJson(entityId, payload));
-    ImgImage.save()
+function addImage(entity, reference, imagekitResponse) {
+    var LocalImage = new ImgKitImage(buildImageJson(entity, reference, imagekitResponse));
+    LocalImage.save()
         .then(data => {
-            console.log('Saved image ' + JSON.stringify(data))
+            console.log('Saved image ' + JSON.stringify(data));
         }).catch(err => {
             console.log('Error when saving image ' + slug + ". " + err)
         });
@@ -272,14 +234,15 @@ function addImage(entityId, payload) {
  * 
  * @param {Request} payload 
  */
-function buildImageJson(entityId, payload) {
-    var slug = entityId.trim().replace(/[\W_]+/g, "-").toLowerCase() + "-" + payload.fileId.trim().replace(/[\W_]+/g, "_").toLowerCase();
+function buildImageJson(entity, reference, imagekitResponse) {
+    var slug = reference.trim().replace(/[\W_]+/g, "-").toLowerCase() + "-" + imagekitResponse.fileId.trim().replace(/[\W_]+/g, "_").toLowerCase();
     return {
-        fileId: payload.fileId,
-        reference: entityId,
-        url: payload.url,
-        name: payload.name,
-        thumbnail: payload.thumbnail,
+        reference: reference,
+        entity: entity,
+        fileId: imagekitResponse.fileId,
+        url: imagekitResponse.url,
+        name: imagekitResponse.name,
+        thumbnail: imagekitResponse.thumbnail,
         active: true,
         slug: slug
     };

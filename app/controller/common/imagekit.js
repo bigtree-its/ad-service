@@ -1,14 +1,8 @@
-const jwt = require("jsonwebtoken");
 const uuid = require("uuid");
 const crypto = require("crypto");
-const http = require("https");
-const { Buffer } = require("node:buffer");
 var ImageKit = require("imagekit");
-const multer = require("multer");
-const fs = require("fs");
 const path = require("path");
 const uploadFile = require("../../middleware/upload");
-const fsPromises = require('fs/promises')
 
 const privateKey = process.env.IMAGEKIT_PRIVATEKEY;
 const publicKey = process.env.IMAGEKIT_PUBLICKEY;
@@ -64,76 +58,6 @@ exports.useFormidable = (req, res) => {
 };
 
 
-exports.upload3 = async(req, res) => {
-    // if (!req.files || Object.keys(req.files).length === 0) {
-    //     return res.status(400).send('No files were uploaded.');
-    // }
-    // this.useFormidable(req, res);
-    // this.multerUpload(req, res);
-
-    // console.log('req.files ' + req.files)
-    //   file = req.files.FormFieldName; // here is the field name of the form
-    //   this.imageKitUpload(req.files);
-    //   res.send("File Uploaded " + file);
-    // let imagedata = "";
-    // req.on("data", (chunk) => (imagedata += chunk));
-
-    // req.on("end", () => {
-    //     const base64Data = imagedata.replace(
-    //         /^data:image\/(png|jpeg|jpg);base64,/,
-    //         ""
-    //     );
-    //     fs.writeFile("/Users/maan/Pictures/downloaded.jpg", base64Data, "base64", (err) => {
-    //         if (err) throw err;
-    //         console.log("File saved!");
-    //     });
-    //     fs.writeFile(
-    //         "/Users/maan/Pictures/downloaded.jpg",
-    //         imagedata,
-    //         "binary",
-    //         (err) => {
-    //             if (err) throw err;
-    //             console.log("File saved!");
-    //         }
-    //     );
-    // });
-
-    // const chunks = [];
-    // req.on("data", (data) => {
-    //     chunks.push(data);
-    // });
-    // req.on("end", () => {
-    //     const payload = Buffer.concat(chunks).toString();
-    //     this.imageKitUpload(payload);
-    //     // console.log(payload);
-    //     // fs.writeFile("/Users/maan/Pictures/file.text", payload, "binary", (err) => {
-    //     //     if (err) throw err;
-    //     //     console.log("File saved!");
-    //     // });
-    // });
-    try {
-        const buffer = await new Promise((resolve, reject) => {
-                const chunks = []
-
-                req.on('data', (chunk) => chunks.push(chunk))
-                req.on('end', () => resolve(Buffer.concat(chunks)))
-                req.on('error', (err) => reject(err))
-            }) // <1>
-
-        const { filename } = req.query
-        const basename = path.basename(filename)
-        const dirname = path.join(__dirname, 'upload')
-        const destination = path.join(dirname, basename)
-
-        await fsPromises.mkdir(dirname, { recursive: true })
-        await fsPromises.writeFile(destination, buffer) // <2>
-
-        res.status(201).end()
-    } catch (err) {
-        // next(err)
-    }
-};
-
 exports.imageKitUpload = (data) => {
     console.log("Uploading to ImageKit");
     imageKit
@@ -146,7 +70,7 @@ exports.imageKitUpload = (data) => {
                 minConfidence: 95,
             }, ],
             transformation: {
-                pre: "l-text,i-currific,fs-50,l-end",
+                pre: "l-text,i-homegrub,fs-50,l-end",
                 post: [{
                     type: "transformation",
                     value: "w-100",
@@ -213,6 +137,18 @@ exports.deleteFile = (req, res) => {
         }
     });
 };
+
+exports.deleteByFileId = (fileId) => {
+    console.log("Deleting of imagekit file " + fileId);
+    imageKit.deleteFile(fileId, function(error, result) {
+        if (error) {
+            console.log(error);
+        } else {
+            console.log(result);
+        }
+    });
+};
+
 
 exports.getFile = (req, res) => {
     console.log("Fetching details of file " + req.params.id);

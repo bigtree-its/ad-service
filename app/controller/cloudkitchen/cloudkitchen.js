@@ -18,7 +18,7 @@ function isEmpty(data) {
 }
 
 // Create and Save a new CloudKitchen
-exports.create = async(req, res) => {
+exports.create = async (req, res) => {
 
     console.log("Creating new CloudKitchen ");
     /** Check for validation errors */
@@ -66,7 +66,7 @@ exports.create = async(req, res) => {
     checkDuplicateAndPersist(req, res);
 };
 
-exports.validateCuisine = async(req, res) => {
+exports.validateCuisine = async (req, res) => {
     try {
         var cuisines = req.body.cuisines;
         console.log('Verifying Cuisine : ' + cuisines);
@@ -81,7 +81,7 @@ exports.validateCuisine = async(req, res) => {
     }
 };
 
-exports.validateDish = async(req, res) => {
+exports.validateDish = async (req, res) => {
     try {
         var dishes = req.body.dishes;
         console.log('Verifying dishes : ' + dishes);
@@ -96,7 +96,7 @@ exports.validateDish = async(req, res) => {
     }
 };
 
-exports.validatePostcodeDistricts = async(req, res) => {
+exports.validatePostcodeDistricts = async (req, res) => {
     try {
         var serviceAreas = req.body.serviceAreas;
         if (isEmpty(serviceAreas)) {
@@ -115,7 +115,7 @@ exports.validatePostcodeDistricts = async(req, res) => {
 };
 
 
-exports.validateSlots = async(req, res) => {
+exports.validateSlots = async (req, res) => {
     var types = ['Breakfast', 'Lunch', 'Dinner', 'AllDay'];
     var valid = false;
     var slots = req.body.slots;
@@ -162,7 +162,7 @@ exports.paginate = (req, res) => {
     if (req.query.postcode) {
         query.where('address.postcode', { $in: req.query.postcode })
     }
-    CloudKitchen.aggregatePaginate(query, options, function(err, result) {
+    CloudKitchen.aggregatePaginate(query, options, function (err, result) {
         if (result) {
             console.log(`Returning ${result.docs.length} CloudKitchens.`);
             res.send(result);
@@ -192,6 +192,8 @@ exports.findAll = (req, res) => {
     }
     if (req.query.active) {
         query.where('active', req.query.active)
+    } if (req.query.onOffer) {
+        query.where('onOffer', req.query.onOffer)
     }
     if (req.query.delivery) {
         query.where('delivery', true);
@@ -354,8 +356,11 @@ function buildCloudKitchenJson(req) {
         contact: data.contact,
         address: data.address,
         rating: data.rating,
+        url: data.url,
         reviews: data.reviews,
         active: data.active,
+        onOffer: data.active,
+        offerPrice: data.active,
         partyOrderLeadDays: data.partyOrderLeadDays,
         doDelivery: data.doDelivery,
         deliveryFee: data.deliveryFee,

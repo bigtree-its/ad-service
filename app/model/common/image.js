@@ -3,10 +3,12 @@ var mongoose = require('mongoose');
 // Define a Schema for our Image collection
 const ImageSchema = new mongoose.Schema({
     active: Boolean,
+    entity: { type: String, trim: true },
     reference: { type: String, trim: true },
     fileId: { type: String, trim: true },
     name: { type: String, trim: true },
     url: { type: String, trim: true },
+    slug: { type: String, trim: true },
     thumbnail: { type: String, trim: true },
 }, {
     timestamps: true

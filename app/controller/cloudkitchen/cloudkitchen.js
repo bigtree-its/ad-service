@@ -379,6 +379,7 @@ function buildCloudKitchenJson(req) {
         doPartyOrders: data.doPartyOrders,
         preOrderOnly: data.preOrderOnly,
         open: data.open,
+        reopen: data.reopen,
     };
 }
 /**

@@ -26,6 +26,7 @@ const CloudKitchenSchema = new mongoose.Schema({
     minimumOrder: Number,
     minimumPartyOrder: Number,
     rating: Number,
+    reopen: Date,
     partyOrderLeadDays: Number,
     reviews: Number,
     doDelivery: Boolean,

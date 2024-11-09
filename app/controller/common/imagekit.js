@@ -139,7 +139,7 @@ exports.deleteFile = (req, res) => {
 };
 
 exports.deleteByFileId = (fileId) => {
-    console.log("Deleting of imagekit file " + fileId);
+    console.log("Deleting a imagekit file with FileId" + fileId);
     imageKit.deleteFile(fileId, function(error, result) {
         if (error) {
             console.log(error);

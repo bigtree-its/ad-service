@@ -58,9 +58,9 @@ exports.lookup = (req, res) => {
             entity: { $regex: ".*" + req.query.entity + ".*", $options: "i" },
         });
     }
-    if (req.query.reference) {
+    if (req.query.entityId) {
         query.where({
-            reference: { $regex: ".*" + req.query.reference + ".*", $options: "i" },
+            reference: { $regex: ".*" + req.query.entityId + ".*", $options: "i" },
         });
     }
     if (req.query.url) {
@@ -130,16 +130,17 @@ exports.update = (req, res) => {
 
 
 // Deletes all
-exports.deleteEverything = async (req, res) => {
+exports.deleteEverything = async(req, res) => {
+    console.log('Delete Images');
     let query = Image.find();
     if (req.query.entity) {
         query.where({
             entity: { $regex: ".*" + req.query.entity + ".*", $options: "i" },
         });
     }
-    if (req.query.reference) {
+    if (req.query.entityId) {
         query.where({
-            reference: { $regex: ".*" + req.query.reference + ".*", $options: "i" },
+            reference: { $regex: ".*" + req.query.entityId + ".*", $options: "i" },
         });
     }
     if (req.query.url) {
@@ -152,7 +153,6 @@ exports.deleteEverything = async (req, res) => {
             fileId: { $regex: ".*" + req.query.fileId + ".*", $options: "i" },
         });
     }
-    // console.log('Deleting images matching query ' + JSON.stringify(query))
     await Image.find(query).then(result => {
         console.log(result);
         result.forEach(async e => {

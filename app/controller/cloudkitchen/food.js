@@ -39,7 +39,9 @@ exports.lookup = (req, res) => {
     if (req.query.vegetarian) {
         query.where('vegetarian', req.query.vegetarian);
     }
-
+    if (req.query.slug) {
+        query.where('slug', req.query.slug);
+    }
     query.where({ active: true });
     Food.find(query).then(result => {
         console.log(`Returning ${result.length} Foods.`);
@@ -79,12 +81,12 @@ exports.update = (req, res) => {
         return res.status(400).send({ message: "Food body can not be empty" });
     }
     // Find Food and update it with the request body
-    Food.updateOne({_id:req.params.id}, { $set: req.body }, {returnDocument: 'after'} )
+    Food.updateOne({ _id: req.params.id }, { $set: req.body }, { returnDocument: 'after' })
         .then(food => {
             if (!food) {
                 return foodNotFoundWithId(req, res);
             }
-            console.log('Updated food '+ JSON.stringify(food))
+            console.log('Updated food ' + JSON.stringify(food))
             res.send(food);
         }).catch(err => {
             if (err.kind === 'ObjectId') {
@@ -108,20 +110,20 @@ exports.delete = (req, res) => {
             console.log('Error while deleting Food ' + JSON.stringify(err))
             if (err.kind === 'ObjectId' || err.name === 'NotFound') {
                 res.status(404).send({ message: `Food not found with id ${req.params.id}` });
-            }else{
+            } else {
                 res.status(500).send({ message: `Could not delete Food with id ${req.params.id}` });
             }
         });
 };
 
 // Deletes a Food with the specified BrandId in the request
-exports.deleteEverything = async (req, res) => {
+exports.deleteEverything = async(req, res) => {
     let filter = Food.find();
     if (req.query.cloudKitchenId) {
         filter.where({ 'cloudKitchenId': { '$regex': req.query.cloudKitchenId, $options: 'i' } });
-        var _ids = await Food.find(filter, {_id: 1});
-        if ( _ids){
-            console.log('Deleting foods '+ JSON.stringify(_ids));
+        var _ids = await Food.find(filter, { _id: 1 });
+        if (_ids) {
+            console.log('Deleting foods ' + JSON.stringify(_ids));
         }
         Food.deleteMany(filter).then(result => {
             console.log('Deleted Food ' + JSON.stringify(result));
@@ -148,7 +150,7 @@ function persist(req, res) {
     // Save Food in the database
     food.save()
         .then(data => {
-            console.log('Created new food '+ JSON.stringify(food))
+            console.log('Created new food ' + JSON.stringify(food))
             res.status(201).send(data);
         }).catch(err => {
             res.status(500).send({

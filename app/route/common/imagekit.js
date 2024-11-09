@@ -16,6 +16,8 @@ const PartyBundle = require("../../model/cloudkitchen/partybundle.js");
 const ImgKitImage = require("../../model/common/image.js");
 const path = process.env.CONTEXT_PATH + "/imagekit";
 
+var imagePersistenceComplete = false;
+
 // Initialize
 const imageKit = new ImageKit({
     publicKey: `${publicKey}`,
@@ -56,13 +58,14 @@ async function storeFileAsync(req, res) {
     var fileKeys = Object.keys(req.files);
     console.log('Files ' + fileKeys);
     var imagekitResponses = [];
+    imagePersistenceComplete = false;
 
     // Iterate all images and upload into Image Kit Asynchronously
-    await fileKeys.map(async function (key) {
+    await fileKeys.map(async function(key) {
         var file = req.files[key];
         const b64 = Buffer.from(file.buffer).toString("base64");
         console.log('Uploading file to ImageKit ' + file.originalname);
-        const response = await imageKit.upload({ file: b64, fileName: file.originalname, extensions: [{ name: "google-auto-tagging", maxTags: 5, minConfidence: 95, },], transformation: { pre: "l-text,i-homegrub,fs-10,l-end", post: [{ type: "transformation", value: "w-100", },], }, });
+        const response = await imageKit.upload({ file: b64, fileName: file.originalname, extensions: [{ name: "google-auto-tagging", maxTags: 5, minConfidence: 95, }, ], transformation: { pre: "l-text,i-homegrub,fs-10,l-end", post: [{ type: "transformation", value: "w-100", }, ], }, });
         console.log('Upload response from Imagekit ' + JSON.stringify(response));
         imagekitResponses.push(response);
     });
@@ -76,37 +79,50 @@ async function storeFileAsync(req, res) {
         }
     });
 
-    console.log('Sending response back to Client');
-    res.status(200);
-    res.send({ status: "Success" });
+    var localImageSaveCount = 0;
 
     // Iterate all response and update relevant entities in Mongo DB
-    imagekitResponses.forEach(e => {
+    imagekitResponses.forEach(async e => {
         //First store the Imagekit response into MongoDB collection
-        addImage(req.query.entity, req.query.reference, e);
+        await addImage(req.query.entity, req.query.entityId, e);
+        localImageSaveCount = localImageSaveCount + 1;
     });
 
-
     // Wait until all images are uploaded
-    await Utils.until(function uploaded() {
-        if (req.files.length == imagekitResponses.length) {
+    console.log('Waiting for all images persisted locally...')
+    await Utils.until(function persisted() {
+        if (req.files.length == localImageSaveCount) {
             return true;
         } else {
             return false;
         }
     });
 
+    console.log('Images persisted locally : ' + localImageSaveCount);
+
     if (req.query.entity === 'Ad') {
-        updateAd(imagekitResponses[0].url, req.query.reference);
+        updateAd(imagekitResponses[0].url, req.query.entityId);
     } else if (req.query.entity === 'Property') {
-        updateProperty(imagekitResponses[0].url, req.query.reference);
+        updateProperty(imagekitResponses[0].url, req.query.entityId);
     } else if (req.query.entity === 'Collection') {
-        updateCollection(imagekitResponses[0].url, req.query.reference);
+        updateCollection(imagekitResponses[0].url, req.query.entityId);
     } else if (req.query.entity === 'Food') {
-        updateMenuCoverPhoto(imagekitResponses[0].url, req.query.reference);
-    }else if (req.query.entity === 'PartyBundle') {
-        updatePartyBundleCoverPhoto(imagekitResponses[0].url, req.query.reference);
+        await updateMenuCoverPhoto(imagekitResponses[0].url, req.query.entityId);
+    } else if (req.query.entity === 'PartyBundle') {
+        updatePartyBundleCoverPhoto(imagekitResponses[0].url, req.query.entityId);
     }
+
+    await Utils.until(function persistComplete() {
+        if (imagePersistenceComplete) {
+            return true;
+        } else {
+            return false;
+        }
+    });
+
+    console.log('Sending response back to Client');
+    res.status(200);
+    res.send({ status: "Success" });
 }
 
 
@@ -121,18 +137,19 @@ function buildAd(body) {
 
 /**
  * Update the Ad with Images from ImageKit
- * @param {*} reference 
+ * @param {*} entityId 
  * @param {*} url 
  */
-function updateAd(url, reference) {
+function updateAd(url, entityId) {
     var body = {};
     body.image = url;
-    Ad.updateOne({ reference: reference }, body, { new: true })
+    Ad.updateOne({ reference: entityId }, body, { new: true })
         .then(data => {
             if (!data) {
                 console.error('Could not update Ad with image ')
             } else {
-                console.log(`Ad ${reference} updated with image ${url}`);
+                imagePersistenceComplete = true;
+                console.log(`Ad ${entityId} updated with image ${url}`);
             }
         }).catch(err => {
             console.log('Error while updating ad ' + JSON.stringify(err))
@@ -141,18 +158,19 @@ function updateAd(url, reference) {
 
 /**
  * Update the Ad with Images from ImageKit
- * @param {*} reference 
+ * @param {*} entityId 
  * @param {*} url 
  */
-function updateProperty(url, reference) {
+function updateProperty(url, entityId) {
     var body = {};
     body.image = url;
-    Property.updateOne({ reference: reference }, body, { new: true })
+    Property.updateOne({ reference: entityId }, body, { new: true })
         .then(data => {
             if (!data) {
                 console.error('Could not update Property with image ')
             } else {
-                console.log(`Property ${reference} updated with image ${url}`);
+                imagePersistenceComplete = true;
+                console.log(`Property ${entityId} updated with image ${url}`);
             }
         }).catch(err => {
             console.log('Error while updating Property ' + JSON.stringify(err))
@@ -161,18 +179,19 @@ function updateProperty(url, reference) {
 
 /**
  * Update the Food with Images from ImageKit
- * @param {*} reference 
+ * @param {*} entityId 
  * @param {*} url 
  */
-function updateMenuCoverPhoto(url, reference) {
+async function updateMenuCoverPhoto(url, entityId) {
     var body = {};
     body.image = url;
-    Food.updateOne({ _id: reference }, body, { new: true })
+    Food.updateOne({ _id: entityId }, body, { new: true })
         .then(data => {
             if (!data) {
                 console.error('Could not update Food with image ')
             } else {
-                console.log(`Food ${reference} updated with image ${url}`);
+                console.log(`Food ${entityId} updated with image ${url}`);
+                imagePersistenceComplete = true;
             }
         }).catch(err => {
             console.log('Error while updating Food ' + JSON.stringify(err))
@@ -180,18 +199,19 @@ function updateMenuCoverPhoto(url, reference) {
 }
 /**
  * Update the PartyBundle with Images from ImageKit
- * @param {*} reference 
+ * @param {*} entityId 
  * @param {*} url 
  */
-function updatePartyBundleCoverPhoto(url, reference) {
+function updatePartyBundleCoverPhoto(url, entityId) {
     var body = {};
     body.image = url;
-    PartyBundle.updateOne({ _id: reference }, body, { new: true })
+    PartyBundle.updateOne({ _id: entityId }, body, { new: true })
         .then(data => {
             if (!data) {
                 console.error('Could not update PartyBundle with image ')
             } else {
-                console.log(`PartyBundle ${reference} updated with image ${url}`);
+                console.log(`PartyBundle ${entityId} updated with image ${url}`);
+                imagePersistenceComplete = true;
             }
         }).catch(err => {
             console.log('Error while updating PartyBundle ' + JSON.stringify(err))
@@ -200,26 +220,27 @@ function updatePartyBundleCoverPhoto(url, reference) {
 
 /**
  * Update the Collection with Images from ImageKit
- * @param {*} reference 
+ * @param {*} entityId 
  * @param {*} url 
  */
-function updateCollection(url, reference) {
+function updateCollection(url, entityId) {
     var body = {};
     body.image = url;
-    Collection.updateOne({ _id: reference }, body, { new: true })
+    Collection.updateOne({ _id: entityId }, body, { new: true })
         .then(data => {
             if (!data) {
                 console.error('Could not update Collection with image ')
             } else {
-                console.log(`Collection ${reference} updated with image ${url}`);
+                imagePersistenceComplete = true;
+                console.log(`Collection ${entityId} updated with image ${url}`);
             }
         }).catch(err => {
             console.log('Error while updating Collection ' + JSON.stringify(err))
         });
 }
 
-function addImage(entity, reference, imagekitResponse) {
-    var LocalImage = new ImgKitImage(buildImageJson(entity, reference, imagekitResponse));
+async function addImage(entity, entityId, imagekitResponse) {
+    var LocalImage = new ImgKitImage(buildImageJson(entity, entityId, imagekitResponse));
     LocalImage.save()
         .then(data => {
             console.log('Saved image ' + JSON.stringify(data));
@@ -234,10 +255,10 @@ function addImage(entity, reference, imagekitResponse) {
  * 
  * @param {Request} payload 
  */
-function buildImageJson(entity, reference, imagekitResponse) {
-    var slug = reference.trim().replace(/[\W_]+/g, "-").toLowerCase() + "-" + imagekitResponse.fileId.trim().replace(/[\W_]+/g, "_").toLowerCase();
+function buildImageJson(entity, entityId, imagekitResponse) {
+    var slug = entityId.trim().replace(/[\W_]+/g, "-").toLowerCase() + "-" + imagekitResponse.fileId.trim().replace(/[\W_]+/g, "_").toLowerCase();
     return {
-        reference: reference,
+        reference: entityId,
         entity: entity,
         fileId: imagekitResponse.fileId,
         url: imagekitResponse.url,

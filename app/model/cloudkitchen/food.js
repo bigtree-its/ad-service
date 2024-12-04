@@ -18,7 +18,6 @@ const FoodSchema = new mongoose.Schema({
     discounted: Boolean,
     discountedPrice: Number,
     description: String,
-    active: Boolean,
     preOrder: Boolean,
     onOffer: Boolean,
     partyCandidate: Boolean,
@@ -26,6 +25,7 @@ const FoodSchema = new mongoose.Schema({
     readyBy: Date,
     orderBy: Date,
     collectionOnly: Boolean,
+    active: Boolean,
 }, {
     timestamps: true
 });

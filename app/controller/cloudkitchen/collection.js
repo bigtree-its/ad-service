@@ -216,6 +216,7 @@ function buildCollectionJson(req) {
         pickupOnly: req.body.pickupOnly,
         delivery: req.body.delivery,
         fixedDay: req.body.fixedDay,
+        weekDay: req.body.weekDay,
         orderBefore: req.body.orderBefore,
         orderBeforeUnit: req.body.orderBeforeUnit,
         slug: req.body.slug ||

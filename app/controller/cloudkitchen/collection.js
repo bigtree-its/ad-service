@@ -204,7 +204,7 @@ function buildCollectionObject(req) {
  * @param {Request} req
  */
 function buildCollectionJson(req) {
-    return {
+    var json=  {
         name: req.body.name,
         description: req.body.description,
         cloudKitchenId: req.body.cloudKitchenId,
@@ -225,6 +225,7 @@ function buildCollectionJson(req) {
                 .replace(/[\W_]+/g, "-")
                 .toLowerCase(),
     };
+    return json;
 }
 
 /**

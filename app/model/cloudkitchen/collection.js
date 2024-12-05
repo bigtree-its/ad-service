@@ -13,6 +13,7 @@ const CollectionSchema = new mongoose.Schema({
     pickupOnly: Boolean,
     delivery: Boolean,
     fixedDay: Boolean,
+    active: Boolean,
     weekDay: String,
     orderBefore: Number,
     orderBeforeUnit: { type: String, trim: true },

@@ -59,8 +59,8 @@ function addDays(theDate, days) {
 exports.lookup = (req, res) => {
     let query = Calendar.find();
     console.log(`Looking for calendars with ${req.query}`);
-    if (req.query.chef) {
-        query.where({ cloudKitchenId: req.query.chef })
+    if (req.query.cloudKitchenId) {
+        query.where({ cloudKitchenId: req.query.cloudKitchenId })
     }
     if (req.query.date) {
         query.where({ date: req.query.date })

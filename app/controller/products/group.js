@@ -154,8 +154,11 @@ exports.delete = (req, res) => {
 
 function deleteManyByQuery(req) {
     let query = Group.find();
+    if ( req.query.cloudKitchenId){
+        
+    }
     query.where({
-        chefId: { $regex: ".*" + req.query.name + ".*", $options: "i" },
+        cloudKitchenId: { $regex: ".*" + req.query.cloudKitchenId + ".*", $options: "i" },
     });
     Group.deleteMany(query)
         .then(function() {

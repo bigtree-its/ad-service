@@ -55,8 +55,8 @@ exports.findAll = (req, res) => {
 // Retrieve and return all PartyBundles from the database.
 exports.lookup = (req, res) => {
     let query = PartyBundle.find();
-    if (req.query.chef) {
-        query.where("cloudKitchenId", req.query.chef);
+    if (req.query.cloudKitchenId) {
+        query.where("cloudKitchenId", req.query.cloudKitchenId);
     }
     PartyBundle.find(query)
         .populate({
@@ -149,7 +149,7 @@ exports.update = (req, res) => {
 
 // Delete a PartyBundle with the specified PartyBundleId in the request
 exports.delete = (req, res) => {
-    if (req.query.chef) {
+    if (req.query.cloudKitchenId) {
         deleteManyByQuery(req);
     } else {
         deleteOneById(req, res);
@@ -178,7 +178,7 @@ exports.deleteOne = async (req, res) => {
 exports.deleteEverything = (req, res) => {
     let filter = PartyBundle.find();
     if (req.query.cloudKitchenId) {
-        filter.where({ 'cloudKitchenId': { '$regex': req.query.cloudKitchenId, $options: 'i' } });
+        filter.where('cloudKitchenId', req.query.cloudKitchenId);
         PartyBundle.deleteMany(filter).then(result => {
             console.log('Deleted PartyBundles ' + JSON.stringify(result));
             res.send({ message: "PartyBundles deleted successfully!" });

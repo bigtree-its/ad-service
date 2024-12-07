@@ -34,8 +34,8 @@ exports.create = (req, res) => {
 // Retrieve and return all Menu from the database.
 exports.findAll = (req, res) => {
     let query = Feedback.find();
-    if (req.query.chef) {
-        query.where("chef", req.query.chef);
+    if (req.query.cloudKitchenId) {
+        query.where("cloudKitchenId", req.query.cloudKitchenId);
         // query.where('name', { $regex: '.*' + req.query.name + '.*' })
         // query.where({ chef: { '$regex': '.*' + req.query.chef + '.*', '$options': 'i' } })
     }

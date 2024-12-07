@@ -3,7 +3,7 @@ const _ = require("underscore");
 
 // Require Validation Utils
 const { validationResult, errorFormatter } = require("./validation");
-const Question  = require("../../model/products/Question ");
+const Question = require("../../model/products/Question ");
 
 // Create and Save a new Collection
 
@@ -16,8 +16,8 @@ exports.create = (req, res) => {
         return res.json({ errors: _.uniq(errors.array()) });
     }
     var slug = getSlug(req.body.name);
-    Question .exists({ slug: slug },
-        function(err, result) {
+    Question.exists({ slug: slug },
+        function (err, result) {
             if (err) {
                 return res
                     .status(500)
@@ -38,10 +38,10 @@ exports.create = (req, res) => {
 // Retrieve and return all Questions from the database.
 exports.findAll = (req, res) => {
     console.log("Received request to get all Questions");
-    if (req.query.chef) {
+    if (req.query.cloudKitchenId) {
         return this.lookup(req, res);
     } else {
-        Question .find()
+        Question.find()
             .then((data) => {
                 if (data) {
                     console.log("Returning " + data.length + " Questions.");
@@ -61,14 +61,14 @@ exports.findAll = (req, res) => {
 
 // Retrieve and return all Questions from the database.
 exports.lookup = (req, res) => {
-    let query = Question .find();
-    if (req.query.chef) {
+    let query = Question.find();
+    if (req.query.cloudKitchenId) {
         // query.where('name', { $regex: '.*' + req.query.name + '.*' })
         query.where({
-            chefId: { $regex: ".*" + req.query.chef + ".*", $options: "i" },
+            cloudKitchenId: { $regex: ".*" + req.query.cloudKitchenId + ".*", $options: "i" },
         });
     }
-    Question .find(query)
+    Question.find(query)
         .then((result) => {
             console.log(`Returning ${result.length} Questions.`);
             res.send(result);
@@ -83,7 +83,7 @@ exports.lookup = (req, res) => {
 
 // Deletes all
 exports.deleteEverything = (req, res) => {
-    Question .remove()
+    Question.remove()
         .then((result) => {
             res.send({ message: "Deleted all Questions" });
         })
@@ -97,7 +97,7 @@ exports.deleteEverything = (req, res) => {
 // Find a single Question  with a CollectionId
 exports.findOne = (req, res) => {
     console.log("Received request get a Question  with id " + req.params.id);
-    Question .findOne({ _id: req.params.id })
+    Question.findOne({ _id: req.params.id })
         .then((collection) => {
             if (!collection) {
                 return objectNotFoundWithId(req, res);
@@ -124,7 +124,7 @@ exports.update = (req, res) => {
             .send({ message: "Question  body can not be empty" });
     }
     // Find Question  and update it with the request body
-    Question .findByIdAndUpdate(req.params.id, { $set: req.body }, { new: true })
+    Question.findByIdAndUpdate(req.params.id, { $set: req.body }, { new: true })
         .then((collection) => {
             if (!collection) {
                 return objectNotFoundWithId(req, res);
@@ -153,23 +153,24 @@ exports.delete = (req, res) => {
 };
 
 function deleteManyByQuery(req) {
-    let query = Question .find();
-    query.where({
-        chefId: { $regex: ".*" + req.query.name + ".*", $options: "i" },
-    });
-    Question .deleteMany(query)
-        .then(function() {
+    let query = Question.find();
+    if (req.query.cloudKitchenId) {
+        query.where("cloudKitchenId", req.query.cloudKitchenId);
+    }
+
+    Question.deleteMany(query)
+        .then(function () {
             // Success
             console.log("Question s deleted");
         })
-        .catch(function(error) {
+        .catch(function (error) {
             // Failure
             console.log(error);
         });
 }
 
 function deleteOneById(req, res) {
-    Question .findByIdAndRemove(req.params.id)
+    Question.findByIdAndRemove(req.params.id)
         .then((collection) => {
             if (!collection) {
                 return objectNotFoundWithId(req, res);
@@ -226,7 +227,7 @@ function objectNotFoundWithId(req, res) {
  * @param {Request} req
  */
 function buildPersistableObject(req) {
-    return new Question (buildFromJson(req));
+    return new Question(buildFromJson(req));
 }
 
 /**
@@ -241,9 +242,9 @@ function buildFromJson(req) {
         active: req.body.active,
         slug: req.body.slug ||
             req.body.name
-            .trim()
-            .replace(/[\W_]+/g, "-")
-            .toLowerCase(),
+                .trim()
+                .replace(/[\W_]+/g, "-")
+                .toLowerCase(),
     };
 }
 

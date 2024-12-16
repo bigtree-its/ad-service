@@ -1,6 +1,6 @@
 //Require Mongoose
 var mongoose = require('mongoose');
-const { Address, Contact } = require('../common');
+const { Address, Contact, OkDay } = require('../common');
 
 // Define a Schema for our CloudKitchen collection
 const CloudKitchenSchema = new mongoose.Schema({
@@ -33,6 +33,7 @@ const CloudKitchenSchema = new mongoose.Schema({
     doPartyOrders: Boolean,
     partyDescription: [String],
     collectionTimings: [String],
+    okDays: [OkDay],
     preOrderOnly: Boolean,
     open: Boolean,
     active: Boolean,

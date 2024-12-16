@@ -366,9 +366,6 @@ function buildCloudKitchenJson(req) {
         address: data.address,
         rating: data.rating,
         reviews: data.reviews,
-        active: data.active,
-        onOffer: data.active,
-        offerPrice: data.active,
         partyOrderLeadDays: data.partyOrderLeadDays,
         doDelivery: data.doDelivery,
         deliveryFee: data.deliveryFee,
@@ -378,8 +375,10 @@ function buildCloudKitchenJson(req) {
         minimumPartyOrder: data.minimumPartyOrder,
         doPartyOrders: data.doPartyOrders,
         preOrderOnly: data.preOrderOnly,
+        okDays: data.okDays,
         open: data.open,
         reopen: data.reopen,
+        active: data.active,
     };
 }
 /**

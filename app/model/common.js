@@ -49,6 +49,16 @@ const Contact = {
     telephone: String
 }
 
+const OkDay ={
+    day: String,
+    ok: Boolean,
+    preOrder: Boolean,
+    partyOrder: Boolean,
+    orderBefore: Number,
+    orderBeforeUnit: String,
+}
+
+
 const FoodSlot = {
 
 }
@@ -70,4 +80,4 @@ const ReturnPolicy = {
 
 }
 
-module.exports = { Extra, SuperStore, School, Address, Sale, Rental, Contact, Attribute, ReturnPolicy, NameValue, Customer }
+module.exports = { Extra, SuperStore, School, Address, Sale, Rental, Contact, Attribute, ReturnPolicy, NameValue, Customer, OkDay }

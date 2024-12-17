@@ -19,6 +19,8 @@ const FoodSchema = new mongoose.Schema({
     discountedPrice: Number,
     description: String,
     preOrder: Boolean,
+    orderBefore: Number,
+    orderBeforeUnit: String,
     onOffer: Boolean,
     partyCandidate: Boolean,
     partyDescription: String,

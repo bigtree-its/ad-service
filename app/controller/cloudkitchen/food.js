@@ -42,6 +42,9 @@ exports.lookup = (req, res) => {
     if (req.query.slug) {
         query.where('slug', req.query.slug);
     }
+    if (req.query.preOrder) {
+        query.where('preOrder', req.query.preOrder);
+    }
     query.where({ active: true });
     Food.find(query).then(result => {
         console.log(`Returning ${result.length} Foods.`);
@@ -197,6 +200,8 @@ function buildFoodJson(req) {
         vegetarian: req.body.vegetarian,
         special: req.body.special,
         preOrder: req.body.preOrder,
+        orderBefore: req.body.orderBefore,
+        orderBeforeUnit: req.body.orderBeforeUnit,
         extras: req.body.extras,
         choices: req.body.choices,
         description: req.body.description,

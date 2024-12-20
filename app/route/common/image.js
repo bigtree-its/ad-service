@@ -1,19 +1,17 @@
 const controller = require("../../controller/common/image");
+const path = process.env.CONTEXT_PATH + "/images";
+const { check } = require('express-validator');
 
 module.exports = (app) => {
-    const { check } = require('express-validator');
-
-    const path = process.env.CONTEXT_PATH + "/images";
-
     // Public routes
-    // Retrieve all PostalDistrict
+    // Retrieve all ImagekitImage
     app.get(path, controller.lookup);
 
-    // Retrieve a single PostalDistrict with Id
+    // Retrieve a single ImagekitImage with Id
     app.get(path + '/:id', controller.findOne);
 
     // Private routes
-    // Creates a new PostalDistrict
+    // Creates a new ImagekitImage
     app.post(path,
         // verifyToken, 
         [
@@ -23,10 +21,10 @@ module.exports = (app) => {
         ],
         controller.create);
 
-    // Update a PostalDistrict with id
+    // Update a ImagekitImage with id
     app.put(path + '/:id', controller.update);
 
-    // Delete a PostalDistrict with id
+    // Delete a ImagekitImage with id
     app.delete(path + '/:id', controller.deleteOne);
 
     //Delete All -- only for non production and can only be done by an admin

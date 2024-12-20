@@ -1,6 +1,6 @@
 //Require CloudKitchen Model
 const CloudKitchen = require('../../model/cloudkitchen/cloudkitchen');
-const ImageUtils = require('../../utils/image-utils');
+const CloudflareImageUtils = require('../../utils/cloudflare-image-util');
 const Dish = require('../../model/cloudkitchen/dish');
 const Cuisine = require('../../model/cloudkitchen/cuisine');
 //Require Underscore JS ( Visit: http://underscorejs.org/#)
@@ -278,13 +278,13 @@ exports.update = (req, res) => {
 
 // Deletes a CloudKitchen with the specified BrandId in the request
 exports.delete = async (req, res) => {
-    var ids = await CloudKitchen.find({ _id: req.params.id }, '_id');
+    var _ids = await CloudKitchen.find({ _id: req.params.id }, '_id');
     CloudKitchen.deleteOne({ _id: req.params.id })
         .then(result => {
             console.log('Deleted CloudKitchen ' + JSON.stringify(result));
             res.send({ message: "CloudKitchen deleted successfully!" });
-            if (ids) {
-                ImageUtils.deleteImages(ids)
+            if (_ids) {
+                CloudflareImageUtils.deleteImages(_ids)
             }
         }).catch(err => {
             console.error('Error while deleting cloud kitchen ' + JSON.stringify(err))

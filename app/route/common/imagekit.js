@@ -50,6 +50,11 @@ module.exports = (app) => {
     app.get(path + "/files/:id", controller.getFile);
     app.get(path + "/files", controller.listFiles);
     // app.post(path + "/upload_images", upload.single("file"), uploadFile);
+
+    // Upload To Imagekit
+    // app.post(path + "/upload_images", uploadToMem.array("files", 5), storeFileAsync);
+
+    // Upload To Cloudflare
     app.post(path + "/upload_images", uploadToMem.array("files", 5), storeFileAsync);
 };
 
@@ -61,11 +66,11 @@ async function storeFileAsync(req, res) {
     imagePersistenceComplete = false;
 
     // Iterate all images and upload into Image Kit Asynchronously
-    await fileKeys.map(async function(key) {
+    await fileKeys.map(async function (key) {
         var file = req.files[key];
         const b64 = Buffer.from(file.buffer).toString("base64");
         console.log('Uploading file to ImageKit ' + file.originalname);
-        const response = await imageKit.upload({ file: b64, fileName: file.originalname, extensions: [{ name: "google-auto-tagging", maxTags: 5, minConfidence: 95, }, ], transformation: { pre: "l-text,i-zcoop,fs-10,l-end", post: [{ type: "transformation", value: "w-100", }, ], }, });
+        const response = await imageKit.upload({ file: b64, fileName: file.originalname, extensions: [{ name: "google-auto-tagging", maxTags: 5, minConfidence: 95, },], transformation: { pre: "l-text,i-zcoop,fs-10,l-end", post: [{ type: "transformation", value: "w-100", },], }, });
         console.log('Upload response from Imagekit ' + JSON.stringify(response));
         imagekitResponses.push(response);
     });

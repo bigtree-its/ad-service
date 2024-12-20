@@ -1,7 +1,7 @@
 const Food = require('../../model/cloudkitchen/food');
 //Require Underscore JS ( Visit: http://underscorejs.org/#)
 const _ = require('underscore');
-const ImageUtils = require('../../utils/image-utils');
+const CloudflareImageUtils = require('../../utils/cloudflare-image-util');
 // Require Validation Utils
 const { validationResult, errorFormatter } = require('../validation');
 
@@ -108,7 +108,7 @@ exports.delete = (req, res) => {
         .then(result => {
             console.log('Deleted Food ' + JSON.stringify(result));
             res.send({ message: "Food deleted successfully!" });
-            ImageUtils.deleteImages(req.params.id)
+            CloudflareImageUtils.deleteImages(req.params.id)
         }).catch(err => {
             console.log('Error while deleting Food ' + JSON.stringify(err))
             if (err.kind === 'ObjectId' || err.name === 'NotFound') {
@@ -131,7 +131,7 @@ exports.deleteEverything = async(req, res) => {
         Food.deleteMany(filter).then(result => {
             console.log('Deleted Food ' + JSON.stringify(result));
             res.send({ message: "Food deleted successfully!" });
-            ImageUtils.deleteImages(_ids)
+            CloudflareImageUtils.deleteImages(_ids)
         }).catch(err => {
             console.error(`Could not delete all Foods. ${err.message}`);
             return res.status(500).send(`Could not delete all Foods. ${err.message}`);

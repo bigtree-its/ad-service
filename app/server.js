@@ -73,6 +73,7 @@ app.use(function(req, res, next) {
 // Other routes
 require('./route/cloudkitchen/cloudkitchen')(app);
 require('./route/common/imagekit')(app);
+require('./route/common/cloudflare-image')(app);
 require('./route/ad/ad')(app);
 require('./route/ad/adEnquiry')(app);
 // require('./route/common/postcodedistrict')(app);

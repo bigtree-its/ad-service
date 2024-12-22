@@ -7,7 +7,7 @@ module.exports = (app) => {
 
     // Public routes
     // Retrieve all Dish
-    app.get(path, controller.findAll);
+    app.get(path, controller.lookup);
 
     // Retrieve a single Dish with Id
     app.get(path + '/:id', controller.findOne);
@@ -25,7 +25,7 @@ module.exports = (app) => {
     app.put(path + '/:id', controller.update);
 
     // Delete a Dish with id
-    app.delete(path + '/:id', controller.delete);
+    app.delete(path + '/:id', controller.deleteOne);
 
     //Delete All -- only for non production and can only be done by an admin
     app.delete(path, controller.deleteEverything);

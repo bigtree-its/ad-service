@@ -1,123 +1,30 @@
-const Dish = require('../../model/cloudkitchen/dish');
+const Dish = require('../../model/cloudkitchen/dish.js');
 //Require Underscore JS ( Visit: http://underscorejs.org/#)
 const _ = require('underscore');
 
-// Require Validation Utils
-const { validationResult, errorFormatter } = require('../validation');
-
 // Create and Save a new Dish
 exports.create = (req, res) => {
-    console.log("Creating new dish " + JSON.stringify(req.body));
-    // Validate Request
-    const errors = validationResult(req).formatWith(errorFormatter);
-    if (!errors.isEmpty()) {
-        return res.json({ errors: _.uniq(errors.array()) });
+    console.log("Received request to create new dish " + JSON.stringify(req.body));
+    var slug = getSlug(req.body);
+    console.log(`Finding if a Dish already exist for: ${slug}`);
+    checkDuplicateAndPersist(req, res);
+
+};
+
+async function checkDuplicateAndPersist(req, res) {
+    var slug = getSlug(req.body);
+    let query = Dish.find();
+    query.where('slug', slug);
+    var _id = await Dish.exists(query);
+    if (_id) {
+        console.log(`Dish already exist`);
+        res.status(400).send({ message: `Dish already exist` });
+    } else {
+        persist(req, res);
     }
-    console.log(`Finding if a dish already exist with name ${req.body.name}`);
-    Dish.exists({ name: req.body.name }, function(err, result) {
-        if (err) {
-            return res.status(500).send({ message: `Error while finding Dish with name ${req.body.name}` });
-        } else if (result) {
-            console.log(`Dish already exist with name ${req.body.name}`);
-            res.status(400).send({ message: `Dish already exist with name ${req.body.name}` });
-        } else {
-            persist(req, res);
-        }
-    });
 
-};
+}
 
-
-// Retrieve and return all Dishs from the database.
-exports.findAll = (req, res) => {
-    console.log("Received request to get all dishs");
-    Dish.find()
-        .then(data => {
-            if (data) {
-                console.log("Returning " + data.length + " dishs.");
-                res.send(data);
-            } else {
-                console.log("Returning no dishs ");
-                res.send({});
-            }
-        })
-        .catch(err => {
-            res.status(500).send({
-                message: err.message || "Some error occurred while retrieving dishs."
-            });
-        });
-};
-
-// Deletes all
-exports.deleteEverything = (req, res) => {
-    Dish.remove().then(result => {
-        res.send({ message: "Deleted all dishs" });
-    }).catch(err => {
-        return res.status(500).send({
-            message: `Could not delete all dishs. ${err.message}`
-        });
-    });
-};
-
-// Find a single Dish with a DishId
-exports.findOne = (req, res) => {
-    console.log("Received request get a dish with id " + req.params.id);
-    Dish.findOne({ _id: req.params.id })
-        .then(dish => {
-            if (!dish) {
-                return dishNotFoundWithId(req, res);
-            }
-            res.send(dish);
-        })
-        .catch(err => {
-            if (err.kind === 'ObjectId') {
-                return dishNotFoundWithId(req, res);
-            }
-            return res.status(500).send({ message: "Error while retrieving Dish with id " + req.params.id });
-        });
-};
-
-// Update a Dish identified by the DishId in the request
-exports.update = (req, res) => {
-    console.log("Updating dish " + JSON.stringify(req.body));
-    // Validate Request
-    if (!req.body) {
-        return res.status(400).send({ message: "Dish body can not be empty" });
-    }
-    // Find Dish and update it with the request body
-    Dish.findByIdAndUpdate(req.params.id, { $set: req.body }, { new: true })
-        .then(dish => {
-            if (!dish) {
-                return dishNotFoundWithId(req, res);
-            }
-            res.send(dish);
-        }).catch(err => {
-            if (err.kind === 'ObjectId') {
-                return dishNotFoundWithId(req, res);
-            }
-            return res.status(500).send({
-                message: "Error updating Dish with id " + req.params.id
-            });
-        });
-};
-
-// Delete a Dish with the specified DishId in the request
-exports.delete = (req, res) => {
-    Dish.findByIdAndRemove(req.params.id)
-        .then(dish => {
-            if (!dish) {
-                return dishNotFoundWithId(req, res);
-            }
-            res.send({ message: "Dish deleted successfully!" });
-        }).catch(err => {
-            if (err.kind === 'ObjectId' || err.name === 'NotFound') {
-                return dishNotFoundWithId(req, res);
-            }
-            return res.status(500).send({
-                message: "Could not delete Dish with id " + req.params.id
-            });
-        });
-};
 
 /**
  * Persists new Dish document
@@ -126,9 +33,9 @@ exports.delete = (req, res) => {
  * @param {Response} res 
  */
 function persist(req, res) {
-    const dish = buildDishObject(req);
+    const Dish = buildDishObject(req);
     // Save Dish in the database
-    dish.save()
+    Dish.save()
         .then(data => {
             res.status(201).send(data);
         }).catch(err => {
@@ -138,13 +45,111 @@ function persist(req, res) {
         });
 }
 
+
+// Retrieve and return all Dish from the database.
+exports.lookup = (req, res) => {
+    let query = Dish.find();
+    if (req.query.name) {
+        query.where({
+            name: { $regex: ".*" + req.query.name + ".*", $options: "i" },
+        });
+    }
+    query.where({ active: true });
+    Dish.find(query).then(result => {
+        console.log(`Returning ${result.length} Dishs.`);
+        res.send(result);
+    }).catch(error => {
+        console.log("Error while fetching Dish from database. " + error.message);
+        res.status(500).send({
+            message: error.message || "Some error occurred while retrieving Dish."
+        });
+    });
+};
+
+
+// Find a single Dish with a MenuId
+exports.findOne = (req, res) => {
+    console.log("Received request get a Dish with id " + req.params.id);
+    Dish.findOne({ _id: req.params.id })
+        .then(sd => {
+            if (!sd) {
+                return notFound(req, res);
+            }
+            res.send(sd);
+        })
+        .catch(err => {
+            if (err.kind === 'ObjectId') {
+                return notFound(req, res);
+            }
+            return res.status(500).send({ message: "Error while retrieving Dish with id " + req.params.id });
+        });
+};
+
+// Update a Dish identified by the MenuId in the request
+exports.update = (req, res) => {
+    console.log("Updating Dish " + JSON.stringify(req.body));
+    // Validate Request
+    if (!req.body) {
+        return res.status(400).send({ message: "Dish body can not be empty" });
+    }
+    // Find Dish and update it with the request body
+    Dish.findByIdAndUpdate(req.params.id, { $set: req.body }, { new: true })
+        .then(sd => {
+            if (!sd) {
+                return notFound(req, res);
+            }
+            res.send(sd);
+        }).catch(err => {
+            if (err.kind === 'ObjectId') {
+                return notFound(req, res);
+            }
+            return res.status(500).send({
+                message: "Error updating Dish with id " + req.params.id
+            });
+        });
+};
+
+
+// Deletes all
+exports.deleteEverything = async(req, res) => {
+    console.log('Delete Dishs');
+    let query = Dish.find();
+    if (req.query.name) {
+        query.where({
+            name: { $regex: ".*" + req.query.name + ".*", $options: "i" },
+        });
+    }
+    Dish.deleteMany(query).then(result => {
+        console.log("Deleted: " + JSON.stringify(result))
+        res.send({ message: "Deleted Dishs" });
+    }).catch(err => {
+        return res.status(500).send({
+            message: `Could not delete all Dishs. ${err.message}`
+        });
+    });
+};
+
+// Delete One
+exports.deleteOne = (req, res) => {
+    Dish.deleteMany(req.params.id).then(result => {
+        console.log("Deleted: " + JSON.stringify(result))
+        res.send({ message: "Deleted Dish" });
+    }).catch(err => {
+        console.log(`Could not delete Dish. ${err.message}`)
+        return res.status(500).send({
+            message: `Could not delete Dish. ${err.message}`
+        });
+    });
+}
+
+
 /**
  * Sends 404 HTTP Response with Message
  * 
  * @param {Request} req 
  * @param {Response} res 
  */
-function dishNotFoundWithId(req, res) {
+function notFound(req, res) {
     res.status(404).send({ message: `Dish not found with id ${req.params.id}` });
 }
 
@@ -166,18 +171,19 @@ function buildDishJson(req) {
     return {
         name: req.body.name,
         image: req.body.image,
-        slug: req.body.slug || req.body.name.trim().replace(/[\W_]+/g, "-").toLowerCase(),
-        logo: req.body.logo
+        searchCount: req.body.searchCount,
+        active: true,
+        slug: req.body.slug || getSlug(req.body)
     };
 }
 
 /**
- * Returns the slug from the given name
- * e.g if name = M & S Foods then Slug = m-s-foods
+ * Returns the slug from the given prefix
+ * e.g if prefix = M & S Dishs then Slug = m-s-Dishs
  * Replaces special characters and replace space with -
  * 
- * @param {String} name 
+ * @param {String} content 
  */
-function getSlug(name) {
-    return name.trim().replace(/[\W_]+/g, "-").toLowerCase()
+function getSlug(content) {
+    return content.name.trim().replace(/[\W_]+/g, "-").toLowerCase()
 }

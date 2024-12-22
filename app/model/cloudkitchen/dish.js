@@ -2,9 +2,11 @@
 var mongoose = require('mongoose');
 // Define a Schema for our Dish collection
 const DishSchema = new mongoose.Schema({
+    active: Boolean,
     name: { type: String, trim: true },
     slug: { type: String, trim: true },
-    logo: String,
+    image: { type: String, trim: true },
+    searchCount: Number
 }, {
     timestamps: true
 });

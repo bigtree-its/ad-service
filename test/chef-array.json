@@ -17,7 +17,7 @@
             "telephone": "07979191176"
         },
         "description": [
-            "zcoop Foods are comited to provide quality foos"
+            "Sapadu Foods are comited to provide quality foos"
         ],
         "specials": [],
         "cuisines": [
@@ -72,8 +72,8 @@
             "Breakfast"
         ],
         "_id": "721dc4e3-b87c-4da3-8ff5-8c6b2907614e",
-        "name": "zcoop",
-        "displayName": "zcoop Foods",
+        "name": "Sapadu",
+        "displayName": "Sapadu Foods",
         "slug": "tozen-foods",
         "rating": 5,
         "reviews": 300,

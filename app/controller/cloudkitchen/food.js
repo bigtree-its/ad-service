@@ -36,6 +36,9 @@ exports.lookup = (req, res) => {
     if (req.query.collection) {
         query.where('collectionId', req.query.collection);
     }
+    if (req.query.calendarId) {
+        query.where('calendarId', req.query.calendarId);
+    }
     if (req.query.vegetarian) {
         query.where('vegetarian', req.query.vegetarian);
     }
@@ -195,6 +198,7 @@ function buildFoodJson(req) {
         name: req.body.name,
         cloudKitchenId: req.body.cloudKitchenId,
         collectionId: req.body.collectionId,
+        calendarId: req.body.calendarId,
         image: req.body.image,
         spice: req.body.spice,
         vegetarian: req.body.vegetarian,

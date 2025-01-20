@@ -84,6 +84,7 @@ require('./route/common/postcodedistrict')(app);
 require('./route/cloudkitchen/calendar')(app);
 require('./route/cloudkitchen/cuisine')(app);
 require('./route/cloudkitchen/dish')(app);
+require('./route/cloudkitchen/hero')(app);
 require('./route/supplier')(app);
 require('./route/cloudkitchen/collection')(app);
 require('./route/cloudkitchen/review')(app);
@@ -94,7 +95,6 @@ require('./route/products/group')(app);
 require('./route/products/feedback')(app);
 require('./route/property/property')(app);
 require('./route/property/property-enquiry')(app);
-require('./route/carousel')(app);
 require('./route/property/type')(app);
 app.use('/health', require('./route/healthcheck'));
 

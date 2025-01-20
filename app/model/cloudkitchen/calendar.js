@@ -5,7 +5,15 @@ var mongoose = require('mongoose');
 const CalendarSchema = new mongoose.Schema({
     cloudKitchenId: { type: String, trim: true },
     date: Date,
+    day: { type: String, trim: true },
     description: [String],
+    preOrder: Boolean,
+    pickupOnly: Boolean,
+    delivery: Boolean,
+    fixedDay: Boolean,
+    active: Boolean,
+    orderBefore: Number,
+    orderBeforeUnit: { type: String, trim: true },
     foods: [{
         type: String,
         ref: 'Food'

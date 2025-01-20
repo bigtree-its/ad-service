@@ -209,6 +209,7 @@ function buildCalendarJson(req) {
     return {
         cloudKitchenId: req.body.cloudKitchenId,
         date: req.body.date,
+        day: req.body.day,
         foods: req.body.foods,
         description: req.body.description
     };

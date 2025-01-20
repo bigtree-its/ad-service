@@ -5,6 +5,7 @@ const { Extra } = require('../common');
 const FoodSchema = new mongoose.Schema({
     cloudKitchenId: String,
     collectionId: String,
+    calendarId: String,
     name: String,
     slug: String,
     image: String,

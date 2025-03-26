@@ -90,6 +90,7 @@ require('./route/cloudkitchen/collection')(app);
 require('./route/cloudkitchen/review')(app);
 require('./route/cloudkitchen/food')(app);
 require('./route/cloudkitchen/partybundle')(app);
+require('./route/messages/message')(app);
 require('./route/products/product')(app);
 require('./route/products/group')(app);
 require('./route/products/feedback')(app);

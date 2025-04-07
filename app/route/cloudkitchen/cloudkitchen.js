@@ -9,6 +9,8 @@ module.exports = (app) => {
     // Retrieve all CloudKitchen
     app.get(path, controller.findAll);
 
+    app.get(path + '/check-availability', controller.checkAvailability);
+
     // Retrieve a single CloudKitchen with Id
     app.get(path + '/:id', controller.findOne);
 

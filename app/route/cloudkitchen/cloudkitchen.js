@@ -18,14 +18,14 @@ module.exports = (app) => {
     // Creates a new CloudKitchen
     app.post(path,
         // verifyToken, 
-        [
-            check('contact.email').notEmpty().isEmail().withMessage('Contact Email is mandatory'),
-            check('name').notEmpty().withMessage('Name is mandatory'),
-            check('description').notEmpty().withMessage('Description is mandatory'),
-            check('address.postcode').notEmpty().withMessage('Postcode is mandatory'),
-            check('contact.person').notEmpty().withMessage('Contact person is mandatory'),
-            check('contact.mobile').notEmpty().withMessage('Contact Mobile is mandatory'),
-        ],
+        // [
+        //     check('contact.email').notEmpty().isEmail().withMessage('Contact Email is mandatory'),
+        //     check('name').notEmpty().withMessage('Name is mandatory'),
+        //     check('description').notEmpty().withMessage('Description is mandatory'),
+        //     check('address.postcode').notEmpty().withMessage('Postcode is mandatory'),
+        //     check('contact.person').notEmpty().withMessage('Contact person is mandatory'),
+        //     check('contact.mobile').notEmpty().withMessage('Contact Mobile is mandatory'),
+        // ],
         controller.create);
 
     // Update a CloudKitchen with id

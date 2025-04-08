@@ -214,6 +214,9 @@ exports.findAll = (req, res) => {
     if (req.query.email) {
         query.where("contact.email", req.query.email);
     }
+    if (req.query.name) {
+        query.where({ "name": req.query.name }, 'i');
+    }
     CloudKitchen.find(query)
         .populate("cuisines")
         .populate("dishes")
@@ -237,7 +240,7 @@ exports.checkAvailability = (req, res) => {
     if (req.query.name) {
         query.where("name", req.query.name);
     }
-    CloudKitchen.find(query)
+    CloudKitchen.find(query).collation({ locale: 'en', strength: 2 })
         .then((result) => {
             console.log(`Returning ${result.length} CloudKitchens.`);
             res.send(result);

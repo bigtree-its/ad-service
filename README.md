@@ -1,4 +1,4 @@
-# product-service
+# MakeMyMeal
 A NodeJs project for Ad management
 
 ## Clone
@@ -32,5 +32,3 @@ Server URL: http://localhost:8081/ads
 | DELETE by id | /products/{id} |
 
 
-DB
-adserviceapi | tkc7vSNgzfbDnKVE

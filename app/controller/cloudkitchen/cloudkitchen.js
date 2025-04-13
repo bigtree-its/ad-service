@@ -10,6 +10,21 @@ const _ = require("underscore");
 // Require Validation Utils
 const { validationResult, errorFormatter } = require("../validation");
 const Utils = require("../../utils/utils.js");
+const nodemailer = require('nodemailer');
+const handlebars = require("handlebars");
+const fs = require('fs');
+const path = require('path');
+const { promisify } = require('util');
+const readFileAsync = promisify(fs.readFile);
+
+
+const transporter = nodemailer.createTransport({
+    service: 'gmail', // Use your email provider
+    auth: {
+        user: process.env.NOTIFICATION_SENDER_EMAIL_ID,
+        pass: process.env.NOTIFICATION_SENDER_EMAIL_PASSWORD
+    }
+});
 
 function isEmpty(data) {
     if (data === undefined || data === null || data.length === 0) {
@@ -380,6 +395,8 @@ function persist(req, res) {
         .save()
         .then((data) => {
             console.log(`Persisted CloudKitchen: ${data._id}`);
+            sendNotificationToAdmin('Admin', process.env.ADMIN_EMAIL_ID, data._id);
+            sendEmailToCustomer(req.body.contact.person, req.body.contact.email, req.body.name);
             res.status(201).send(data);
         })
         .catch((err) => {
@@ -391,6 +408,54 @@ function persist(req, res) {
                         "Some error occurred while creating the CloudKitchen.",
                 });
         });
+}
+
+async function sendEmailToCustomer(recipientName, recipientEmail, kitchenName) {
+    // Read the HTML template and image file
+    var htmlPath = path.join(__dirname, '../../..', 'public', 'email-to-customer.html');
+    var imgFilePath = path.join(__dirname, '../../..', 'public', 'mmm-logo.png');
+    const htmlTemplate = await readFileAsync(htmlPath, 'utf-8');
+    const imageAttachment = await readFileAsync(imgFilePath);
+
+    var template = handlebars.compile(htmlTemplate);
+    var replacements = {
+        username: recipientName,
+        kitchenName: kitchenName,
+    };
+    var htmlToSend = template(replacements);
+
+    // Send email
+    const info = await transporter.sendMail({
+        from: process.env.NOTIFICATION_SENDER_EMAIL_ID,
+        to: recipientEmail,
+        subject: 'MakeMyMeal - Thanks for you interest',
+        html: htmlToSend,
+        attachments: [{
+            filename: 'mmm-logo.png',
+            content: imageAttachment,
+            encoding: 'base64',
+            cid: 'uniqueImageCID', // Referenced in the HTML template
+        }],
+    });
+
+    console.log('Email sent:', info.messageId);
+}
+
+function sendNotificationToAdmin(recipientName, recipientEmail, kitchenId) {
+
+    let mailOptions = {
+        from: process.env.NOTIFICATION_SENDER_EMAIL_ID,
+        to: recipientEmail,
+        subject: "New Interest received for kitchen Partner",
+        text: 'Hi ' + recipientName + ', New Interest received to become a kitchen Partner. Kitchen ID :' + kitchenId,
+    };
+    transporter.sendMail(mailOptions, function(error, info) {
+        if (error) {
+            console.log(error);
+        } else {
+            console.log('Email sent to admin: ' + info.response);
+        }
+    });
 }
 
 /**

@@ -230,7 +230,8 @@ exports.findAll = (req, res) => {
         query.where("contact.email", req.query.email);
     }
     if (req.query.name) {
-        query.where({ "name": req.query.name }, 'i');
+        // query.where({ "name": req.query.name }, 'i');
+        query.where({ name: new RegExp(req.query.name, 'i') });
     }
     CloudKitchen.find(query)
         .populate("cuisines")

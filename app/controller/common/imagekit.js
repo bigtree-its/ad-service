@@ -70,7 +70,7 @@ exports.imageKitUpload = (data) => {
                 minConfidence: 95,
             }, ],
             transformation: {
-                pre: "l-text,i-okeat,fs-50,l-end",
+                pre: "l-text,i-foodogram,fs-50,l-end",
                 post: [{
                     type: "transformation",
                     value: "w-100",

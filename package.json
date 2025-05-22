@@ -12,7 +12,7 @@
         "RestAPI",
         "Products",
         "MongoDB",
-        "MakeMyMeal"
+        "Foodogram"
     ],
     "author": "Nava Kannusamy",
     "license": "MIT",

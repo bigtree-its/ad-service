@@ -230,7 +230,6 @@ exports.findAll = (req, res) => {
         query.where("contact.email", req.query.email);
     }
     if (req.query.name) {
-        // query.where({ "name": req.query.name }, 'i');
         query.where({ name: new RegExp(req.query.name, 'i') });
     }
     CloudKitchen.find(query)
@@ -414,9 +413,9 @@ function persist(req, res) {
 async function sendEmailToCustomer(recipientName, recipientEmail, kitchenName) {
     // Read the HTML template and image file
     var htmlPath = path.join(__dirname, '../../..', 'public', 'email-to-customer.html');
-    var imgFilePath = path.join(__dirname, '../../..', 'public', 'mmm-logo.png');
+    // var imgFilePath = path.join(__dirname, '../../..', 'public', 'mmm-logo.png');
     const htmlTemplate = await readFileAsync(htmlPath, 'utf-8');
-    const imageAttachment = await readFileAsync(imgFilePath);
+    // const imageAttachment = await readFileAsync(imgFilePath);
 
     var template = handlebars.compile(htmlTemplate);
     var replacements = {
@@ -429,14 +428,15 @@ async function sendEmailToCustomer(recipientName, recipientEmail, kitchenName) {
     const info = await transporter.sendMail({
         from: process.env.NOTIFICATION_SENDER_EMAIL_ID,
         to: recipientEmail,
-        subject: 'MakeMyMeal - Thanks for you interest',
+        subject: 'Foodogram - Thanks for you interest',
         html: htmlToSend,
-        attachments: [{
-            filename: 'mmm-logo.png',
-            content: imageAttachment,
-            encoding: 'base64',
-            cid: 'uniqueImageCID', // Referenced in the HTML template
-        }],
+        //Enable this to attach a file 
+        // attachments: [{
+        //     filename: 'mmm-logo.png',
+        //     content: imageAttachment,
+        //     encoding: 'base64',
+        //     cid: 'uniqueImageCID', // Referenced in the HTML template
+        // }],
     });
 
     console.log('Email sent:', info.messageId);

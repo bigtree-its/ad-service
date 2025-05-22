@@ -1,2 +1,2 @@
 #!/bin/bash
-docker build -t makemymeal/ad-service:v1 .
+docker build -t Foodogram/ad-service:v1 .

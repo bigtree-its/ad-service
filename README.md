@@ -1,4 +1,4 @@
-# MakeMyMeal
+# Foodogram
 A NodeJs project for Ad management
 
 ## Clone

@@ -1,5 +1,4 @@
-[
-    {
+[{
         "address": {
             "propertyNumber": "2",
             "addressLine1": "Main St",
@@ -17,11 +16,10 @@
             "telephone": "07979191176"
         },
         "description": [
-            "okeat Foods are comited to provide quality foos"
+            "foodogram Foods are comited to provide quality foos"
         ],
         "specials": [],
-        "cuisines": [
-            {
+        "cuisines": [{
                 "_id": "82d5a813-bd8a-440d-b280-b9aa0bb235da",
                 "name": "Indian"
             },
@@ -38,8 +36,7 @@
             "https://ychef.files.bbci.co.uk/976x549/p09wrjyz.jpg",
             "https://www.expatica.com/app/uploads/sites/2/2016/09/spanish-food.jpg"
         ],
-        "serviceAreas": [
-            {
+        "serviceAreas": [{
                 "_id": "200dfe76-9b80-412f-b0d6-476902adf024",
                 "name": "Newton Mearns",
                 "city": "Glasgow",
@@ -72,8 +69,8 @@
             "Breakfast"
         ],
         "_id": "721dc4e3-b87c-4da3-8ff5-8c6b2907614e",
-        "name": "okeat",
-        "displayName": "okeat Foods",
+        "name": "foodogram",
+        "displayName": "foodogram Foods",
         "slug": "tozen-foods",
         "rating": 5,
         "reviews": 300,
@@ -113,8 +110,7 @@
             "Desi Swaad Foods are commited to provide quality foos"
         ],
         "specials": [],
-        "cuisines": [
-            {
+        "cuisines": [{
                 "_id": "82d5a813-bd8a-440d-b280-b9aa0bb235da",
                 "name": "Indian"
             },
@@ -131,8 +127,7 @@
             "https://ychef.files.bbci.co.uk/976x549/p09wrjyz.jpg",
             "https://www.expatica.com/app/uploads/sites/2/2016/09/spanish-food.jpg"
         ],
-        "serviceAreas": [
-            {
+        "serviceAreas": [{
                 "_id": "19ddeaeb-a097-4815-b222-9558e1bf100c",
                 "name": "Waterfoot",
                 "city": "Glasgow",
@@ -206,8 +201,7 @@
             "South Indian Kitchen are commited to provide quality foos"
         ],
         "specials": [],
-        "cuisines": [
-            {
+        "cuisines": [{
                 "_id": "82d5a813-bd8a-440d-b280-b9aa0bb235da",
                 "name": "Indian"
             },
@@ -224,8 +218,7 @@
             "https://ychef.files.bbci.co.uk/976x549/p09wrjyz.jpg",
             "https://www.expatica.com/app/uploads/sites/2/2016/09/spanish-food.jpg"
         ],
-        "serviceAreas": [
-            {
+        "serviceAreas": [{
                 "_id": "19ddeaeb-a097-4815-b222-9558e1bf100c",
                 "name": "Waterfoot",
                 "city": "Glasgow",
@@ -300,8 +293,7 @@
             "Madhus Kitchen are commited to provide quality foos"
         ],
         "specials": [],
-        "cuisines": [
-            {
+        "cuisines": [{
                 "_id": "82d5a813-bd8a-440d-b280-b9aa0bb235da",
                 "name": "Indian"
             },
@@ -318,8 +310,7 @@
             "https://ychef.files.bbci.co.uk/976x549/p09wrjyz.jpg",
             "https://www.expatica.com/app/uploads/sites/2/2016/09/spanish-food.jpg"
         ],
-        "serviceAreas": [
-            {
+        "serviceAreas": [{
                 "_id": "19ddeaeb-a097-4815-b222-9558e1bf100c",
                 "name": "Waterfoot",
                 "city": "Glasgow",
@@ -398,8 +389,7 @@
             "Peri Peri",
             "Halal"
         ],
-        "cuisines": [
-            {
+        "cuisines": [{
                 "_id": "82d5a813-bd8a-440d-b280-b9aa0bb235da",
                 "name": "Indian"
             },
@@ -416,8 +406,7 @@
             "https://ychef.files.bbci.co.uk/976x549/p09wrjyz.jpg",
             "https://www.expatica.com/app/uploads/sites/2/2016/09/spanish-food.jpg"
         ],
-        "serviceAreas": [
-            {
+        "serviceAreas": [{
                 "_id": "19ddeaeb-a097-4815-b222-9558e1bf100c",
                 "name": "Waterfoot",
                 "city": "Glasgow",
@@ -496,8 +485,7 @@
             "Briyanis",
             "South Indian"
         ],
-        "cuisines": [
-            {
+        "cuisines": [{
                 "_id": "82d5a813-bd8a-440d-b280-b9aa0bb235da",
                 "name": "Indian"
             },
@@ -514,8 +502,7 @@
             "https://ychef.files.bbci.co.uk/976x549/p09wrjyz.jpg",
             "https://www.expatica.com/app/uploads/sites/2/2016/09/spanish-food.jpg"
         ],
-        "serviceAreas": [
-            {
+        "serviceAreas": [{
                 "_id": "19ddeaeb-a097-4815-b222-9558e1bf100c",
                 "name": "Waterfoot",
                 "city": "Glasgow",
@@ -610,8 +597,7 @@
             "Pasta",
             "Rice"
         ],
-        "cuisines": [
-            {
+        "cuisines": [{
                 "_id": "a1cb82ca-24f2-4911-b4b7-2f3ce97519b9",
                 "name": "Parsi"
             },
@@ -628,18 +614,16 @@
             "https://ychef.files.bbci.co.uk/976x549/p09wrjyz.jpg",
             "https://www.expatica.com/app/uploads/sites/2/2016/09/spanish-food.jpg"
         ],
-        "serviceAreas": [
-            {
-                "_id": "200dfe76-9b80-412f-b0d6-476902adf024",
-                "name": "Newton Mearns",
-                "city": "Glasgow",
-                "country": "Scotland",
-                "slug": "newton-mearns-glasgow",
-                "createdAt": "2022-03-08T20:12:56.565Z",
-                "updatedAt": "2022-03-08T20:12:56.565Z",
-                "__v": 0
-            }
-        ],
+        "serviceAreas": [{
+            "_id": "200dfe76-9b80-412f-b0d6-476902adf024",
+            "name": "Newton Mearns",
+            "city": "Glasgow",
+            "country": "Scotland",
+            "slug": "newton-mearns-glasgow",
+            "createdAt": "2022-03-08T20:12:56.565Z",
+            "updatedAt": "2022-03-08T20:12:56.565Z",
+            "__v": 0
+        }],
         "categories": [
             "Starter",
             "Mains",
@@ -692,8 +676,7 @@
             "Roti",
             "Rice"
         ],
-        "cuisines": [
-            {
+        "cuisines": [{
                 "_id": "908591ac-b42d-48c7-bcd5-6e08ad74451d",
                 "name": "North Indian"
             },
@@ -710,18 +693,16 @@
             "https://ychef.files.bbci.co.uk/976x549/p09wrjyz.jpg",
             "https://www.expatica.com/app/uploads/sites/2/2016/09/spanish-food.jpg"
         ],
-        "serviceAreas": [
-            {
-                "_id": "200dfe76-9b80-412f-b0d6-476902adf024",
-                "name": "Newton Mearns",
-                "city": "Glasgow",
-                "country": "Scotland",
-                "slug": "newton-mearns-glasgow",
-                "createdAt": "2022-03-08T20:12:56.565Z",
-                "updatedAt": "2022-03-08T20:12:56.565Z",
-                "__v": 0
-            }
-        ],
+        "serviceAreas": [{
+            "_id": "200dfe76-9b80-412f-b0d6-476902adf024",
+            "name": "Newton Mearns",
+            "city": "Glasgow",
+            "country": "Scotland",
+            "slug": "newton-mearns-glasgow",
+            "createdAt": "2022-03-08T20:12:56.565Z",
+            "updatedAt": "2022-03-08T20:12:56.565Z",
+            "__v": 0
+        }],
         "categories": [
             "Starter",
             "Mains",
@@ -774,12 +755,10 @@
             "Roti",
             "Rice"
         ],
-        "cuisines": [
-            {
-                "_id": "908591ac-b42d-48c7-bcd5-6e08ad74451d",
-                "name": "North Indian"
-            }
-        ],
+        "cuisines": [{
+            "_id": "908591ac-b42d-48c7-bcd5-6e08ad74451d",
+            "name": "North Indian"
+        }],
         "gallery": [
             "https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/20190503-delish-pineapple-baked-salmon-horizontal-ehg-450-1557771120.jpg",
             "https://www.refrigeratedfrozenfood.com/ext/resources/NEW_RD_Website/DefaultImages/default-pasta.jpg?1430942591",
@@ -788,18 +767,16 @@
             "https://ychef.files.bbci.co.uk/976x549/p09wrjyz.jpg",
             "https://www.expatica.com/app/uploads/sites/2/2016/09/spanish-food.jpg"
         ],
-        "serviceAreas": [
-            {
-                "_id": "200dfe76-9b80-412f-b0d6-476902adf024",
-                "name": "Newton Mearns",
-                "city": "Glasgow",
-                "country": "Scotland",
-                "slug": "newton-mearns-glasgow",
-                "createdAt": "2022-03-08T20:12:56.565Z",
-                "updatedAt": "2022-03-08T20:12:56.565Z",
-                "__v": 0
-            }
-        ],
+        "serviceAreas": [{
+            "_id": "200dfe76-9b80-412f-b0d6-476902adf024",
+            "name": "Newton Mearns",
+            "city": "Glasgow",
+            "country": "Scotland",
+            "slug": "newton-mearns-glasgow",
+            "createdAt": "2022-03-08T20:12:56.565Z",
+            "updatedAt": "2022-03-08T20:12:56.565Z",
+            "__v": 0
+        }],
         "categories": [
             "Starter",
             "Mains",
@@ -852,12 +829,10 @@
             "Roti",
             "Rice"
         ],
-        "cuisines": [
-            {
-                "_id": "908591ac-b42d-48c7-bcd5-6e08ad74451d",
-                "name": "North Indian"
-            }
-        ],
+        "cuisines": [{
+            "_id": "908591ac-b42d-48c7-bcd5-6e08ad74451d",
+            "name": "North Indian"
+        }],
         "gallery": [
             "https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/20190503-delish-pineapple-baked-salmon-horizontal-ehg-450-1557771120.jpg",
             "https://www.refrigeratedfrozenfood.com/ext/resources/NEW_RD_Website/DefaultImages/default-pasta.jpg?1430942591",
@@ -866,18 +841,16 @@
             "https://ychef.files.bbci.co.uk/976x549/p09wrjyz.jpg",
             "https://www.expatica.com/app/uploads/sites/2/2016/09/spanish-food.jpg"
         ],
-        "serviceAreas": [
-            {
-                "_id": "200dfe76-9b80-412f-b0d6-476902adf024",
-                "name": "Newton Mearns",
-                "city": "Glasgow",
-                "country": "Scotland",
-                "slug": "newton-mearns-glasgow",
-                "createdAt": "2022-03-08T20:12:56.565Z",
-                "updatedAt": "2022-03-08T20:12:56.565Z",
-                "__v": 0
-            }
-        ],
+        "serviceAreas": [{
+            "_id": "200dfe76-9b80-412f-b0d6-476902adf024",
+            "name": "Newton Mearns",
+            "city": "Glasgow",
+            "country": "Scotland",
+            "slug": "newton-mearns-glasgow",
+            "createdAt": "2022-03-08T20:12:56.565Z",
+            "updatedAt": "2022-03-08T20:12:56.565Z",
+            "__v": 0
+        }],
         "categories": [
             "Starter",
             "Mains",
@@ -930,12 +903,10 @@
             "Roti",
             "Rice"
         ],
-        "cuisines": [
-            {
-                "_id": "908591ac-b42d-48c7-bcd5-6e08ad74451d",
-                "name": "North Indian"
-            }
-        ],
+        "cuisines": [{
+            "_id": "908591ac-b42d-48c7-bcd5-6e08ad74451d",
+            "name": "North Indian"
+        }],
         "gallery": [
             "https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/20190503-delish-pineapple-baked-salmon-horizontal-ehg-450-1557771120.jpg",
             "https://www.refrigeratedfrozenfood.com/ext/resources/NEW_RD_Website/DefaultImages/default-pasta.jpg?1430942591",
@@ -944,18 +915,16 @@
             "https://ychef.files.bbci.co.uk/976x549/p09wrjyz.jpg",
             "https://www.expatica.com/app/uploads/sites/2/2016/09/spanish-food.jpg"
         ],
-        "serviceAreas": [
-            {
-                "_id": "200dfe76-9b80-412f-b0d6-476902adf024",
-                "name": "Newton Mearns",
-                "city": "Glasgow",
-                "country": "Scotland",
-                "slug": "newton-mearns-glasgow",
-                "createdAt": "2022-03-08T20:12:56.565Z",
-                "updatedAt": "2022-03-08T20:12:56.565Z",
-                "__v": 0
-            }
-        ],
+        "serviceAreas": [{
+            "_id": "200dfe76-9b80-412f-b0d6-476902adf024",
+            "name": "Newton Mearns",
+            "city": "Glasgow",
+            "country": "Scotland",
+            "slug": "newton-mearns-glasgow",
+            "createdAt": "2022-03-08T20:12:56.565Z",
+            "updatedAt": "2022-03-08T20:12:56.565Z",
+            "__v": 0
+        }],
         "categories": [
             "Starter",
             "Mains",

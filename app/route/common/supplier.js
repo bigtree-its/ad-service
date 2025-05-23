@@ -1,5 +1,5 @@
 module.exports = (app) => {
-    const controller = require('../controller/supplier.js');
+    const controller = require('../../controller/common/supplier');
     const { check } = require('express-validator');
 
     const path = process.env.CONTEXT_PATH + '/suppliers';

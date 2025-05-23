@@ -1,29 +1,29 @@
 //Require Mongoose
 var mongoose = require('mongoose');
-const { Address, Contact } = require('./modals');
+const { Address, Contact, OkDay } = require('../common');
 
 // Define a Schema for our Supplier collection
 const SupplierSchema = new mongoose.Schema({
     name: { type: String, trim: true },
-    tradingName: { type: String, trim: true },
     description: [String],
+    slug: { type: String, trim: true },
     image: String,
-    slug: String,
-    email: String,
-    address: Address,
+    serviceAreas: [String],
+    keywords: [String],
     deliveryFee: Number,
     freeDeliveryOver: Number,
     packagingFee: Number,
-    deliveryMinimum: Number,
-    deliveryDistance: Number,
     minimumOrder: Number,
     rating: Number,
+    reopen: Date,
     reviews: Number,
     doDelivery: Boolean,
+    collectionTimings: [String],
     preOrderOnly: Boolean,
-    paymentRequireApproval: Boolean,
+    open: Boolean,
     active: Boolean,
     contact: Contact,
+    address: Address,
 }, {
     timestamps: true
 });

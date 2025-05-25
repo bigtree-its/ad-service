@@ -41,7 +41,7 @@ exports.lookup = (req, res) => {
         query.where("supplier", req.query.supplier);
     }
     if (req.query.group) {
-        query.where("group", req.query.group);
+        query.where({ group: new RegExp("^" + req.query.group + "$", "i") });
     }
     if (req.query.slug) {
         query.where("slug", req.query.slug);
@@ -97,26 +97,36 @@ exports.findOne = (req, res) => {
 
 // Update a product identified by the productId in the request
 exports.update = (req, res) => {
-    console.log("Updating product " + JSON.stringify(req.body));
+    console.log(`Updating Product ${req.params.id}`);
     // Validate Request
     if (!req.body) {
-        return res.status(400).send({ message: "product body can not be empty" });
+        return res
+            .status(400)
+            .send({ message: "Product body cannot be empty" });
     }
-    // Find product and update it with the request body
-    Product.findByIdAndUpdate(req.params.id, { $set: req.body }, { new: true })
-        .then((product) => {
-            if (!product) {
-                return returnError(req, res, 400, "Product not found");
+    const filter = { _id: req.params.id };
+    // Find Product and update it with the request body
+    Product.findOneAndUpdate(filter, req.body)
+        .populate("supplier")
+        .then((Product) => {
+            if (!Product) {
+                return res
+                    .status(404)
+                    .send({ message: `Product not found with id ${req.params.id}` });
             }
-            res.send(product);
+            res.send(Product);
         })
         .catch((err) => {
             if (err.kind === "ObjectId") {
-                return returnError(req, res, 400, "Product not found");
+                return res
+                    .status(404)
+                    .send({ message: `Product not found with id ${req.params.id}` });
             }
-            return res.status(500).send({
-                message: "Error updating product with id " + req.params.id,
-            });
+            return res
+                .status(500)
+                .send({
+                    message: `Error updating Product with id ${req.params.id}`,
+                });
         });
 };
 
@@ -232,7 +242,7 @@ function buildObject(req) {
         availableDate: req.body.availableDate,
         deliveryLeadTime: req.body.deliveryLeadTime,
         dateAdded: req.body.dateAdded,
-        inStock: req.body.inStock,
+        stock: req.body.stock,
         active: req.body.active,
         discontinued: req.body.discontinued,
         featured: req.body.featured,

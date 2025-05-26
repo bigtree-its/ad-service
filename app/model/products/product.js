@@ -22,7 +22,6 @@ const ProductSchema = new mongoose.Schema({
     colors: [Variant],
     sizes: [Variant],
     variants: [Variant],
-    deliveryLeadTime: Number,
     price: Number,
     priceOld: Number,
     availableDate: Date,
@@ -33,6 +32,8 @@ const ProductSchema = new mongoose.Schema({
     collectionOnly: Boolean,
     discontinued: Boolean,
     stock: Boolean,
+    deliverNationwide: Boolean,
+    deliveryLeadTime: Number,
     featured: Boolean,
     preOrder: Boolean,
 }, {

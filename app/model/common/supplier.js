@@ -1,6 +1,6 @@
 //Require Mongoose
 var mongoose = require('mongoose');
-const { Address, Contact, OkDay } = require('../common');
+const { Address, Contact } = require('../common');
 
 // Define a Schema for our Supplier collection
 const SupplierSchema = new mongoose.Schema({

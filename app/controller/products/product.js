@@ -43,6 +43,15 @@ exports.lookup = (req, res) => {
     if (req.query.group) {
         query.where({ group: new RegExp("^" + req.query.group + "$", "i") });
     }
+    if (req.query.origin) {
+        query.where({ group: new RegExp("^" + req.query.origin + "$", "i") });
+    }
+    if (req.query.organic) {
+        query.where({ organic: true });
+    }
+    if (req.query.stock) {
+        query.where({ stock: true });
+    }
     if (req.query.slug) {
         query.where("slug", req.query.slug);
     }
@@ -228,6 +237,7 @@ function buildObject(req) {
         group: req.body.group,
         description: req.body.description,
         image: req.body.image,
+        origin: req.body.origin,
         gallery: req.body.gallery,
         color: req.body.color,
         weight: req.body.weight,
@@ -243,6 +253,7 @@ function buildObject(req) {
         deliveryLeadTime: req.body.deliveryLeadTime,
         dateAdded: req.body.dateAdded,
         stock: req.body.stock,
+        organic: req.body.organic,
         active: req.body.active,
         discontinued: req.body.discontinued,
         featured: req.body.featured,

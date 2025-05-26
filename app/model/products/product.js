@@ -17,6 +17,7 @@ const ProductSchema = new mongoose.Schema({
     size: Variant,
     color: Variant,
     image: String,
+    origin: String,
     description: [String],
     gallery: [String],
     colors: [Variant],
@@ -35,6 +36,7 @@ const ProductSchema = new mongoose.Schema({
     deliverNationwide: Boolean,
     deliveryLeadTime: Number,
     featured: Boolean,
+    organic: Boolean,
     preOrder: Boolean,
 }, {
     timestamps: true

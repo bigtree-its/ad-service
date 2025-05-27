@@ -236,6 +236,7 @@ function buildObject(req) {
         name: req.body.name,
         group: req.body.group,
         description: req.body.description,
+        productInfo: req.body.productInfo,
         image: req.body.image,
         origin: req.body.origin,
         gallery: req.body.gallery,

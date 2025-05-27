@@ -140,21 +140,27 @@ exports.update = (req, res) => {
 };
 
 // Delete a product with the specified productId in the request
-exports.delete = (req, res) => {
-    Product.findByIdAndRemove(req.params.id)
-        .then((product) => {
-            if (!product) {
-                return returnError(req, res, 400, "Product not found");
-            }
-            res.send({ message: "product deleted successfully!" });
+exports.delete = async(req, res) => {
+    Product.deleteOne({ _id: req.params.id })
+        .then((result) => {
+            console.log("Deleted Product " + JSON.stringify(result));
+            res.send({ message: "Product deleted successfully!" });
         })
         .catch((err) => {
+            console.error(
+                "Error while deleting product " + JSON.stringify(err)
+            );
             if (err.kind === "ObjectId" || err.name === "NotFound") {
-                return returnError(req, res, 400, "Product not found");
+                res
+                    .status(404)
+                    .send({ message: `Product not found with id ${req.params.id}` });
+            } else {
+                res
+                    .status(500)
+                    .send({
+                        message: `Could not delete Product with id ${req.params.id}`,
+                    });
             }
-            return res.status(500).send({
-                message: "Could not delete product with id " + req.params.id,
-            });
         });
 };
 

@@ -109,10 +109,41 @@ exports.update = (req, res) => {
     console.log(`Updating Product ${req.params.id}`);
     // Validate Request
     if (!req.body) {
-        return res
-            .status(400)
-            .send({ message: "Product body cannot be empty" });
+        return res.status(400).send({ message: "Product body cannot be empty" });
     }
+    if (req.body.supplier) {
+        // fetch supplier details from database
+        Supplier.findById({ _id: req.body.supplier._id })
+            .then((supplier) => {
+                if (!supplier) {
+                    return returnError(req, res, 400, "Supplier not found");
+                } else {
+                    req.body.supplier = {
+                        _id: supplier._id,
+                        name: supplier.name,
+                        tradingName: supplier.tradingName,
+                        email: supplier.contact.email,
+                        mobile: supplier.contact.mobile,
+                        telephone: supplier.contact.telephone,
+                    };
+                    console.log("Supplier found. " + JSON.stringify(req.body.supplier));
+                    updateProduct(req, res);
+                }
+            })
+            .catch((err) => {
+                if (err.kind === "ObjectId") {
+                    return returnError(req, res, 400, "Supplier not found");
+                }
+                return res.status(500).send({
+                    message: "Error while retrieving product with id " + req.params.id,
+                });
+            });
+    } else {
+        updateProduct(req, res);
+    }
+};
+
+function updateProduct(req, res) {
     const filter = { _id: req.params.id };
     // Find Product and update it with the request body
     Product.findOneAndUpdate(filter, req.body)
@@ -131,13 +162,11 @@ exports.update = (req, res) => {
                     .status(404)
                     .send({ message: `Product not found with id ${req.params.id}` });
             }
-            return res
-                .status(500)
-                .send({
-                    message: `Error updating Product with id ${req.params.id}`,
-                });
+            return res.status(500).send({
+                message: `Error updating Product with id ${req.params.id}`,
+            });
         });
-};
+}
 
 // Delete a product with the specified productId in the request
 exports.delete = async(req, res) => {
@@ -147,19 +176,15 @@ exports.delete = async(req, res) => {
             res.send({ message: "Product deleted successfully!" });
         })
         .catch((err) => {
-            console.error(
-                "Error while deleting product " + JSON.stringify(err)
-            );
+            console.error("Error while deleting product " + JSON.stringify(err));
             if (err.kind === "ObjectId" || err.name === "NotFound") {
                 res
                     .status(404)
                     .send({ message: `Product not found with id ${req.params.id}` });
             } else {
-                res
-                    .status(500)
-                    .send({
-                        message: `Could not delete Product with id ${req.params.id}`,
-                    });
+                res.status(500).send({
+                    message: `Could not delete Product with id ${req.params.id}`,
+                });
             }
         });
 };

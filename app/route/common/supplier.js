@@ -17,7 +17,6 @@ module.exports = (app) => {
         // verifyToken, 
         [
             check('name').notEmpty().isLength({ min: 3, max: 250 }).withMessage('Name is mandatory'),
-            check('email').notEmpty().isLength({ min: 10, max: 250 }).withMessage('Email is mandatory')
         ],
         controller.create);
 

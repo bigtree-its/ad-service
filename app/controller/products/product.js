@@ -38,10 +38,53 @@ async function checkDuplicateAndPersist(req, res) {
 exports.lookup = (req, res) => {
     let query = Product.find();
     if (req.query.supplier) {
-        query.where("supplier", req.query.supplier);
+        query.where("supplier.", req.query.supplier);
     }
+    if (req.query.supplierIds) {
+        console.log(
+            "Received request to filter products by supplierIds: " +
+            req.query.supplierIds
+        );
+        // If supplierIds is provided, convert it to an array and filter
+        var supplierIds = [];
+        if (typeof req.query.supplierIds === "string") {
+            supplierIds = req.query.supplierIds.split(",");
+        } else if (Array.isArray(req.query.supplierIds)) {
+            supplierIds = req.query.supplierIds;
+        } else {
+            console.error("Invalid supplierIds format: " + req.query.supplierIds);
+            return res.status(400).send({
+                message: "Invalid supplierIds format. It should be a comma-separated string or an array.",
+            });
+        }
+        // Ensure supplierIds are valid ObjectId strings
+        supplierIds = supplierIds
+            .map((id) => {
+                if (/^[0-9a-fA-F]{24}$/.test(id)) {
+                    return id;
+                } else {
+                    console.error("Invalid ObjectId format: " + id);
+                    return null; // Filter out invalid ObjectIds
+                }
+            })
+            .filter((id) => id !== null); // Remove any null values
+        if (!supplierIds || supplierIds.length === 0) {
+            console.error("No valid supplierIds provided.");
+            return res.status(400).send({
+                message: "No valid supplierIds provided.",
+            });
+        }
+        console.log("Filtering products by supplierIds: " + supplierIds);
+        // Use $in operator to filter products by supplierIds
+        query.where("supplier._id", { $in: supplierIds });
+    }
+    // If group is provided, filter by group
     if (req.query.group) {
-        query.where({ group: new RegExp("^" + req.query.group + "$", "i") });
+        console.log(
+            "Received request to filter products by group: " + req.query.group
+        );
+        // Using RegExp to allow case-insensitive matching
+        query.where({ group: { $regex: req.query.group, $options: "i" } });
     }
     if (req.query.origin) {
         query.where({ group: new RegExp("^" + req.query.origin + "$", "i") });
@@ -60,6 +103,7 @@ exports.lookup = (req, res) => {
     }
     query.where({ active: true });
     Product.find(query)
+        .populate("supplier")
         .then((result) => {
             console.log(`Returning ${result.length} products.`);
             res.send(result);

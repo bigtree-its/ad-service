@@ -94,10 +94,9 @@ exports.findAll = (req, res) => {
     if (req.query.dishes) {
         query.where("dishes", { $in: req.query.dishes });
     }
-    if (req.query.serviceAreas) {
-        query.where("serviceAreas", { $in: req.query.serviceAreas });
+    if (req.query.area) {
+        query.where("serviceAreas", { $in: req.query.area });
     }
-
     if (req.query.slug) {
         query.where("slug", req.query.slug);
     }
@@ -111,7 +110,13 @@ exports.findAll = (req, res) => {
         query.where("delivery", true);
     }
     if (req.query.keywords) {
-        query.where("keywords", { $in: req.query.keywords });
+        var list = req.query.keywords;
+        var inKeywordsList = []; //holding RegExp objects of case-insensitive talents list 
+        [...req.query.keywords].forEach(kw => {
+            var inKeyword = RegExp(`^${kw}`, 'i') //RegExp object contains talent pattern and case-insensitive option
+            inKeywordsList.push(inKeyword)
+        });
+        query.where("keywords", { $in: inKeywordsList });
     }
     if (req.query.noMinimumOrder) {
         query.where("noMinimumOrder", true);

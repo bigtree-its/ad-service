@@ -89,13 +89,47 @@ exports.paginate = (req, res) => {
 
 // Retrieve and return all Suppliers from the database.
 exports.findAll = (req, res) => {
-    console.log("Finding cloud kitchens..");
+    console.log("Fetching all suppliers..");
     let query = Supplier.find();
-    if (req.query.dishes) {
-        query.where("dishes", { $in: req.query.dishes });
+    Supplier.find(query)
+        .then((result) => {
+            console.log(`Returning ${result.length} Suppliers.`);
+            res.send(result);
+        })
+        .catch((error) => {
+            console.log("Error while fetching from database. " + error.message);
+            res.status(500).send({
+                message: error.message ||
+                    "Some error occurred while retrieving Suppliers.",
+            });
+        });
+};
+
+
+// Retrieve and return all Suppliers from the database.
+exports.lookup = async(req, res) => {
+    console.log("Finding suppliers..");
+    let query = Supplier.find();
+    if (req.query.id) {
+        return this.findOne(req, res);
     }
     if (req.query.area) {
-        query.where("serviceAreas", { $in: req.query.area });
+        var inAreaList = []; //holding RegExp objects of case-insensitive talents list 
+        [req.query.area].forEach(a => {
+            var inArea = RegExp(`^${a}`, 'i') //RegExp object contains talent pattern and case-insensitive option
+            inAreaList.push(inArea)
+        });
+
+        // query.where("serviceAreas", { $in: inAreaList });
+        query.where({ $or: [{ "serviceAreas": { $in: req.query.area } }] });
+        query.where({ $or: [{ "nationwide": true }] });
+    }
+    if (!req.query.area) {
+        console.log(`Area not supplied. Finding Nationwide Suppliers`);
+        query.where("nationwide", true);
+    }
+    if (req.query.nationwide) {
+        query.where("nationwide", true);
     }
     if (req.query.slug) {
         query.where("slug", req.query.slug);
@@ -110,13 +144,12 @@ exports.findAll = (req, res) => {
         query.where("delivery", true);
     }
     if (req.query.keywords) {
-        var list = req.query.keywords;
         var inKeywordsList = []; //holding RegExp objects of case-insensitive talents list 
-        [...req.query.keywords].forEach(kw => {
+        [req.query.keywords].forEach(kw => {
             var inKeyword = RegExp(`^${kw}`, 'i') //RegExp object contains talent pattern and case-insensitive option
             inKeywordsList.push(inKeyword)
         });
-        query.where("keywords", { $in: inKeywordsList });
+        query.where("keywords", { $in: req.query.keywords });
     }
     if (req.query.noMinimumOrder) {
         query.where("noMinimumOrder", true);
@@ -140,10 +173,9 @@ exports.findAll = (req, res) => {
             });
         });
 };
-
 // Find if Supplier with a name already exist
 exports.checkAvailability = (req, res) => {
-    console.log(`Finding if cloud kitchen name exist`);
+    console.log(`Finding if supplier name exist`);
     let query = Supplier.find();
     if (req.query.name) {
         query.where("name", req.query.name);
@@ -164,8 +196,8 @@ exports.checkAvailability = (req, res) => {
 
 // Find a single Supplier with a BrandId
 exports.findOne = (req, res) => {
-    console.log(`Finding a cloud kitchen ${req.params.id}`);
-    Supplier.findById(req.params.id)
+    console.log(`Finding a supplier ${req.query.id}`);
+    Supplier.findById(req.query.id)
         .then((data) => {
             if (!data) {
                 return res
@@ -239,7 +271,7 @@ exports.delete = async(req, res) => {
         })
         .catch((err) => {
             console.error(
-                "Error while deleting cloud kitchen " + JSON.stringify(err)
+                "Error while deleting supplier " + JSON.stringify(err)
             );
             if (err.kind === "ObjectId" || err.name === "NotFound") {
                 res
@@ -389,6 +421,7 @@ function buildSupplierJson(req) {
         minimumOrder: data.minimumOrder,
         preOrderOnly: data.preOrderOnly,
         open: data.open,
+        nationwide: data.nationwide,
         reopen: data.reopen,
         active: data.active,
     };

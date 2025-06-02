@@ -52,6 +52,9 @@ exports.lookup = (req, res) => {
     if (req.query.stock) {
         query.where({ stock: true });
     }
+    if (req.query.nationwide) {
+        query.where({ nationwide: true });
+    }
     if (req.query.slug) {
         query.where("slug", req.query.slug);
     }
@@ -291,6 +294,7 @@ function buildObject(req) {
         featured: req.body.featured,
         preOrder: req.body.preOrder,
         freeDelivery: req.body.freeDelivery,
+        nationwide: req.body.nationwide,
         collectionOnly: req.body.collectionOnly,
     };
 }

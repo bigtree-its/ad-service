@@ -33,10 +33,10 @@ const ProductSchema = new mongoose.Schema({
     collectionOnly: Boolean,
     discontinued: Boolean,
     stock: Boolean,
-    deliverNationwide: Boolean,
     deliveryLeadTime: Number,
     featured: Boolean,
     organic: Boolean,
+    nationwide: Boolean,
     preOrder: Boolean,
 }, {
     timestamps: true

@@ -20,6 +20,7 @@ const SupplierSchema = new mongoose.Schema({
     doDelivery: Boolean,
     collectionTimings: [String],
     preOrderOnly: Boolean,
+    nationwide: Boolean,
     open: Boolean,
     active: Boolean,
     contact: Contact,

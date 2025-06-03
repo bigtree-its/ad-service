@@ -110,9 +110,6 @@ exports.findAll = (req, res) => {
 exports.lookup = async(req, res) => {
     console.log("Finding suppliers..");
     let query = Supplier.find();
-    if (req.query.id) {
-        return this.findOne(req, res);
-    }
     if (req.query.area) {
         var inAreaList = []; //holding RegExp objects of case-insensitive talents list 
         [req.query.area].forEach(a => {
@@ -124,9 +121,43 @@ exports.lookup = async(req, res) => {
         query.where({ $or: [{ "serviceAreas": { $in: req.query.area } }] });
         query.where({ $or: [{ "nationwide": true }] });
     }
-    if (!req.query.area) {
-        console.log(`Area not supplied. Finding Nationwide Suppliers`);
-        query.where("nationwide", true);
+    if (req.query.supplierIds) {
+        console.log(
+            "Received request to filter by supplierIds: " +
+            req.query.supplierIds
+        );
+        // If supplierIds is provided, convert it to an array and filter
+        var supplierIds = [];
+        if (typeof req.query.supplierIds === "string") {
+            supplierIds = req.query.supplierIds.split(",");
+        } else if (Array.isArray(req.query.supplierIds)) {
+            supplierIds = req.query.supplierIds;
+        } else {
+            console.error("Invalid supplierIds format: " + req.query.supplierIds);
+            return res.status(400).send({
+                message: "Invalid supplierIds format. It should be a comma-separated string or an array.",
+            });
+        }
+        // Ensure supplierIds are valid ObjectId strings
+        supplierIds = supplierIds
+            .map((id) => {
+                if (/^[0-9a-fA-F]{24}$/.test(id)) {
+                    return id;
+                } else {
+                    console.error("Invalid ObjectId format: " + id);
+                    return null; // Filter out invalid ObjectIds
+                }
+            })
+            .filter((id) => id !== null); // Remove any null values
+        if (!supplierIds || supplierIds.length === 0) {
+            console.error("No valid supplierIds provided.");
+            return res.status(400).send({
+                message: "No valid supplierIds provided.",
+            });
+        }
+        console.log("Filtering products by supplierIds: " + supplierIds);
+        // Use $in operator to filter products by supplierIds
+        query.where("_id", { $in: supplierIds });
     }
     if (req.query.nationwide) {
         query.where("nationwide", true);
@@ -196,14 +227,16 @@ exports.checkAvailability = (req, res) => {
 
 // Find a single Supplier with a BrandId
 exports.findOne = (req, res) => {
-    console.log(`Finding a supplier ${req.query.id}`);
-    Supplier.findById(req.query.id)
+    console.log(`Finding a supplier ${req.params.id}`);
+    const filter = { _id: req.params.id };
+    Supplier.findById(filter)
         .then((data) => {
             if (!data) {
                 return res
                     .status(404)
                     .send({ message: `Supplier not found with id ${req.params.id}` });
             }
+            console.log(`Found Supplier ${data.name}`);
             res.send(data);
         })
         .catch((err) => {
@@ -412,6 +445,7 @@ function buildSupplierJson(req) {
         keywords: data.keywords,
         contact: data.contact,
         address: data.address,
+        collectionPoints: data.collectionPoints,
         rating: data.rating,
         reviews: data.reviews,
         doDelivery: data.doDelivery,

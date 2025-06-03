@@ -25,6 +25,7 @@ const SupplierSchema = new mongoose.Schema({
     active: Boolean,
     contact: Contact,
     address: Address,
+    collectionPoints: [Address],
 }, {
     timestamps: true
 });

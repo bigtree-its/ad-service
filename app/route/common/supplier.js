@@ -9,7 +9,7 @@ module.exports = (app) => {
     app.get(path, controller.findAll);
 
     // Retrieve a single Supplier with Id
-    // app.get(path + '/:id', controller.findOne);
+    app.get(path + '/one/:id', controller.findOne);
 
     // Retrieve suppliers with query
     app.get(path + '/lookup', controller.lookup);

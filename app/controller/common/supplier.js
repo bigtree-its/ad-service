@@ -8,20 +8,19 @@ const _ = require("underscore");
 // Require Validation Utils
 const { validationResult, errorFormatter } = require("../validation.js");
 const Utils = require("../../utils/utils.js");
-const nodemailer = require('nodemailer');
+const nodemailer = require("nodemailer");
 const handlebars = require("handlebars");
-const fs = require('fs');
-const path = require('path');
-const { promisify } = require('util');
+const fs = require("fs");
+const path = require("path");
+const { promisify } = require("util");
 const readFileAsync = promisify(fs.readFile);
 
-
 const transporter = nodemailer.createTransport({
-    service: 'gmail', // Use your email provider
+    service: "gmail", // Use your email provider
     auth: {
         user: process.env.NOTIFICATION_SENDER_EMAIL_ID,
-        pass: process.env.NOTIFICATION_SENDER_EMAIL_PASSWORD
-    }
+        pass: process.env.NOTIFICATION_SENDER_EMAIL_PASSWORD,
+    },
 });
 
 function isEmpty(data) {
@@ -43,19 +42,15 @@ exports.create = async(req, res) => {
     checkDuplicateAndPersist(req, res);
 };
 
-
-
 async function checkDuplicateAndPersist(req, res) {
     console.log(`Checking if Supplier already exist..`);
     var slug = getSlug(req.body.name, req.body.address.postcode);
     var _id = await Supplier.exists({ slug: slug });
     if (_id) {
         console.log(`Supplier already exist with name ${req.body.name}`);
-        res
-            .status(400)
-            .send({
-                message: `Supplier already exist with name ${req.body.name}`,
-            });
+        res.status(400).send({
+            message: `Supplier already exist with name ${req.body.name}`,
+        });
     } else {
         persist(req, res);
     }
@@ -99,32 +94,29 @@ exports.findAll = (req, res) => {
         .catch((error) => {
             console.log("Error while fetching from database. " + error.message);
             res.status(500).send({
-                message: error.message ||
-                    "Some error occurred while retrieving Suppliers.",
+                message: error.message || "Some error occurred while retrieving Suppliers.",
             });
         });
 };
-
 
 // Retrieve and return all Suppliers from the database.
 exports.lookup = async(req, res) => {
     console.log("Finding suppliers..");
     let query = Supplier.find();
     if (req.query.area) {
-        var inAreaList = []; //holding RegExp objects of case-insensitive talents list 
-        [req.query.area].forEach(a => {
-            var inArea = RegExp(`^${a}`, 'i') //RegExp object contains talent pattern and case-insensitive option
-            inAreaList.push(inArea)
+        var inAreaList = []; //holding RegExp objects of case-insensitive talents list
+        [req.query.area].forEach((a) => {
+            var inArea = RegExp(`^${a}`, "i"); //RegExp object contains talent pattern and case-insensitive option
+            inAreaList.push(inArea);
         });
 
         // query.where("serviceAreas", { $in: inAreaList });
-        query.where({ $or: [{ "serviceAreas": { $in: req.query.area } }] });
-        query.where({ $or: [{ "nationwide": true }] });
+        query.where({ $or: [{ serviceAreas: { $in: req.query.area } }] });
+        query.where({ $or: [{ nationwide: true }] });
     }
     if (req.query.supplierIds) {
         console.log(
-            "Received request to filter by supplierIds: " +
-            req.query.supplierIds
+            "Received request to filter by supplierIds: " + req.query.supplierIds
         );
         // If supplierIds is provided, convert it to an array and filter
         var supplierIds = [];
@@ -175,12 +167,41 @@ exports.lookup = async(req, res) => {
         query.where("delivery", true);
     }
     if (req.query.keywords) {
-        var inKeywordsList = []; //holding RegExp objects of case-insensitive talents list 
-        [req.query.keywords].forEach(kw => {
-            var inKeyword = RegExp(`^${kw}`, 'i') //RegExp object contains talent pattern and case-insensitive option
-            inKeywordsList.push(inKeyword)
+        console.log(
+            `Received request to filter by keywords: ${req.query.keywords}`
+        );
+        // If keywords is provided, convert it to an array and filter
+        if (typeof req.query.keywords === "string") {
+            req.query.keywords = req.query.keywords.split(",");
+        } else if (!Array.isArray(req.query.keywords)) {
+            console.error("Invalid keywords format: " + req.query.keywords);
+            return res.status(400).send({
+                message: "Invalid keywords format. It should be a comma-separated string or an array.",
+            });
+        }
+        // Ensure keywords are valid strings
+        req.query.keywords = req.query.keywords
+            .map((keyword) => {
+                if (typeof keyword === "string" && keyword.trim() !== "") {
+                    return keyword.trim();
+                } else {
+                    console.error("Invalid keyword format: " + keyword);
+                    return null; // Filter out invalid keywords
+                }
+            })
+            .filter((keyword) => keyword !== null); // Remove any null values
+
+        if (!req.query.keywords || req.query.keywords.length === 0) {
+            console.error("No valid keywords provided.");
+            return res.status(400).send({
+                message: "No valid keywords provided.",
+            });
+        }
+        console.log("Filtering suppliers by keywords: " + req.query.keywords);
+        query.where("keywords", {
+            $in: req.query.keywords.map((kw) => new RegExp(`^${kw}$`, "i")),
         });
-        query.where("keywords", { $in: req.query.keywords });
+        // query.where("keywords", { $in: req.query.keywords });
     }
     if (req.query.noMinimumOrder) {
         query.where("noMinimumOrder", true);
@@ -189,7 +210,7 @@ exports.lookup = async(req, res) => {
         query.where("contact.email", req.query.email);
     }
     if (req.query.name) {
-        query.where({ name: new RegExp(req.query.name, 'i') });
+        query.where({ name: new RegExp(req.query.name, "i") });
     }
     Supplier.find(query)
         .then((result) => {
@@ -199,8 +220,7 @@ exports.lookup = async(req, res) => {
         .catch((error) => {
             console.log("Error while fetching from database. " + error.message);
             res.status(500).send({
-                message: error.message ||
-                    "Some error occurred while retrieving Suppliers.",
+                message: error.message || "Some error occurred while retrieving Suppliers.",
             });
         });
 };
@@ -211,7 +231,8 @@ exports.checkAvailability = (req, res) => {
     if (req.query.name) {
         query.where("name", req.query.name);
     }
-    Supplier.find(query).collation({ locale: 'en', strength: 2 })
+    Supplier.find(query)
+        .collation({ locale: "en", strength: 2 })
         .then((result) => {
             console.log(`Returning ${result.length} Suppliers.`);
             res.send(result);
@@ -219,8 +240,7 @@ exports.checkAvailability = (req, res) => {
         .catch((error) => {
             console.log("Error while fetching from database. " + error.message);
             res.status(500).send({
-                message: error.message ||
-                    "Some error occurred while retrieving Suppliers.",
+                message: error.message || "Some error occurred while retrieving Suppliers.",
             });
         });
 };
@@ -245,11 +265,9 @@ exports.findOne = (req, res) => {
                     .status(404)
                     .send({ message: `Supplier not found with id ${req.params.id}` });
             }
-            return res
-                .status(500)
-                .send({
-                    message: `Error while retrieving Supplier with id ${req.params.id}`,
-                });
+            return res.status(500).send({
+                message: `Error while retrieving Supplier with id ${req.params.id}`,
+            });
         });
 };
 
@@ -258,9 +276,7 @@ exports.update = (req, res) => {
     console.log(`Updating Supplier ${req.params.id}`);
     // Validate Request
     if (!req.body) {
-        return res
-            .status(400)
-            .send({ message: "Supplier body cannot be empty" });
+        return res.status(400).send({ message: "Supplier body cannot be empty" });
     }
     if (req.body.type) {
         this.validateType(req, res, req.body.type);
@@ -283,11 +299,9 @@ exports.update = (req, res) => {
                     .status(404)
                     .send({ message: `Supplier not found with id ${req.params.id}` });
             }
-            return res
-                .status(500)
-                .send({
-                    message: `Error updating Supplier with id ${req.params.id}`,
-                });
+            return res.status(500).send({
+                message: `Error updating Supplier with id ${req.params.id}`,
+            });
         });
 };
 
@@ -303,19 +317,15 @@ exports.delete = async(req, res) => {
             }
         })
         .catch((err) => {
-            console.error(
-                "Error while deleting supplier " + JSON.stringify(err)
-            );
+            console.error("Error while deleting supplier " + JSON.stringify(err));
             if (err.kind === "ObjectId" || err.name === "NotFound") {
                 res
                     .status(404)
                     .send({ message: `Supplier not found with id ${req.params.id}` });
             } else {
-                res
-                    .status(500)
-                    .send({
-                        message: `Could not delete Supplier with id ${req.params.id}`,
-                    });
+                res.status(500).send({
+                    message: `Could not delete Supplier with id ${req.params.id}`,
+                });
             }
         });
 };
@@ -349,26 +359,32 @@ function persist(req, res) {
         .save()
         .then((data) => {
             console.log(`Persisted Supplier: ${data._id}`);
-            sendNotificationToAdmin('Admin', process.env.ADMIN_EMAIL_ID, data._id);
-            sendEmailToCustomer(req.body.contact.person, req.body.contact.email, req.body.name);
+            sendNotificationToAdmin("Admin", process.env.ADMIN_EMAIL_ID, data._id);
+            sendEmailToCustomer(
+                req.body.contact.person,
+                req.body.contact.email,
+                req.body.name
+            );
             res.status(201).send(data);
         })
         .catch((err) => {
             console.error("Save failed. " + err);
-            res
-                .status(500)
-                .send({
-                    message: err.message ||
-                        "Some error occurred while creating the Supplier.",
-                });
+            res.status(500).send({
+                message: err.message || "Some error occurred while creating the Supplier.",
+            });
         });
 }
 
 async function sendEmailToCustomer(recipientName, recipientEmail, kitchenName) {
     // Read the HTML template and image file
-    var htmlPath = path.join(__dirname, '../../..', 'public', 'email-to-customer.html');
+    var htmlPath = path.join(
+        __dirname,
+        "../../..",
+        "public",
+        "email-to-customer.html"
+    );
     // var imgFilePath = path.join(__dirname, '../../..', 'public', 'mmm-logo.png');
-    const htmlTemplate = await readFileAsync(htmlPath, 'utf-8');
+    const htmlTemplate = await readFileAsync(htmlPath, "utf-8");
     // const imageAttachment = await readFileAsync(imgFilePath);
 
     var template = handlebars.compile(htmlTemplate);
@@ -382,9 +398,9 @@ async function sendEmailToCustomer(recipientName, recipientEmail, kitchenName) {
     const info = await transporter.sendMail({
         from: process.env.NOTIFICATION_SENDER_EMAIL_ID,
         to: recipientEmail,
-        subject: 'Foodogram - Thanks for you interest',
+        subject: "Foodogram - Thanks for you interest",
         html: htmlToSend,
-        //Enable this to attach a file 
+        //Enable this to attach a file
         // attachments: [{
         //     filename: 'mmm-logo.png',
         //     content: imageAttachment,
@@ -393,22 +409,24 @@ async function sendEmailToCustomer(recipientName, recipientEmail, kitchenName) {
         // }],
     });
 
-    console.log('Email sent:', info.messageId);
+    console.log("Email sent:", info.messageId);
 }
 
 function sendNotificationToAdmin(recipientName, recipientEmail, kitchenId) {
-
     let mailOptions = {
         from: process.env.NOTIFICATION_SENDER_EMAIL_ID,
         to: recipientEmail,
         subject: "New Interest received for kitchen Partner",
-        text: 'Hi ' + recipientName + ', New Interest received to become a kitchen Partner. Kitchen ID :' + kitchenId,
+        text: "Hi " +
+            recipientName +
+            ", New Interest received to become a kitchen Partner. Kitchen ID :" +
+            kitchenId,
     };
     transporter.sendMail(mailOptions, function(error, info) {
         if (error) {
             console.log(error);
         } else {
-            console.log('Email sent to admin: ' + info.response);
+            console.log("Email sent to admin: " + info.response);
         }
     });
 }

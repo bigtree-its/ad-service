@@ -58,6 +58,7 @@ const SupplierBasic = {
     telephone: String
 }
 
+
 const Extra = {
     name: String,
     price: Number,

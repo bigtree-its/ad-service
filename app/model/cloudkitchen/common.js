@@ -8,4 +8,15 @@ const PartyBundleCandidate = {
     }]
 }
 
-module.exports = { PartyBundleCandidate }
+
+const Kitchen = {
+    _id: String,
+    name: String,
+    tradingName: String,
+    image: String,
+    email: String,
+    mobile: String,
+    telephone: String
+}
+
+module.exports = { Kitchen, PartyBundleCandidate }

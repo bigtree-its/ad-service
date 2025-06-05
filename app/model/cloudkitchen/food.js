@@ -1,10 +1,12 @@
 //Require Mongoose
 var mongoose = require('mongoose');
 const { Extra } = require('../common');
+const { Kitchen } = require('./common');
 // Define a Schema for our Food collection
 const FoodSchema = new mongoose.Schema({
-    cloudKitchenId: String,
+    kitchen: Kitchen,
     collectionId: String,
+    keywords: [String],
     calendarId: String,
     name: String,
     slug: String,
